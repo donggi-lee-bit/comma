@@ -1,3 +1,12 @@
+---
+name: Refactor Template
+about: 리팩토링할 기능 템플릿
+title: '[{common|BE}/refactor] 개선할 기능 제목'
+labels: '🤖 BE, ♻️ refactor'
+assignees: ''
+---
+
+
 ## 🤔 코드 개선 필요성
 
 - (어떤 이유에서 변경하는지)

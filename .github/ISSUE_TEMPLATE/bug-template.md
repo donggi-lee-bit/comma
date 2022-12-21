@@ -1,3 +1,11 @@
+---
+name: Bug Template
+about: 버그 템플릿
+title: '[{common|BE}/bug] 발생한 버그 제목'
+labels: '🤖 BE, 🐛 bug'
+assignees: ''
+---
+
 ### 📝 개요 및 증상
 
 - 버그 발생 상황:

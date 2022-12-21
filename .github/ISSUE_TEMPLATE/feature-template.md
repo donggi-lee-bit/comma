@@ -1,3 +1,11 @@
+---
+name: Feature Template
+about: 기능 구현 작성 템플릿
+title: '[{common|BE}/feat] 구현할 기능 제목'
+labels: '🤖 BE, ✨ feature'
+assignees: ''
+---
+
 ## 📝 구현 목록
 
 - [ ] 작업1
