@@ -34,10 +34,10 @@ dependencies {
 
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.rest-assured:rest-assured'
+//    testImplementation 'io.rest-assured:spring-mock-mvc'
 
     // api docs
-    testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+//    testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
 
     // dev
     compileOnly 'org.projectlombok:lombok'
