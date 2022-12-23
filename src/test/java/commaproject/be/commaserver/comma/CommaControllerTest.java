@@ -3,6 +3,7 @@ package commaproject.be.commaserver.comma;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import commaproject.be.commaserver.common.BaseResponse;
 import commaproject.be.commaserver.controller.CommaController;
 import commaproject.be.commaserver.service.CommaService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
@@ -36,10 +37,11 @@ class CommaControllerTest {
     void 특정_회고_조회_성공() throws Exception {
         List<CommentResponse> comments = new ArrayList<>();
         comments.add(new CommentResponse(1L, "username1", 1L, "content1"));
-
         Long commaId = 1L;
         CommaDetailResponse commaDetailResponse = new CommaDetailResponse(
             commaId, "title1", "content1", "username1", 1L, 1, comments);
+        BaseResponse<CommaDetailResponse> baseResponse = new BaseResponse<>("200", "OK",
+            commaDetailResponse);
         when(commaService.readOne(commaId)).thenReturn(commaDetailResponse);
 
         ResultActions resultActions = mockMvc.perform(
@@ -49,6 +51,6 @@ class CommaControllerTest {
         resultActions.andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.content()
-                .string(objectMapper.writeValueAsString(commaDetailResponse)));
+                .string(objectMapper.writeValueAsString(baseResponse)));
     }
 }

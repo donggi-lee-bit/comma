@@ -1,5 +1,6 @@
 package commaproject.be.commaserver.controller;
 
+import commaproject.be.commaserver.common.BaseResponse;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.CommaService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,8 @@ public class CommaController {
     private final CommaService commaService;
 
     @GetMapping("/api/commas/{commaId}")
-    public CommaDetailResponse readOne(@PathVariable Long commaId) {
-        return commaService.readOne(commaId);
+    public BaseResponse<CommaDetailResponse> readOne(@PathVariable Long commaId) {
+        CommaDetailResponse commaDetailResponse = commaService.readOne(commaId);
+        return new BaseResponse<>("200", "OK", commaDetailResponse);
     }
 }
