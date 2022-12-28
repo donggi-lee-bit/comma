@@ -44,4 +44,10 @@ public class CommaController {
         CommaDetailResponse updateCommaDetailResponse = commaService.update(commaId, commaRequest);
         return new BaseResponse<>("200", "OK", updateCommaDetailResponse);
     }
+
+    @DeleteMapping("/api/commas/{commaId}")
+    public BaseResponse<CommaResponse> delete(@PathVariable Long commaId) {
+        CommaResponse deleteCommaResponse = commaService.delete(commaId);
+        return new BaseResponse<>("200", "OK", deleteCommaResponse);
+    }
 }

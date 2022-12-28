@@ -24,4 +24,8 @@ public class CommaService {
     public CommaDetailResponse update(Long commaId, CommaRequest commaRequest) {
         return null;
     }
+
+    public CommaResponse delete(Long commaId) {
+        return null;
+    }
 }
