@@ -18,7 +18,9 @@ import commaproject.be.commaserver.common.BaseResponse;
 import commaproject.be.commaserver.controller.CommaController;
 import commaproject.be.commaserver.service.CommaService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
+import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommentResponse;
+import commaproject.be.commaserver.service.dto.CommaResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -161,6 +163,42 @@ class CommaControllerTest {
                         fieldWithPath("data[].comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
                         fieldWithPath("data[].comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
                         fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용")
+                    )
+                ));
+    }
+
+    @Test
+    @DisplayName("회고 생성 성공")
+    void create_comma_success() throws Exception {
+
+        // given
+        Long userId = 1L;
+        CommaRequest commaRequest = new CommaRequest("title1", "content1", "username1", userId);
+        CommaResponse createResponse = new CommaResponse(commaRequest.getUserId());
+
+        when(commaService.create(commaRequest)).thenReturn(createResponse);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            RestDocumentationRequestBuilders.post("/api/commas")
+                .content(objectMapper
+                    .writeValueAsString(commaRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "comma-post",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("생성된 회고 아이디")
                     )
                 ));
     }
