@@ -20,4 +20,8 @@ public class CommaService {
     public CommaResponse create(CommaRequest commaRequest) {
         return null;
     }
+
+    public CommaDetailResponse update(Long commaId, CommaRequest commaRequest) {
+        return null;
+    }
 }
