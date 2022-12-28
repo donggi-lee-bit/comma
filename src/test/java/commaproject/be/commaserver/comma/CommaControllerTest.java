@@ -257,6 +257,41 @@ class CommaControllerTest {
                 ));
     }
 
+    @Test
+    @DisplayName("회고 삭제 성공")
+    void delete_comma_success() throws Exception {
+
+        // given
+        Long commaId = 1L;
+        CommaResponse commaResponse = new CommaResponse(commaId);
+
+        when(commaService.delete(commaId)).thenReturn(commaResponse);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            RestDocumentationRequestBuilders.delete("/api/commas/{commaId}", commaId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "comma-delete",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("commaId").description("삭제할 회고 아이디")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("삭제된 회고 아이디")
+                    )
+                ));
+    }
+
     private List<CommaDetailResponse> createTestData() {
         List<CommentResponse> comments1 = new ArrayList<>();
         comments1.add(new CommentResponse(1L, "username1", 1L, "content1"));
