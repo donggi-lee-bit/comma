@@ -203,6 +203,60 @@ class CommaControllerTest {
                 ));
     }
 
+    @Test
+    @DisplayName("회고 수정 성공")
+    void update_comma_success() throws Exception {
+
+        // given
+        Long commaId = 1L;
+        Long userId = 1L;
+        CommaRequest commaRequest = new CommaRequest("title1", "content1", "username1", userId);
+
+        List<CommentResponse> comments = new ArrayList<>();
+        comments.add(new CommentResponse(1L, "username1", 1L, "content1"));
+
+        CommaDetailResponse commaDetailResponse = new CommaDetailResponse(commaId, "title1", "content1", "username1", userId, LocalDateTime.of(2022, 12, 28, 15, 30), 1, comments);
+
+        when(commaService.update(commaId, commaRequest)).thenReturn(commaDetailResponse);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            RestDocumentationRequestBuilders.put("/api/commas/{commaId}", commaId)
+                .content(objectMapper
+                    .writeValueAsString(commaRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "comma-update",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("commaId").description("수정된 회고 아이디")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("회고 아이디"),
+                        fieldWithPath("data.title").type(JsonFieldType.STRING).description("수정된 회고 제목"),
+                        fieldWithPath("data.content").type(JsonFieldType.STRING).description("수정된 회고 내용"),
+                        fieldWithPath("data.username").type(JsonFieldType.STRING).description("수정한 회고 작성자"),
+                        fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("수정한 회고 작성자 아이디"),
+                        fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
+                        fieldWithPath("data.likeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
+                        fieldWithPath("data.comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
+                        fieldWithPath("data.comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
+                        fieldWithPath("data.comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
+                        fieldWithPath("data.comments[].content").type(JsonFieldType.STRING).description("댓글 내용")
+                    )
+                ));
+    }
+
     private List<CommaDetailResponse> createTestData() {
         List<CommentResponse> comments1 = new ArrayList<>();
         comments1.add(new CommentResponse(1L, "username1", 1L, "content1"));
