@@ -47,10 +47,12 @@ class CommaControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private CommaService commaService;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -63,7 +65,7 @@ class CommaControllerTest {
     }
 
     @Test
-    @DisplayName("commaId로 회고를 조회할 때 commaId가 존재한다면 테스트가 성공한다 ")
+    @DisplayName("특정 회고 조회 성공")
     void read_comma_success() throws Exception {
 
         // given
@@ -75,9 +77,9 @@ class CommaControllerTest {
         BaseResponse<CommaDetailResponse> baseResponse = new BaseResponse<>("200", "OK",
             commaDetailResponse);
 
-        // when
         when(commaService.readOne(commaId)).thenReturn(commaDetailResponse);
 
+        // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas/{commaId}", commaId)
                 .content(objectMapper
@@ -116,54 +118,72 @@ class CommaControllerTest {
             ));
     }
 
-//    @Test
-//    @DisplayName("전체 회")
-//    void read_all_comma_success() throws Exception {
-//
-//        // given
-//        List<CommentResponse> comments = new ArrayList<>();
-//        comments.add(new CommentResponse(1L, "username1", 1L, "content1"));
-//        Long commaId = 1L;
-//        CommaDetailResponse commaDetailResponse = new CommaDetailResponse(
-//            commaId, "title1", "content1", "username1", 1L, 1, comments);
-//        BaseResponse<CommaDetailResponse> baseResponse = new BaseResponse<>("200", "OK",
-//            commaDetailResponse);
-//
-//        // when
-//        when(commaService.readOne(commaId)).thenReturn(commaDetailResponse);
-//
-//        ResultActions result = mockMvc.perform(
-//            RestDocumentationRequestBuilders.get("/api/commas/{commaId}", commaId)
-//                .content(objectMapper.writeValueAsString(baseResponse))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON));
-//
-//
-//        // then
-//        result
-//            .andExpect(status().isOk())
-//            .andDo(
-//                document(
-//                    "comma-get",
-//                    preprocessRequest(prettyPrint()),
-//                    preprocessResponse(prettyPrint()),
-//                    pathParameters(
-//                        parameterWithName("commaId").description("회고 아이디")
-//                    ),
-//                    responseFields(
-//                        fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
-//                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-//                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("회고 아이디"),
-//                        fieldWithPath("data.title").type(JsonFieldType.STRING).description("회고 제목"),
-//                        fieldWithPath("data.content").type(JsonFieldType.STRING).description("회고 내용"),
-//                        fieldWithPath("data.username").type(JsonFieldType.STRING).description("회고 작성자"),
-//                        fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("회고 작성자 아이디"),
-//                        fieldWithPath("data.likeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
-//                        fieldWithPath("data.comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
-//                        fieldWithPath("data.comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
-//                        fieldWithPath("data.comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
-//                        fieldWithPath("data.comments[].content").type(JsonFieldType.STRING).description("댓글 내용")
-//                    )
-//                ));
-//    }
+    @Test
+    @DisplayName("전체 회고 조회 성공")
+    void read_all_comma_success() throws Exception {
+
+        // given
+        List<CommaDetailResponse> commaDetailResponses = createTestData();
+
+        BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
+            commaDetailResponses);
+
+        when(commaService.readAll()).thenReturn(commaDetailResponses);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            RestDocumentationRequestBuilders.get("/api/commas")
+                .content(objectMapper
+                    .registerModule(new JavaTimeModule())
+                    .writeValueAsString(baseResponse))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "comma-all-get",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("회고 아이디"),
+                        fieldWithPath("data[].title").type(JsonFieldType.STRING).description("회고 제목"),
+                        fieldWithPath("data[].content").type(JsonFieldType.STRING).description("회고 내용"),
+                        fieldWithPath("data[].username").type(JsonFieldType.STRING).description("회고 작성자"),
+                        fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("회고 작성자 아이디"),
+                        fieldWithPath("data[].likeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
+                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
+                        fieldWithPath("data[].comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
+                        fieldWithPath("data[].comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
+                        fieldWithPath("data[].comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
+                        fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용")
+                    )
+                ));
+    }
+
+    private List<CommaDetailResponse> createTestData() {
+        List<CommentResponse> comments1 = new ArrayList<>();
+        comments1.add(new CommentResponse(1L, "username1", 1L, "content1"));
+        Long commaId1 = 1L;
+
+        CommaDetailResponse commaDetailResponse1 = new CommaDetailResponse(
+            commaId1, "title1", "content1", "username1", 1L, LocalDateTime.of(2022, 12, 27, 15, 13),2, comments1);
+
+
+        List<CommentResponse> comments2 = new ArrayList<>();
+        comments2.add(new CommentResponse(2L, "username2", 2L, "content2"));
+        Long commaId2 = 2L;
+
+        CommaDetailResponse commaDetailResponse2 = new CommaDetailResponse(
+            commaId2, "title2", "content2", "username2", 2L, LocalDateTime.of(2022, 12, 28, 15, 13),3, comments2);
+
+        List<CommaDetailResponse> commaDetailResponses = new ArrayList<>();
+        commaDetailResponses.add(commaDetailResponse1);
+        commaDetailResponses.add(commaDetailResponse2);
+        return commaDetailResponses;
+    }
 }
