@@ -43,7 +43,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith({RestDocumentationExtension.class})
 @WebMvcTest(CommaController.class)
-가class CommaControllerTest {
+class CommaControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
