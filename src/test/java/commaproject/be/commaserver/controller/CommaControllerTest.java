@@ -1,4 +1,4 @@
-package commaproject.be.commaserver.comma;
+package commaproject.be.commaserver.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -15,12 +15,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import commaproject.be.commaserver.common.BaseResponse;
-import commaproject.be.commaserver.controller.CommaController;
 import commaproject.be.commaserver.service.CommaService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
-import commaproject.be.commaserver.service.dto.CommentResponse;
 import commaproject.be.commaserver.service.dto.CommaResponse;
+import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +69,8 @@ class CommaControllerTest {
     void read_comma_success() throws Exception {
 
         // given
-        List<CommentResponse> comments = new ArrayList<>();
-        comments.add(new CommentResponse(1L, "username1", 1L, "content1"));
+        List<CommentDetailResponse> comments = new ArrayList<>();
+        comments.add(new CommentDetailResponse(1L, "username1", 1L, "content1"));
         Long commaId = 1L;
         CommaDetailResponse commaDetailResponse = new CommaDetailResponse(
             commaId, "title1", "content1", "username1", 1L, LocalDateTime.of(2022, 12, 27, 15, 13),1, comments);
@@ -172,10 +171,11 @@ class CommaControllerTest {
 
         // given
         Long userId = 1L;
+        Long commaId = 1L;
         CommaRequest commaRequest = new CommaRequest("title1", "content1", "username1", userId);
-        CommaResponse createResponse = new CommaResponse(commaRequest.getUserId());
+        CommaResponse commaResponse = new CommaResponse(commaId);
 
-        when(commaService.create(commaRequest)).thenReturn(createResponse);
+        when(commaService.create(commaRequest)).thenReturn(commaResponse);
 
         // when
         ResultActions result = mockMvc.perform(
@@ -211,8 +211,8 @@ class CommaControllerTest {
         Long userId = 1L;
         CommaRequest commaRequest = new CommaRequest("title1", "content1", "username1", userId);
 
-        List<CommentResponse> comments = new ArrayList<>();
-        comments.add(new CommentResponse(1L, "username1", 1L, "content1"));
+        List<CommentDetailResponse> comments = new ArrayList<>();
+        comments.add(new CommentDetailResponse(1L, "username1", 1L, "content1"));
 
         CommaDetailResponse commaDetailResponse = new CommaDetailResponse(commaId, "title1", "content1", "username1", userId, LocalDateTime.of(2022, 12, 28, 15, 30), 1, comments);
 
@@ -292,16 +292,16 @@ class CommaControllerTest {
     }
 
     private List<CommaDetailResponse> createTestData() {
-        List<CommentResponse> comments1 = new ArrayList<>();
-        comments1.add(new CommentResponse(1L, "username1", 1L, "content1"));
+        List<CommentDetailResponse> comments1 = new ArrayList<>();
+        comments1.add(new CommentDetailResponse(1L, "username1", 1L, "content1"));
         Long commaId1 = 1L;
 
         CommaDetailResponse commaDetailResponse1 = new CommaDetailResponse(
             commaId1, "title1", "content1", "username1", 1L, LocalDateTime.of(2022, 12, 27, 15, 13),2, comments1);
 
 
-        List<CommentResponse> comments2 = new ArrayList<>();
-        comments2.add(new CommentResponse(2L, "username2", 2L, "content2"));
+        List<CommentDetailResponse> comments2 = new ArrayList<>();
+        comments2.add(new CommentDetailResponse(2L, "username2", 2L, "content2"));
         Long commaId2 = 2L;
 
         CommaDetailResponse commaDetailResponse2 = new CommaDetailResponse(
