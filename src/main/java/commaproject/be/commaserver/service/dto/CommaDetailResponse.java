@@ -16,6 +16,6 @@ public class CommaDetailResponse {
     private Long userId;
     private LocalDateTime createdAt;
     private int likeCount;
-    private List<CommentResponse> comments;
+    private List<CommentDetailResponse> comments;
 
 }
