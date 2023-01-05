@@ -43,7 +43,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith({RestDocumentationExtension.class})
 @WebMvcTest(CommaController.class)
-@DisplayName("API /api/commas/* 컨트롤러 계층 단위 테스트")
 class CommaControllerTest {
 
     @Autowired
