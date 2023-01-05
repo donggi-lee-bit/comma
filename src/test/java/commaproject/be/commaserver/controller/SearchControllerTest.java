@@ -16,6 +16,7 @@ import commaproject.be.commaserver.common.BaseResponse;
 import commaproject.be.commaserver.service.SearchService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentResponse;
+import commaproject.be.commaserver.service.dto.SearchConditionRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,115 @@ class SearchControllerTest {
             .build();
     }
 
+    @DisplayName("특정 날짜, 특정 유저가 쓴 글 조회 성공")
+    @Test
+    void read_search_date_user() throws Exception {
+
+        // given
+        List<CommaDetailResponse> commaDetailResponses = createTestData();
+
+        BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
+            commaDetailResponses);
+
+        String date = "20221228";
+        String username = "donggi";
+        SearchConditionRequest searchConditionRequest = new SearchConditionRequest(date, username);
+
+        when(searchService.searchByCondition(searchConditionRequest)).thenReturn(commaDetailResponses);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            RestDocumentationRequestBuilders.get("/api/commas")
+                .queryParam("date", searchConditionRequest.getDate())
+                .queryParam("username", searchConditionRequest.getUsername())
+                .content(objectMapper
+                    .registerModule(new JavaTimeModule())
+                    .writeValueAsString(baseResponse))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "read-search-date-user",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("회고 아이디"),
+                        fieldWithPath("data[].title").type(JsonFieldType.STRING).description("회고 제목"),
+                        fieldWithPath("data[].content").type(JsonFieldType.STRING).description("회고 내용"),
+                        fieldWithPath("data[].username").type(JsonFieldType.STRING).description("회고 작성자"),
+                        fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("회고 작성자 아이디"),
+                        fieldWithPath("data[].likeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
+                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
+                        fieldWithPath("data[].comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
+                        fieldWithPath("data[].comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
+                        fieldWithPath("data[].comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
+                        fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용")
+                    )
+                )
+            );
+    }
+
+    @DisplayName("특정 사용자가 쓴 글 조회 성공")
+    @Test
+    void read_search_user() throws Exception {
+
+        // given
+        List<CommaDetailResponse> commaDetailResponses = createTestData();
+
+        BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
+            commaDetailResponses);
+
+        String date = null;
+        String username = "donggi";
+        SearchConditionRequest searchConditionRequest = new SearchConditionRequest(date, username);
+
+        when(searchService.searchByCondition(searchConditionRequest)).thenReturn(commaDetailResponses);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            RestDocumentationRequestBuilders.get("/api/commas")
+                .queryParam("username", searchConditionRequest.getUsername())
+                .content(objectMapper
+                    .registerModule(new JavaTimeModule())
+                    .writeValueAsString(baseResponse))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "read-search-user",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("회고 아이디"),
+                        fieldWithPath("data[].title").type(JsonFieldType.STRING).description("회고 제목"),
+                        fieldWithPath("data[].content").type(JsonFieldType.STRING).description("회고 내용"),
+                        fieldWithPath("data[].username").type(JsonFieldType.STRING).description("회고 작성자"),
+                        fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("회고 작성자 아이디"),
+                        fieldWithPath("data[].likeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
+                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
+                        fieldWithPath("data[].comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
+                        fieldWithPath("data[].comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
+                        fieldWithPath("data[].comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
+                        fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용")
+                    )
+                )
+            );
+    }
+
     @DisplayName("특정 날짜에 쓴 글 조회 성공")
     @Test
     void read_search_date() throws Exception {
@@ -70,13 +180,15 @@ class SearchControllerTest {
             commaDetailResponses);
 
         String date = "20221228";
+        String username = null;
+        SearchConditionRequest searchConditionRequest = new SearchConditionRequest(date, username);
 
-        when(searchService.readUsingDate(date)).thenReturn(commaDetailResponses);
+        when(searchService.searchByCondition(searchConditionRequest)).thenReturn(commaDetailResponses);
 
         // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
-                .queryParam("date", date)
+                .queryParam("date", searchConditionRequest.getDate())
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())
                     .writeValueAsString(baseResponse))
@@ -110,6 +222,8 @@ class SearchControllerTest {
                 )
             );
     }
+
+
 
 
     private List<CommaDetailResponse> createTestData() {
