@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import commaproject.be.commaserver.service.CommentService;
+import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
 import commaproject.be.commaserver.service.dto.CommentResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,6 +87,50 @@ class CommentControllerTest {
                         fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                         fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("생성된 댓글 아이디")
+                    )
+                ));
+    }
+
+    @Test
+    @DisplayName("댓글 수정 성공")
+    void update_comment_success() throws Exception {
+
+        // given
+        Long commaId = 1L;
+        Long commentId = 1L;
+        CommentRequest commentRequest = new CommentRequest(commaId, "댓글 본문1", "username1", 1L);
+        CommentDetailResponse commentDetailResponse = new CommentDetailResponse(
+            commentId,
+            commentRequest.getUsername(),
+            commentRequest.getUserId(),
+            commentRequest.getContent()
+        );
+
+        when(commentService.update(commaId, commentId, commentRequest)).thenReturn(commentDetailResponse);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            RestDocumentationRequestBuilders.put("/api/commas/{commaId}/comments/{commentId}", commaId, commentId)
+                .content(objectMapper
+                    .writeValueAsString(commentRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "update-comment",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
+                        fieldWithPath("data.usernamex").type(JsonFieldType.STRING).description("수정한 작성자 닉네임"),
+                        fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("수정한 작성자 아이디"),
+                        fieldWithPath("data.content").type(JsonFieldType.STRING).description("수정된 댓글 내용")
                     )
                 ));
     }
