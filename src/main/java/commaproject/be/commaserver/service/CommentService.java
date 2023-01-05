@@ -15,4 +15,8 @@ public class CommentService {
     public CommentDetailResponse update(Long commaId, Long commentId, CommentRequest commentRequest) {
         return null;
     }
+
+    public CommentResponse delete(Long commaId, Long commentId) {
+        return null;
+    }
 }

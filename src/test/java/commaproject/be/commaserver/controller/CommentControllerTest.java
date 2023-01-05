@@ -8,6 +8,8 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -131,6 +133,43 @@ class CommentControllerTest {
                         fieldWithPath("data.usernamex").type(JsonFieldType.STRING).description("수정한 작성자 닉네임"),
                         fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("수정한 작성자 아이디"),
                         fieldWithPath("data.content").type(JsonFieldType.STRING).description("수정된 댓글 내용")
+                    )
+                ));
+    }
+
+    @Test
+    @DisplayName("댓글 삭제 성공")
+    void delete_comment_success() throws Exception {
+
+        // given
+        Long commaId = 1L;
+        Long commentId = 1L;
+        CommentResponse commentResponse = new CommentResponse(commentId);
+
+        when(commentService.delete(commaId, commentId)).thenReturn(commentResponse);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            RestDocumentationRequestBuilders.delete("/api/commas/{commaId}/comments/{commentId}", commaId, commentId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "delete-comment",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("commaId").description("삭제할 댓글이 있는 회고 아이디"),
+                        parameterWithName("commentId").description("삭제할 댓글 아이디")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("삭제된 댓글 아이디")
                     )
                 ));
     }
