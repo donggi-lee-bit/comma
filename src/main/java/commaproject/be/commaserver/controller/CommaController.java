@@ -34,7 +34,7 @@ public class CommaController {
     }
 
     @PostMapping("/api/commas")
-    public BaseResponse<CommaResponse> update(@RequestBody CommaRequest commaRequest) {
+    public BaseResponse<CommaResponse> create(@RequestBody CommaRequest commaRequest) {
         CommaResponse commaResponse = commaService.create(commaRequest);
         return new BaseResponse<>("200", "OK", commaResponse);
     }

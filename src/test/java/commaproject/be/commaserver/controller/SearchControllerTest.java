@@ -15,7 +15,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import commaproject.be.commaserver.common.BaseResponse;
 import commaproject.be.commaserver.service.SearchService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
-import commaproject.be.commaserver.service.dto.CommentResponse;
+import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.SearchConditionRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -227,23 +227,23 @@ class SearchControllerTest {
 
 
     private List<CommaDetailResponse> createTestData() {
-        List<CommentResponse> comments1 = new ArrayList<>();
-        comments1.add(new CommentResponse(1L, "username1", 1L, "content1"));
+        List<CommentDetailResponse> comments1 = new ArrayList<>();
+        comments1.add(new CommentDetailResponse(1L, "username1", 1L, "content1"));
         Long commaId1 = 1L;
 
         CommaDetailResponse commaDetailResponse1 = new CommaDetailResponse(
             commaId1, "title1", "content1", "username1", 1L, LocalDateTime.of(2022, 12, 27, 15, 13),2, comments1);
 
 
-        List<CommentResponse> comments2 = new ArrayList<>();
-        comments2.add(new CommentResponse(2L, "username2", 2L, "content2"));
+        List<CommentDetailResponse> comments2 = new ArrayList<>();
+        comments2.add(new CommentDetailResponse(2L, "username2", 2L, "content2"));
         Long commaId2 = 2L;
 
         CommaDetailResponse commaDetailResponse2 = new CommaDetailResponse(
             commaId2, "title2", "content2", "username2", 2L, LocalDateTime.of(2022, 12, 28, 15, 13),3, comments2);
 
-        List<CommentResponse> comments3 = new ArrayList<>();
-        comments3.add(new CommentResponse(3L, "username3", 3L, "content3"));
+        List<CommentDetailResponse> comments3 = new ArrayList<>();
+        comments3.add(new CommentDetailResponse(3L, "username3", 3L, "content3"));
         Long commaId3 = 3L;
 
         CommaDetailResponse commaDetailResponse3 = new CommaDetailResponse(
