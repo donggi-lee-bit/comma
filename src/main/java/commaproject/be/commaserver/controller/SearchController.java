@@ -16,7 +16,7 @@ public class SearchController {
 
     private final SearchService searchService;
 
-    @GetMapping("/api/commas")
+    @GetMapping("/api/commas/search")
     public BaseResponse<List<CommaDetailResponse>> searchByCondition(SearchConditionRequest searchConditionRequest) {
         List<CommaDetailResponse> commaDetailResponses = searchService.searchByCondition(searchConditionRequest);
         return new BaseResponse<>("200", "OK", commaDetailResponses);

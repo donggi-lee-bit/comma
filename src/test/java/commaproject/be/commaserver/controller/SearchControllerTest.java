@@ -78,7 +78,7 @@ class SearchControllerTest {
 
         // when
         ResultActions result = mockMvc.perform(
-            RestDocumentationRequestBuilders.get("/api/commas")
+            RestDocumentationRequestBuilders.get("/api/commas/search")
                 .queryParam("date", searchConditionRequest.getDate())
                 .queryParam("username", searchConditionRequest.getUsername())
                 .content(objectMapper
@@ -133,7 +133,7 @@ class SearchControllerTest {
 
         // when
         ResultActions result = mockMvc.perform(
-            RestDocumentationRequestBuilders.get("/api/commas")
+            RestDocumentationRequestBuilders.get("/api/commas/search")
                 .queryParam("username", searchConditionRequest.getUsername())
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())
@@ -187,7 +187,7 @@ class SearchControllerTest {
 
         // when
         ResultActions result = mockMvc.perform(
-            RestDocumentationRequestBuilders.get("/api/commas")
+            RestDocumentationRequestBuilders.get("/api/commas/search")
                 .queryParam("date", searchConditionRequest.getDate())
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())
