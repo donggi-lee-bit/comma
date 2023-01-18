@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import commaproject.be.commaserver.common.BaseResponse;
-import commaproject.be.commaserver.service.SearchService;
+import commaproject.be.commaserver.service.CommaSearchService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.SearchConditionRequest;
@@ -38,8 +38,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith({RestDocumentationExtension.class})
-@WebMvcTest(SearchController.class)
-class SearchControllerTest {
+@WebMvcTest(CommaSearchController.class)
+class CommaSearchControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -48,7 +48,7 @@ class SearchControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private SearchService searchService;
+    private CommaSearchService commaSearchService;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -74,11 +74,12 @@ class SearchControllerTest {
         String username = "donggi";
         SearchConditionRequest searchConditionRequest = new SearchConditionRequest(date, username);
 
-        when(searchService.searchByCondition(searchConditionRequest)).thenReturn(commaDetailResponses);
+        when(commaSearchService.searchByCondition(searchConditionRequest)).thenReturn(commaDetailResponses);
 
         // when
         ResultActions result = mockMvc.perform(
-            RestDocumentationRequestBuilders.get("/api/commas/search")
+            RestDocumentationRequestBuilders.get("/api/commas")
+                .queryParam("type", "userdate")
                 .queryParam("date", searchConditionRequest.getDate())
                 .queryParam("username", searchConditionRequest.getUsername())
                 .content(objectMapper
@@ -129,11 +130,12 @@ class SearchControllerTest {
         String username = "donggi";
         SearchConditionRequest searchConditionRequest = new SearchConditionRequest(date, username);
 
-        when(searchService.searchByCondition(searchConditionRequest)).thenReturn(commaDetailResponses);
+        when(commaSearchService.searchByCondition(searchConditionRequest)).thenReturn(commaDetailResponses);
 
         // when
         ResultActions result = mockMvc.perform(
-            RestDocumentationRequestBuilders.get("/api/commas/search")
+            RestDocumentationRequestBuilders.get("/api/commas")
+                .queryParam("type", "user")
                 .queryParam("username", searchConditionRequest.getUsername())
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())
@@ -183,11 +185,12 @@ class SearchControllerTest {
         String username = null;
         SearchConditionRequest searchConditionRequest = new SearchConditionRequest(date, username);
 
-        when(searchService.searchByCondition(searchConditionRequest)).thenReturn(commaDetailResponses);
+        when(commaSearchService.searchByCondition(searchConditionRequest)).thenReturn(commaDetailResponses);
 
         // when
         ResultActions result = mockMvc.perform(
-            RestDocumentationRequestBuilders.get("/api/commas/search")
+            RestDocumentationRequestBuilders.get("/api/commas")
+                .queryParam("type", "date")
                 .queryParam("date", searchConditionRequest.getDate())
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())

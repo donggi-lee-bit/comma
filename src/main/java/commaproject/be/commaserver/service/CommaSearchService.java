@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SearchService {
+public class CommaSearchService {
 
     public List<CommaDetailResponse> searchByCondition(SearchConditionRequest searchConditionRequest) {
         return null;
