@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.6'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    id 'org.asciidoctor.convert' version '1.5.8'
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 group = 'commaproject.be'
@@ -10,6 +10,8 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
+    asciidoctorExtensions
+
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -19,8 +21,25 @@ repositories {
     mavenCentral()
 }
 
+// API 문서 관련 설정
 ext {
-    set('snippetsDir', file("build/generated-snippets"))
+    snippetsDir = file('${project.buildDir}/generated-snippets')
+}
+
+asciidoctor {
+    dependsOn test
+    configurations 'asciidoctorExtensions'
+    inputs.dir snippetsDir
+}
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("${project.buildDir}/docs/asciidoc")
+    into file("${project.rootDir}/src/main/resources/static/docs")
+}
+
+bootJar {
+    dependsOn copyDocument
 }
 
 dependencies {
@@ -29,15 +48,15 @@ dependencies {
 
     // db
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testImplementation 'org.projectlombok:lombok:1.18.22'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementation 'io.rest-assured:spring-mock-mvc'
 
     // api docs
-//    testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
     // dev
     compileOnly 'org.projectlombok:lombok'

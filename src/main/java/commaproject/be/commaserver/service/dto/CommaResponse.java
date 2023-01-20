@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CommentResponse {
+public class CommaResponse {
 
     private Long id;
 }
