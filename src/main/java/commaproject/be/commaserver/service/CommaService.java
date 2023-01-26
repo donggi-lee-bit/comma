@@ -4,28 +4,16 @@ import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
 import java.util.List;
-import org.springframework.stereotype.Service;
 
-@Service
-public class CommaService {
+public interface CommaService {
 
-    public CommaDetailResponse readOne(Long commaId) {
-        return null;
-    }
+    CommaDetailResponse readOne(Long commaId);
 
-    public List<CommaDetailResponse> readAll() {
-        return null;
-    }
+    List<CommaDetailResponse> readAll();
 
-    public CommaResponse create(CommaRequest commaRequest) {
-        return null;
-    }
+    CommaResponse create(CommaRequest commaRequest);
 
-    public CommaDetailResponse update(Long commaId, CommaRequest commaRequest) {
-        return null;
-    }
+    CommaDetailResponse update(Long commaId, CommaRequest commaRequest);
 
-    public CommaResponse delete(Long commaId) {
-        return null;
-    }
+    CommaResponse remove(Long commaId);
 }

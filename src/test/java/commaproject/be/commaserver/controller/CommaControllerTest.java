@@ -264,7 +264,7 @@ class CommaControllerTest {
         Long commaId = 1L;
         CommaResponse commaResponse = new CommaResponse(commaId);
 
-        when(commaService.delete(commaId)).thenReturn(commaResponse);
+        when(commaService.remove(commaId)).thenReturn(commaResponse);
 
         // when
         ResultActions result = mockMvc.perform(
