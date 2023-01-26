@@ -2,11 +2,9 @@ package commaproject.be.commaserver.service.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class CommaDetailResponse {
 
     private Long id;
@@ -18,4 +16,15 @@ public class CommaDetailResponse {
     private int likeCount;
     private List<CommentDetailResponse> comments;
 
+    public CommaDetailResponse(Long id, String title, String content, String username, Long userId,
+        LocalDateTime createdAt, int likeCount, List<CommentDetailResponse> comments) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.username = username;
+        this.userId = userId;
+        this.createdAt = createdAt;
+        this.likeCount = likeCount;
+        this.comments = comments;
+    }
 }
