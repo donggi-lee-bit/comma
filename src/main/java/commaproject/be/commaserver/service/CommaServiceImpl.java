@@ -25,9 +25,11 @@ public class CommaServiceImpl implements CommaService {
         // user, like, comment 도메인 개발 예정
         Comma findComma = commaRepository.findById(commaId)
             .orElseThrow(NoSuchElementException::new);
+
         Long userId = 1L;
         int likeCount = 1;
         List<CommentDetailResponse> comments = new ArrayList<>();
+
         return new CommaDetailResponse(
             findComma.getId(),
             findComma.getTitle(),
@@ -44,6 +46,7 @@ public class CommaServiceImpl implements CommaService {
     public List<CommaDetailResponse> readAll() {
         List<Comma> commas = commaRepository.findAll();
         List<CommaDetailResponse> commaDetailResponses = new ArrayList<>();
+
         // todo likeCount, comments 상수 입력 상태
         for (Comma comma : commas) {
             commaDetailResponses.add(
@@ -51,6 +54,7 @@ public class CommaServiceImpl implements CommaService {
                     comma.getUsername(), comma.getUserId(), comma.getCreatedAt(), 0,
                     new ArrayList<>()));
         }
+
         return commaDetailResponses;
     }
 
@@ -60,6 +64,7 @@ public class CommaServiceImpl implements CommaService {
         Comma saveComma = commaRepository.save(
             Comma.from(commaRequest.getTitle(), commaRequest.getContent(),
                 commaRequest.getUsername(), commaRequest.getUserId()));
+
         return new CommaResponse(saveComma.getId());
     }
 
@@ -69,7 +74,9 @@ public class CommaServiceImpl implements CommaService {
         // todo likeCount, comments 상수 입력 상태
         Comma findComma = commaRepository.findById(commaId)
             .orElseThrow(NoSuchElementException::new);
+
         Comma updateComma = findComma.update(commaRequest);
+
         return new CommaDetailResponse(updateComma.getId(), updateComma.getTitle(),
             updateComma.getContent(), updateComma.getUsername(), updateComma.getUserId(),
             updateComma.getCreatedAt(), 0, new ArrayList<>());
@@ -80,7 +87,9 @@ public class CommaServiceImpl implements CommaService {
     public CommaResponse remove(Long commaId) {
         Comma findComma = commaRepository.findById(commaId)
             .orElseThrow(NoSuchElementException::new);
+
         commaRepository.delete(findComma);
+
         return new CommaResponse(findComma.getId());
     }
 }
