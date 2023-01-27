@@ -1,14 +1,17 @@
 package commaproject.be.commaserver.service.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 @EqualsAndHashCode
-public class SearchConditionRequest {
+public class CommaSearchConditionRequest {
 
     private String date;
     private String username;
+
+    public CommaSearchConditionRequest(String date, String username) {
+        this.date = date;
+        this.username = username;
+    }
 }
