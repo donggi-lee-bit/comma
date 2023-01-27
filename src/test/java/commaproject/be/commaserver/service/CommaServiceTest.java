@@ -101,17 +101,17 @@ class CommaServiceTest {
     @DisplayName("유효한 commaId로 회고를 조회하여 soft delete를 하면 테스트가 성공한다")
     void remove_comma() {
         // given
+        Long commaId = 1L;
         Long userId = 1L;
-        Comma comma = Comma.from("title1", "content1", "username", userId);
-        when(commaRepository.save(any(Comma.class))).thenReturn(comma);
-
+        Optional<Comma> comma = Optional.of(Comma.from("title1", "content1", "username1", userId));
+        when(commaRepository.findById(commaId)).thenReturn(comma);
 
         // when
-        Long commaId = 1L;
-        commaService.remove(commaId);
+        CommaResponse removeComma = commaService.remove(commaId);
 
         // then
-        verify(commaRepository, times(1)).save(any(Comma.class));
+        verify(commaRepository).delete(comma.get());
+        assertThat(removeComma).isNotNull();
     }
 
     private static List<Comma> setCommaData() {
