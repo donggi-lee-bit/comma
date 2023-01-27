@@ -45,17 +45,16 @@ public class CommaServiceImpl implements CommaService {
     @Override
     public List<CommaDetailResponse> readAll() {
         List<Comma> commas = commaRepository.findAll();
-        List<CommaDetailResponse> commaDetailResponses = new ArrayList<>();
 
         // todo likeCount, comments 상수 입력 상태
-        for (Comma comma : commas) {
-            commaDetailResponses.add(
-                new CommaDetailResponse(comma.getId(), comma.getTitle(), comma.getContent(),
-                    comma.getUsername(), comma.getUserId(), comma.getCreatedAt(), 0,
-                    new ArrayList<>()));
-        }
 
-        return commaDetailResponses;
+        return commas.stream()
+            .map(comma -> new CommaDetailResponse(
+                comma.getId(), comma.getTitle(), comma.getContent(),
+                comma.getUsername(), comma.getUserId(), comma.getCreatedAt(),
+                0,
+                new ArrayList<>()))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
