@@ -16,7 +16,7 @@ import commaproject.be.commaserver.common.BaseResponse;
 import commaproject.be.commaserver.service.CommaSearchService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
-import commaproject.be.commaserver.service.dto.SearchConditionRequest;
+import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,16 +72,16 @@ class CommaSearchControllerTest {
 
         String date = "20221228";
         String username = "donggi";
-        SearchConditionRequest searchConditionRequest = new SearchConditionRequest(date, username);
+        CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
-        when(commaSearchService.searchByCondition(searchConditionRequest)).thenReturn(commaDetailResponses);
+        when(commaSearchService.searchByCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
 
         // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
                 .queryParam("type", "userdate")
-                .queryParam("date", searchConditionRequest.getDate())
-                .queryParam("username", searchConditionRequest.getUsername())
+                .queryParam("date", commaSearchConditionRequest.getDate())
+                .queryParam("username", commaSearchConditionRequest.getUsername())
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())
                     .writeValueAsString(baseResponse))
@@ -128,15 +128,15 @@ class CommaSearchControllerTest {
 
         String date = null;
         String username = "donggi";
-        SearchConditionRequest searchConditionRequest = new SearchConditionRequest(date, username);
+        CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
-        when(commaSearchService.searchByCondition(searchConditionRequest)).thenReturn(commaDetailResponses);
+        when(commaSearchService.searchByCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
 
         // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
                 .queryParam("type", "user")
-                .queryParam("username", searchConditionRequest.getUsername())
+                .queryParam("username", commaSearchConditionRequest.getUsername())
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())
                     .writeValueAsString(baseResponse))
@@ -183,15 +183,15 @@ class CommaSearchControllerTest {
 
         String date = "20221228";
         String username = null;
-        SearchConditionRequest searchConditionRequest = new SearchConditionRequest(date, username);
+        CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
-        when(commaSearchService.searchByCondition(searchConditionRequest)).thenReturn(commaDetailResponses);
+        when(commaSearchService.searchByCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
 
         // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
                 .queryParam("type", "date")
-                .queryParam("date", searchConditionRequest.getDate())
+                .queryParam("date", commaSearchConditionRequest.getDate())
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())
                     .writeValueAsString(baseResponse))
