@@ -39,7 +39,7 @@ public class OauthLoginIntegrationTest {
     @Test
     @DisplayName("인가 코드로 auth 서버에서 유저 정보를 가져와 UserRepository에 유저를 저장하고 로그인에 성공한다")
     void oauth_login_success() {
-        WireMock.setScenarioState("OAuth Login", "Started");
+        WireMock.setScenarioState("Email Not Null", "Started");
 
         UserInformation userInformation = oauthService.oauth("code");
         LoginInformation loginInformation = loginService.login("code");
