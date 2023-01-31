@@ -1,17 +1,26 @@
 package commaproject.be.commaserver.service.dto;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class LoginInformation {
 
-    private final Long userId;
-    private final String username;
-    private final String userImageUri;
-    private final String email;
-    private final String accessToken;
-    private final String refreshToken;
+    private Long userId;
+    private String username;
+    private String userImageUri;
+    private String email;
+    private String accessToken;
+    private String refreshToken;
 
+    public LoginInformation(Long userId, String username, String userImageUri, String email,
+        String accessToken, String refreshToken) {
+        this.userId = userId;
+        this.username = username;
+        this.userImageUri = userImageUri;
+        this.email = email;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 }

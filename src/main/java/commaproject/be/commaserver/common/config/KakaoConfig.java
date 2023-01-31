@@ -8,9 +8,9 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @EnableConfigurationProperties(KakaoProperties.class)
-@PropertySource("classpath:properties/auth.yml")
+@PropertySource(value = "classpath:application-auth.yml")
 @RequiredArgsConstructor
-public class OauthConfig {
+public class KakaoConfig {
 
     private final KakaoProperties kakaoProperties;
 }

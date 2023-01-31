@@ -21,7 +21,6 @@ public class LoginController {
     public BaseResponse<LoginInformation> login(@RequestBody LoginRequest loginRequest) {
         LoginInformation loginInformation = loginService.login(loginRequest.getCode());
 
-    // todo BaseResponse 정적 메서드 사용이 더 좋을듯
-        return new BaseResponse("code", "OK", loginInformation);
+        return new BaseResponse<>("code", "OK", loginInformation);
     }
 }

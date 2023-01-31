@@ -19,7 +19,8 @@ public class LoginService {
 
     public LoginInformation login(String code) {
         UserInformation userInformation = oauthService.oauth(code);
-        User user = userRepository.FindByEmail(userInformation.getEmail())
+
+        User user = userRepository.findByEmail(userInformation.getEmail())
             .orElseGet(() -> userRepository.save(User.from(userInformation.getUsername(),
                 userInformation.getEmail(), userInformation.getUserImageUri())));
 

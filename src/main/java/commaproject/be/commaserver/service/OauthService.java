@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OauthService {
 
+    private static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
     private final KakaoProperties kakaoProperties;
     private final OauthTokenClient oauthTokenClient;
     private final OauthApiClient oauthApiClient;
@@ -18,13 +19,15 @@ public class OauthService {
     @Transactional
     public UserInformation oauth(String code) {
         OauthTokenResponse oauthTokenResponse = oauthTokenClient.getAccessToken(
+            CONTENT_TYPE,
             kakaoProperties.getGrantType(),
             kakaoProperties.getClientId(),
             kakaoProperties.getRedirectUri(),
-            kakaoProperties.getResponseType()
+            code
         );
 
         String authorizationHeader = getAuthorizationHeader(oauthTokenResponse);
+        System.out.println("======= authorizationHeader : " + authorizationHeader);
 
         return oauthApiClient.getUserInformation(authorizationHeader);
     }
