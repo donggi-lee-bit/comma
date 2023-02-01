@@ -67,6 +67,7 @@ dependencies {
 
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
 
     // api docs
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
