@@ -110,7 +110,7 @@ class CommaServiceTest {
         CommaResponse removeComma = commaService.remove(commaId);
 
         // then
-        verify(commaRepository).delete(comma.get());
+        verify(commaRepository, times(1)).delete(comma.get());
         assertThat(removeComma).isNotNull();
     }
 
