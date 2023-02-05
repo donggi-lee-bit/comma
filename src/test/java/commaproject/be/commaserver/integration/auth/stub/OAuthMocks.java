@@ -34,7 +34,7 @@ public class OAuthMocks {
 
     public static void setupMockUserInformationResponse() throws IOException {
         stubFor(get(urlEqualTo("/v2/user/me"))
-            .inScenario("Email Not Null")
+            .inScenario("OAuth Login")
             .whenScenarioStateIs(STARTED)
             .withHeader("Authorization", equalTo("bearer accessToken"))
             .willReturn(aResponse()

@@ -27,8 +27,6 @@ public class OauthService {
         );
 
         String authorizationHeader = getAuthorizationHeader(oauthTokenResponse);
-        System.out.println("======= authorizationHeader : " + authorizationHeader);
-
         return oauthApiClient.getUserInformation(authorizationHeader);
     }
 

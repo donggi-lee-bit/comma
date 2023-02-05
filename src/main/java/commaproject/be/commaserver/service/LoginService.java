@@ -22,7 +22,7 @@ public class LoginService {
 
         User user = userRepository.findByEmail(userInformation.getEmail())
             .orElseGet(() -> userRepository.save(User.from(userInformation.getUsername(),
-                userInformation.getEmail(), userInformation.getUserImageUri())));
+                userInformation.getEmail(), userInformation.getImages())));
 
         String accessToken = jwtProvider.generateAccessToken(user.getId());
         String refreshToken = jwtProvider.generateRefreshToken(user.getId());

@@ -9,5 +9,5 @@ public class UserInformation {
 
     private String username;
     private String email;
-    private String userImageUri;
+    private String images;
 }
