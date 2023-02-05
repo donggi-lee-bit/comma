@@ -5,8 +5,13 @@ on:
     branches:
       - be
   pull_request:
-    branches:
-      - be
+    branches: [ be ]
+    paths:
+      [
+        "src/**",
+        "build.gradle",
+      ]
+    types: [ opened, synchronize, reopened ]
 
 permissions:
   contents: read
