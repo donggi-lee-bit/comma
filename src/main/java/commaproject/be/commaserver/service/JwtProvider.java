@@ -1,6 +1,7 @@
 package commaproject.be.commaserver.service;
 
 import commaproject.be.commaserver.service.dto.properties.JwtProperties;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
@@ -30,6 +31,15 @@ public class JwtProvider {
         return generateToken(userId,
             jwtProperties.getRefreshTokenSubject(),
             jwtProperties.getRefreshTokenExpiredTime());
+    }
+
+    public String decode(String token) {
+        Claims body = Jwts.parserBuilder()
+            .setSigningKey(secretKey)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+        return body.get("id", String.class);
     }
 
     private String generateToken(Long userId, String subject, Long expiredTime) {
