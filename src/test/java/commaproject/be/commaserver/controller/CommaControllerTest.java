@@ -172,10 +172,10 @@ class CommaControllerTest {
         // given
         Long userId = 1L;
         Long commaId = 1L;
-        CommaRequest commaRequest = new CommaRequest("title1", "content1", "username1", userId);
+        CommaRequest commaRequest = new CommaRequest("title1", "content1");
         CommaResponse commaResponse = new CommaResponse(commaId);
 
-        when(commaService.create(commaRequest)).thenReturn(commaResponse);
+        when(commaService.create(userId, commaRequest)).thenReturn(commaResponse);
 
         // when
         ResultActions result = mockMvc.perform(
@@ -209,7 +209,7 @@ class CommaControllerTest {
         // given
         Long commaId = 1L;
         Long userId = 1L;
-        CommaRequest commaRequest = new CommaRequest("title1", "content1", "username1", userId);
+        CommaRequest commaRequest = new CommaRequest("title1", "content1");
 
         List<CommentDetailResponse> comments = new ArrayList<>();
         comments.add(new CommentDetailResponse(1L, "username1", 1L, "content1"));

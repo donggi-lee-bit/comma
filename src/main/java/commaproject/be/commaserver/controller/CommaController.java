@@ -1,6 +1,7 @@
 package commaproject.be.commaserver.controller;
 
 import commaproject.be.commaserver.common.BaseResponse;
+import commaproject.be.commaserver.domain.user.AuthenticatedUser;
 import commaproject.be.commaserver.service.dto.CommaResponse;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.CommaService;
@@ -34,8 +35,10 @@ public class CommaController {
     }
 
     @PostMapping("/api/commas")
-    public BaseResponse<CommaResponse> create(@RequestBody CommaRequest commaRequest) {
-        CommaResponse commaResponse = commaService.create(commaRequest);
+    public BaseResponse<CommaResponse> create(
+        @AuthenticatedUser Long loginUserId,
+        @RequestBody CommaRequest commaRequest) {
+        CommaResponse commaResponse = commaService.create(loginUserId, commaRequest);
         return new BaseResponse<>("200", "OK", commaResponse);
     }
 

@@ -1,7 +1,9 @@
 package commaproject.be.commaserver.service;
 
 import commaproject.be.commaserver.domain.comma.Comma;
+import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
+import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommaServiceImpl implements CommaService {
 
     private final CommaRepository commaRepository;
+    private final UserRepository userRepository;
 
     @Override
     public CommaDetailResponse readOne(Long commaId) {
@@ -60,10 +63,14 @@ public class CommaServiceImpl implements CommaService {
 
     @Override
     @Transactional
-    public CommaResponse create(CommaRequest commaRequest) {
+    public CommaResponse create(Long loginUserId, CommaRequest commaRequest) {
+        // todo Exception 재정의
+        User user = userRepository.findById(loginUserId)
+            .orElseThrow(NoSuchElementException::new);
+
         Comma saveComma = commaRepository.save(
             Comma.from(commaRequest.getTitle(), commaRequest.getContent(),
-                commaRequest.getUsername(), commaRequest.getUserId()));
+                user.getUsername(), user.getId()));
 
         return new CommaResponse(saveComma.getId());
     }

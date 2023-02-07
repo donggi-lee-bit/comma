@@ -73,8 +73,7 @@ class CommaServiceTest {
         when(commaRepository.findById(commaId)).thenReturn(comma);
 
         // when
-        CommaRequest commaRequest = new CommaRequest("title1", "update content1", "username", userId
-        );
+        CommaRequest commaRequest = new CommaRequest("title1", "update content1");
         CommaDetailResponse updateCommaDetailResponse = commaService.update(commaId, commaRequest);
 
         // then
@@ -90,8 +89,8 @@ class CommaServiceTest {
         when(commaRepository.save(any(Comma.class))).thenReturn(comma);
 
         // when
-        CommaResponse saveCommaResponse = commaService.create(
-            new CommaRequest("title1", "content1", "username", userId));
+        CommaResponse saveCommaResponse = commaService.create(userId,
+            new CommaRequest("title1", "content1"));
 
         // then
         assertThat(saveCommaResponse).isNotNull();
