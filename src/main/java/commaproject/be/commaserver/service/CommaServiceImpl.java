@@ -32,7 +32,6 @@ public class CommaServiceImpl implements CommaService {
         Comma findComma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        Long userId = 1L;
         int likeCount = 1;
         List<CommentDetailResponse> comments = new ArrayList<>();
 
@@ -41,7 +40,7 @@ public class CommaServiceImpl implements CommaService {
             findComma.getTitle(),
             findComma.getContent(),
             findComma.getUsername(),
-            userId,
+            findComma.getUserId(),
             findComma.getCreatedAt(),
             likeCount,
             comments

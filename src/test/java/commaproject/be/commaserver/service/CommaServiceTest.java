@@ -1,11 +1,13 @@
 package commaproject.be.commaserver.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
@@ -49,7 +51,6 @@ class CommaServiceTest {
         assertThat(commaDetailResponsesExpected.size()).isEqualTo(3);
     }
 
-
     @Test
     @DisplayName("유효한 commaId로 회고를 조회하면 테스트가 성공한다")
     void valid_comma_id_find_comma() {
@@ -63,7 +64,6 @@ class CommaServiceTest {
         CommaDetailResponse commaDetailResponse = commaService.readOne(commaId);
 
         // then
-        // todo id를 조회하고자 했는데 comma를 jpa로 저장하지 않아서 id 생성이 안되는걸까?
         assertThat(commaDetailResponse).isNotNull();
         assertThat(commaDetailResponse.getTitle()).isEqualTo("title1");
     }
@@ -87,6 +87,28 @@ class CommaServiceTest {
 
         // then
         assertThat(updateCommaDetailResponse.getContent()).isEqualTo("update content1");
+    }
+
+    @Test
+    @DisplayName("허용되지 않은 유저가 게시글을 접근하여 수정하면 예외를 발생시킨다")
+    void un_authorized_user_update_comma() {
+        // given
+        Long commaId = 1L;
+        Long userId = 1L;
+        Long unauthorizedUserId = Long.MAX_VALUE;
+
+        Comma comma = new Comma(commaId, "title1", "content1", "username1", userId);
+        when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
+
+        User user = new User(unauthorizedUserId, "username1", "email1", "kakao@kakao.com");
+        when(userRepository.findById(unauthorizedUserId)).thenReturn(Optional.of(user));
+
+        // when
+        CommaRequest commaRequest = new CommaRequest("title1", "update content1");
+
+        // then
+        assertThatThrownBy(() -> commaService.update(unauthorizedUserId, commaId, commaRequest))
+            .isInstanceOf(UnAuthorizedUserException.class);
     }
 
     @Test
@@ -129,6 +151,27 @@ class CommaServiceTest {
         // then
         verify(commaRepository, times(1)).delete(comma.get());
         assertThat(removeComma).isNotNull();
+    }
+
+    @Test
+    @DisplayName("권한이 없는 유저가 게시글을 삭제하면 예외를 발생시킨다")
+    void un_authorized_user_remove_comma() {
+        // given
+        Long commaId = 1L;
+        Long userId = 1L;
+        Long unauthorizedUserId = Long.MAX_VALUE;
+
+        User user = new User(unauthorizedUserId, "username1", "email1", "kakao@kakao.com");
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        Optional<Comma> comma = Optional.of(Comma.from("title1", "content1", "username1", userId));
+        when(commaRepository.findById(commaId)).thenReturn(comma);
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> commaService.remove(unauthorizedUserId, commaId))
+            .isInstanceOf(UnAuthorizedUserException.class);
     }
 
     private static List<Comma> setCommaData() {
