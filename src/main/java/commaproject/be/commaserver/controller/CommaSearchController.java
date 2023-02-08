@@ -1,7 +1,11 @@
 package commaproject.be.commaserver.controller;
 
 
-import commaproject.be.commaserver.common.BaseResponse;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.SEARCH_BY_DATE_LOG_SUCCESS;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.SEARCH_BY_USER_DATE_LOG_SUCCESS;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.SEARCH_BY_USER_LOG_SUCCESS;
+
+import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.service.CommaSearchService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
@@ -21,7 +25,7 @@ public class CommaSearchController {
         CommaSearchConditionRequest commaSearchConditionRequest) {
         List<CommaDetailResponse> commaDetailResponses = searchService.searchByCondition(
             commaSearchConditionRequest);
-        return new BaseResponse<>("200", "OK", commaDetailResponses);
+        return new BaseResponse<>(SEARCH_BY_DATE_LOG_SUCCESS, commaDetailResponses);
     }
 
     @GetMapping(path = "/api/commas", params = "type=user")
@@ -29,7 +33,7 @@ public class CommaSearchController {
         CommaSearchConditionRequest commaSearchConditionRequest) {
         List<CommaDetailResponse> commaDetailResponses = searchService.searchByCondition(
             commaSearchConditionRequest);
-        return new BaseResponse<>("200", "OK", commaDetailResponses);
+        return new BaseResponse<>(SEARCH_BY_USER_LOG_SUCCESS, commaDetailResponses);
     }
 
     @GetMapping(path = "/api/commas", params = "type=userdate")
@@ -37,7 +41,7 @@ public class CommaSearchController {
         CommaSearchConditionRequest commaSearchConditionRequest) {
         List<CommaDetailResponse> commaDetailResponses = searchService.searchByCondition(
             commaSearchConditionRequest);
-        return new BaseResponse<>("200", "OK", commaDetailResponses);
+        return new BaseResponse<>(SEARCH_BY_USER_DATE_LOG_SUCCESS, commaDetailResponses);
     }
 }
 

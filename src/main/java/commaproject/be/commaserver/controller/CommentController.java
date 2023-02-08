@@ -1,6 +1,10 @@
 package commaproject.be.commaserver.controller;
 
-import commaproject.be.commaserver.common.BaseResponse;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.CREATE_COMMENT_LOG_SUCCESS;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.DELETE_COMMENT_LOG_SUCCESS;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.UPDATE_COMMENT_LOG_SUCCESS;
+
+import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.service.CommentService;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
@@ -22,18 +26,18 @@ public class CommentController {
     @PostMapping("/api/commas/{commaId}/comments")
     public BaseResponse<CommentResponse> create(@PathVariable Long commaId, @RequestBody CommentRequest commentRequest) {
         CommentResponse commentResponse = commentService.create(commaId, commentRequest);
-        return new BaseResponse<>("200", "OK", commentResponse);
+        return new BaseResponse<>(CREATE_COMMENT_LOG_SUCCESS, commentResponse);
     }
 
     @PutMapping("/api/commas/{commaId}/comments/{commentId}")
     public BaseResponse<CommentDetailResponse> update(@PathVariable Long commaId, @PathVariable Long commentId, @RequestBody CommentRequest commentRequest) {
         CommentDetailResponse commentDetailResponse = commentService.update(commaId, commentId, commentRequest);
-        return new BaseResponse<>("200", "OK", commentDetailResponse);
+        return new BaseResponse<>(UPDATE_COMMENT_LOG_SUCCESS, commentDetailResponse);
     }
 
     @DeleteMapping("/api/commas/{commaId}/comments/{commentId}")
     public BaseResponse<CommentResponse> delete(@PathVariable Long commaId, @PathVariable Long commentId) {
         CommentResponse commentResponse = commentService.delete(commaId, commentId);
-        return new BaseResponse<>("200", "OK", commentResponse);
+        return new BaseResponse<>(DELETE_COMMENT_LOG_SUCCESS, commentResponse);
     }
 }

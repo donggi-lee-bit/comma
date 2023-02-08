@@ -1,6 +1,12 @@
 package commaproject.be.commaserver.controller;
 
-import commaproject.be.commaserver.common.BaseResponse;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.CREATE_COMMA_LOG_SUCCESS;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.DELETE_COMMA_LOG_SUCCESS;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.READ_ALL_COMMA_LOG_SUCCESS;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.READ_COMMA_LOG_SUCCESS;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.UPDATE_COMMA_LOG_SUCCESS;
+
+import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.domain.user.AuthenticatedUser;
 import commaproject.be.commaserver.service.CommaService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
@@ -25,13 +31,13 @@ public class CommaController {
     @GetMapping("/api/commas/{commaId}")
     public BaseResponse<CommaDetailResponse> readOne(@PathVariable Long commaId) {
         CommaDetailResponse commaDetailResponse = commaService.readOne(commaId);
-        return new BaseResponse<>("200", "OK", commaDetailResponse);
+        return new BaseResponse<>(READ_COMMA_LOG_SUCCESS, commaDetailResponse);
     }
 
     @GetMapping("/api/commas")
     public BaseResponse<List<CommaDetailResponse>> readAll() {
         List<CommaDetailResponse> commaDetailResponses = commaService.readAll();
-        return new BaseResponse<>("200", "OK", commaDetailResponses);
+        return new BaseResponse<>(READ_ALL_COMMA_LOG_SUCCESS, commaDetailResponses);
     }
 
     @PostMapping("/api/commas")
@@ -39,7 +45,7 @@ public class CommaController {
         @AuthenticatedUser Long loginUserId,
         @RequestBody CommaRequest commaRequest) {
         CommaResponse commaResponse = commaService.create(loginUserId, commaRequest);
-        return new BaseResponse<>("200", "OK", commaResponse);
+        return new BaseResponse<>(CREATE_COMMA_LOG_SUCCESS, commaResponse);
     }
 
     @PutMapping("/api/commas/{commaId}")
@@ -48,12 +54,12 @@ public class CommaController {
         @AuthenticatedUser Long loginUserId,
         @RequestBody CommaRequest commaRequest) {
         CommaDetailResponse updateCommaDetailResponse = commaService.update(loginUserId, commaId, commaRequest);
-        return new BaseResponse<>("200", "OK", updateCommaDetailResponse);
+        return new BaseResponse<>(UPDATE_COMMA_LOG_SUCCESS, updateCommaDetailResponse);
     }
 
     @DeleteMapping("/api/commas/{commaId}")
     public BaseResponse<CommaResponse> delete(@PathVariable Long commaId, @AuthenticatedUser Long loginUserId) {
         CommaResponse deleteCommaResponse = commaService.remove(loginUserId, commaId);
-        return new BaseResponse<>("200", "OK", deleteCommaResponse);
+        return new BaseResponse<>(DELETE_COMMA_LOG_SUCCESS, deleteCommaResponse);
     }
 }

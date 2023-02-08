@@ -12,7 +12,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import commaproject.be.commaserver.common.BaseResponse;
+import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
@@ -37,7 +37,7 @@ class CommaControllerTest extends InitContollerTest {
 
     @Test
     @DisplayName("특정 회고 조회 성공")
-    void read_comma_succ거ess() throws Exception {
+    void read_comma_success() throws Exception {
 
         // given
         List<CommentDetailResponse> comments = new ArrayList<>();
