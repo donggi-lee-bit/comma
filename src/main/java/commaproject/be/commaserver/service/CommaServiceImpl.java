@@ -1,5 +1,6 @@
 package commaproject.be.commaserver.service;
 
+import commaproject.be.commaserver.common.exception.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
@@ -77,12 +78,21 @@ public class CommaServiceImpl implements CommaService {
 
     @Override
     @Transactional
-    public CommaDetailResponse update(Long commaId, CommaRequest commaRequest) {
+    public CommaDetailResponse update(Long loginUserId, Long commaId, CommaRequest commaRequest) {
         // todo likeCount, comments 상수 입력 상태
-        Comma findComma = commaRepository.findById(commaId)
+        Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NoSuchElementException::new);
 
-        Comma updateComma = findComma.update(commaRequest);
+        User user = userRepository.findById(loginUserId)
+            .orElseThrow(NoSuchElementException::new);
+
+        validateUpdateComma(loginUserId, comma.getUserId());
+
+        Comma updateComma = comma.update(
+            commaRequest.getTitle(),
+            commaRequest.getContent(),
+            user.getUsername(),
+            user.getId());
 
         return new CommaDetailResponse(updateComma.getId(), updateComma.getTitle(),
             updateComma.getContent(), updateComma.getUsername(), updateComma.getUserId(),
@@ -91,12 +101,29 @@ public class CommaServiceImpl implements CommaService {
 
     @Override
     @Transactional
-    public CommaResponse remove(Long commaId) {
-        Comma findComma = commaRepository.findById(commaId)
+    public CommaResponse remove(Long loginUserId, Long commaId) {
+        // todo exception exception exception
+        // 생ㅇ성, 수정, 삭제 순서로 login user id 로직을 추가하면서
+        // login user id 와 comma 엔티티에 저장된 user id 를 비교하는 작업을
+        // 동일하게 동작시키고 있는데 이걸 매번 service 에서 해주는 게 맞겠지?
+        // repository 에서 db 를 통해 엔티티를 가져와야하는 작업이 필요하니까
+        // 왠지 여러번의 반복이 이뤄지면서 다른 곳에서 처리해줄 수 있지도 않나 생각이 든다
+        userRepository.findById(loginUserId)
             .orElseThrow(NoSuchElementException::new);
 
-        commaRepository.delete(findComma);
+        Comma comma = commaRepository.findById(commaId)
+            .orElseThrow(NoSuchElementException::new);
 
-        return new CommaResponse(findComma.getId());
+        validateUpdateComma(loginUserId, comma.getUserId());
+
+        commaRepository.delete(comma);
+
+        return new CommaResponse(comma.getId());
+    }
+
+    private void validateUpdateComma(Long loginUserId, Long writerId) {
+        if (!writerId.equals(loginUserId)) {
+            throw new UnAuthorizedUserException();
+        }
     }
 }

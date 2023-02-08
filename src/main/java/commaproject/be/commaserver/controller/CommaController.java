@@ -2,10 +2,10 @@ package commaproject.be.commaserver.controller;
 
 import commaproject.be.commaserver.common.BaseResponse;
 import commaproject.be.commaserver.domain.user.AuthenticatedUser;
-import commaproject.be.commaserver.service.dto.CommaResponse;
-import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.CommaService;
+import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
+import commaproject.be.commaserver.service.dto.CommaResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,14 +43,17 @@ public class CommaController {
     }
 
     @PutMapping("/api/commas/{commaId}")
-    public BaseResponse<CommaDetailResponse> update(@PathVariable Long commaId, @RequestBody CommaRequest commaRequest) {
-        CommaDetailResponse updateCommaDetailResponse = commaService.update(commaId, commaRequest);
+    public BaseResponse<CommaDetailResponse> update(
+        @PathVariable Long commaId,
+        @AuthenticatedUser Long loginUserId,
+        @RequestBody CommaRequest commaRequest) {
+        CommaDetailResponse updateCommaDetailResponse = commaService.update(loginUserId, commaId, commaRequest);
         return new BaseResponse<>("200", "OK", updateCommaDetailResponse);
     }
 
     @DeleteMapping("/api/commas/{commaId}")
-    public BaseResponse<CommaResponse> delete(@PathVariable Long commaId) {
-        CommaResponse deleteCommaResponse = commaService.remove(commaId);
+    public BaseResponse<CommaResponse> delete(@PathVariable Long commaId, @AuthenticatedUser Long loginUserId) {
+        CommaResponse deleteCommaResponse = commaService.remove(loginUserId, commaId);
         return new BaseResponse<>("200", "OK", deleteCommaResponse);
     }
 }

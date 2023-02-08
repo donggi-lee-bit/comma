@@ -16,10 +16,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import commaproject.be.commaserver.common.BaseResponse;
 import commaproject.be.commaserver.service.CommaService;
+import commaproject.be.commaserver.service.JwtProvider;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
+import commaproject.be.commaserver.tool.TestWebConfig;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +32,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -42,17 +46,20 @@ import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith({RestDocumentationExtension.class})
 @WebMvcTest(CommaController.class)
+@Import(TestWebConfig.class)
+@ActiveProfiles("test")
 class CommaControllerTest {
 
+    @MockBean
+    private CommaService commaService;
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
-    private CommaService commaService;
-
+    @Autowired
+    private JwtProvider jwtProvider;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -180,6 +187,8 @@ class CommaControllerTest {
         // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.post("/api/commas")
+                .header("Authorization",
+                    "Bearer " + jwtProvider.generateAccessToken(userId))
                 .content(objectMapper
                     .writeValueAsString(commaRequest))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -216,16 +225,17 @@ class CommaControllerTest {
 
         CommaDetailResponse commaDetailResponse = new CommaDetailResponse(commaId, "title1", "content1", "username1", userId, LocalDateTime.of(2022, 12, 28, 15, 30), 1, comments);
 
-        when(commaService.update(commaId, commaRequest)).thenReturn(commaDetailResponse);
+        when(commaService.update(userId, commaId, commaRequest)).thenReturn(commaDetailResponse);
 
         // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.put("/api/commas/{commaId}", commaId)
+                .header("Authorization",
+                    "Bearer " + jwtProvider.generateAccessToken(userId))
                 .content(objectMapper
                     .writeValueAsString(commaRequest))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
-
 
         // then
         result
@@ -262,13 +272,16 @@ class CommaControllerTest {
 
         // given
         Long commaId = 1L;
+        Long loginUserId = 1L;
         CommaResponse commaResponse = new CommaResponse(commaId);
 
-        when(commaService.remove(commaId)).thenReturn(commaResponse);
+        when(commaService.remove(loginUserId, commaId)).thenReturn(commaResponse);
 
         // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.delete("/api/commas/{commaId}", commaId)
+                .header("Authorization",
+                    "Bearer " + jwtProvider.generateAccessToken(loginUserId))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 

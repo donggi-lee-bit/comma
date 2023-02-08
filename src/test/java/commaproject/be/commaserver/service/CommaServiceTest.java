@@ -7,7 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import commaproject.be.commaserver.domain.comma.Comma;
+import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
+import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
@@ -29,6 +31,9 @@ class CommaServiceTest {
 
     @Mock
     private CommaRepository commaRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @Test
     @DisplayName("DB에 저장된 회고를 조회하면 모든 회고를 조회하고 테스트가 성공한다")
@@ -69,12 +74,16 @@ class CommaServiceTest {
         // given
         Long commaId = 1L;
         Long userId = 1L;
-        Optional<Comma> comma = Optional.of(Comma.from("title1", "content1", "username1", userId));
-        when(commaRepository.findById(commaId)).thenReturn(comma);
+
+        Comma comma = new Comma(commaId, "title1", "content1", "username1", userId);
+        when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
+
+        User user = new User(userId, "username1", "email1", "kakao@kakao.com");
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         // when
         CommaRequest commaRequest = new CommaRequest("title1", "update content1");
-        CommaDetailResponse updateCommaDetailResponse = commaService.update(commaId, commaRequest);
+        CommaDetailResponse updateCommaDetailResponse = commaService.update(userId, commaId, commaRequest);
 
         // then
         assertThat(updateCommaDetailResponse.getContent()).isEqualTo("update content1");
@@ -84,8 +93,13 @@ class CommaServiceTest {
     @DisplayName("회고 데이터가 저장되면 테스트가 성공한다")
     void save_comma() {
         // given
+        Long commaId = 1L;
         Long userId = 1L;
-        Comma comma = Comma.from("title1", "content1", "username", userId);
+
+        User user = new User(userId, "username1", "email1", "kakao@kakao.com");
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        Comma comma = new Comma(commaId, "title1", "content1", "username1", userId);
         when(commaRepository.save(any(Comma.class))).thenReturn(comma);
 
         // when
@@ -102,11 +116,15 @@ class CommaServiceTest {
         // given
         Long commaId = 1L;
         Long userId = 1L;
+
+        User user = new User(userId, "username1", "email1", "kakao@kakao.com");
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
         Optional<Comma> comma = Optional.of(Comma.from("title1", "content1", "username1", userId));
         when(commaRepository.findById(commaId)).thenReturn(comma);
 
         // when
-        CommaResponse removeComma = commaService.remove(commaId);
+        CommaResponse removeComma = commaService.remove(userId, commaId);
 
         // then
         verify(commaRepository, times(1)).delete(comma.get());

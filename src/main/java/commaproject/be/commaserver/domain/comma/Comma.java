@@ -1,7 +1,6 @@
 package commaproject.be.commaserver.domain.comma;
 
 import commaproject.be.commaserver.domain.BaseEntity;
-import commaproject.be.commaserver.service.dto.CommaRequest;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,15 +33,23 @@ public class Comma extends BaseEntity {
         this.userId = userId;
     }
 
+    public Comma(Long id, String title, String content, String username, Long userId) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.username = username;
+        this.userId = userId;
+    }
+
     public static Comma from(String title, String content, String username, Long userId) {
         return new Comma(title, content, username, userId);
     }
 
-    public Comma update(CommaRequest commaRequest) {
-        this.title = commaRequest.getTitle();
-        this.content = commaRequest.getContent();
-        this.username = commaRequest.getUsername();
-        this.userId = commaRequest.getUserId();
+    public Comma update(String title, String content, String username, Long userId) {
+        this.title = title;
+        this.content = content;
+        this.username = username;
+        this.userId = userId;
         return this;
     }
 }
