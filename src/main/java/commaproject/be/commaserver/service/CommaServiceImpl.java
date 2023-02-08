@@ -1,6 +1,8 @@
 package commaproject.be.commaserver.service;
 
-import commaproject.be.commaserver.common.exception.UnAuthorizedUserException;
+import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
+import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
+import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
@@ -11,7 +13,6 @@ import commaproject.be.commaserver.service.dto.CommaResponse;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class CommaServiceImpl implements CommaService {
     public CommaDetailResponse readOne(Long commaId) {
         // user, like, comment 도메인 개발 예정
         Comma findComma = commaRepository.findById(commaId)
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(NotFoundCommaException::new);
 
         Long userId = 1L;
         int likeCount = 1;
@@ -65,9 +66,8 @@ public class CommaServiceImpl implements CommaService {
     @Override
     @Transactional
     public CommaResponse create(Long loginUserId, CommaRequest commaRequest) {
-        // todo Exception 재정의
         User user = userRepository.findById(loginUserId)
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(NotFoundUserException::new);
 
         Comma saveComma = commaRepository.save(
             Comma.from(commaRequest.getTitle(), commaRequest.getContent(),
@@ -81,10 +81,10 @@ public class CommaServiceImpl implements CommaService {
     public CommaDetailResponse update(Long loginUserId, Long commaId, CommaRequest commaRequest) {
         // todo likeCount, comments 상수 입력 상태
         Comma comma = commaRepository.findById(commaId)
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(NotFoundCommaException::new);
 
         User user = userRepository.findById(loginUserId)
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(NotFoundUserException::new);
 
         validateUpdateComma(loginUserId, comma.getUserId());
 
@@ -109,10 +109,10 @@ public class CommaServiceImpl implements CommaService {
         // repository 에서 db 를 통해 엔티티를 가져와야하는 작업이 필요하니까
         // 왠지 여러번의 반복이 이뤄지면서 다른 곳에서 처리해줄 수 있지도 않나 생각이 든다
         userRepository.findById(loginUserId)
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(NotFoundUserException::new);
 
         Comma comma = commaRepository.findById(commaId)
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(NotFoundCommaException::new);
 
         validateUpdateComma(loginUserId, comma.getUserId());
 
