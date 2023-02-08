@@ -212,7 +212,7 @@ class CommaControllerTest {
     }
 
     @Test
-    @DisplayName("회고 수정 성공")
+    @DisplayName("특정 회고 수정 성공")
     void update_comma_success() throws Exception {
 
         // given

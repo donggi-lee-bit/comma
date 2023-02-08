@@ -36,7 +36,7 @@ class CommaServiceTest {
     private UserRepository userRepository;
 
     @Test
-    @DisplayName("DB에 저장된 회고를 조회하면 모든 회고를 조회하고 테스트가 성공한다")
+    @DisplayName("회고를 조회하면 DB에 저장된 모든 회고를 조회하고 테스트가 성공한다")
     void findAll() {
         // given
         List<Comma> commas = setCommaData();
@@ -69,7 +69,7 @@ class CommaServiceTest {
     }
 
     @Test
-    @DisplayName("유효한 commaId로 회고를 조회하여 수정한 데이터를 확인할 수 있으면 테스트가 성공한다")
+    @DisplayName("로그인한 유저가 작성한 회고를 유효한 commaId로 접근하여 수정하면 테스트가 성공한다")
     void update_comma() {
         // given
         Long commaId = 1L;
@@ -90,7 +90,7 @@ class CommaServiceTest {
     }
 
     @Test
-    @DisplayName("회고 데이터가 저장되면 테스트가 성공한다")
+    @DisplayName("로그인한 유저가 작성한 회고를 저장하면 테스트가 성공한다")
     void save_comma() {
         // given
         Long commaId = 1L;
@@ -111,7 +111,7 @@ class CommaServiceTest {
     }
 
     @Test
-    @DisplayName("유효한 commaId로 회고를 조회하여 soft delete를 하면 테스트가 성공한다")
+    @DisplayName("로그인한 유저가 작성한 글을 유효한 commaId로 조회하여 soft delete 하면 테스트가 성공한다")
     void remove_comma() {
         // given
         Long commaId = 1L;
