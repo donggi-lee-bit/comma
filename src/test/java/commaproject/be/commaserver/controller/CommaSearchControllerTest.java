@@ -17,7 +17,6 @@ import commaproject.be.commaserver.service.CommaSearchService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
-import commaproject.be.commaserver.tool.TestWebConfig;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +27,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -42,9 +39,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith({RestDocumentationExtension.class})
 @WebMvcTest(CommaSearchController.class)
-@Import(TestWebConfig.class)
-@ActiveProfiles("test")
-class CommaSearchControllerTest {
+class CommaSearchControllerTest extends InitContollerTest{
 
     @Autowired
     private MockMvc mockMvc;

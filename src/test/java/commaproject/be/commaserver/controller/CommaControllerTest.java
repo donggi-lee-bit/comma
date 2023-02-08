@@ -2,7 +2,6 @@ package commaproject.be.commaserver.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -12,68 +11,33 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import commaproject.be.commaserver.common.BaseResponse;
-import commaproject.be.commaserver.service.CommaService;
-import commaproject.be.commaserver.service.JwtProvider;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
-import commaproject.be.commaserver.tool.TestWebConfig;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith({RestDocumentationExtension.class})
 @WebMvcTest(CommaController.class)
-@Import(TestWebConfig.class)
-@ActiveProfiles("test")
-class CommaControllerTest {
 
-    @MockBean
-    private CommaService commaService;
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private JwtProvider jwtProvider;
-
-    @BeforeEach
-    public void setUp(WebApplicationContext webApplicationContext,
-        RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-            .apply(documentationConfiguration(restDocumentation))
-            .alwaysDo(document("{method-name}",
-                preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
-            .build();
-    }
+class CommaControllerTest extends InitContollerTest {
 
     @Test
     @DisplayName("특정 회고 조회 성공")
-    void read_comma_success() throws Exception {
+    void read_comma_succ거ess() throws Exception {
 
         // given
         List<CommentDetailResponse> comments = new ArrayList<>();

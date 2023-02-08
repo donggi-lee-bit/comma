@@ -36,7 +36,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith({RestDocumentationExtension.class})
 @WebMvcTest(CommentController.class)
-class CommentControllerTest {
+class CommentControllerTest extends InitContollerTest{
 
     @Autowired
     private MockMvc mockMvc;
