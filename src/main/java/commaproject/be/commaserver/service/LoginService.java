@@ -17,6 +17,7 @@ public class LoginService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
+    @Transactional
     public LoginInformation login(String code) {
         UserInformation userInformation = oauthService.oauth(code);
 
