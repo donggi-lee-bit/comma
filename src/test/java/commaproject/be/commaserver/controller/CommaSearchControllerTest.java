@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import commaproject.be.commaserver.common.BaseResponse;
+import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.service.CommaSearchService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
@@ -108,9 +108,10 @@ class CommaSearchControllerTest extends InitContollerTest{
                         fieldWithPath("data[].likeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                         fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
                         fieldWithPath("data[].comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
-                        fieldWithPath("data[].comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
                         fieldWithPath("data[].comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
-                        fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용")
+                        fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용"),
+                        fieldWithPath("data[].comments[].createdAt").type(JsonFieldType.STRING).description("댓글 작성 시간"),
+                        fieldWithPath("data[].comments[].lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
                     )
                 )
             );
@@ -163,9 +164,10 @@ class CommaSearchControllerTest extends InitContollerTest{
                         fieldWithPath("data[].likeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                         fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
                         fieldWithPath("data[].comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
-                        fieldWithPath("data[].comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
                         fieldWithPath("data[].comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
-                        fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용")
+                        fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용"),
+                        fieldWithPath("data[].comments[].createdAt").type(JsonFieldType.STRING).description("댓글 작성 시간"),
+                        fieldWithPath("data[].comments[].lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
                     )
                 )
             );
@@ -218,9 +220,10 @@ class CommaSearchControllerTest extends InitContollerTest{
                         fieldWithPath("data[].likeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                         fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
                         fieldWithPath("data[].comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
-                        fieldWithPath("data[].comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
                         fieldWithPath("data[].comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
-                        fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용")
+                        fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용"),
+                        fieldWithPath("data[].comments[].createdAt").type(JsonFieldType.STRING).description("댓글 작성 시간"),
+                        fieldWithPath("data[].comments[].lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
                     )
                 )
             );
@@ -231,7 +234,9 @@ class CommaSearchControllerTest extends InitContollerTest{
 
     private List<CommaDetailResponse> createTestData() {
         List<CommentDetailResponse> comments1 = new ArrayList<>();
-        comments1.add(new CommentDetailResponse(1L, "username1", 1L, "content1"));
+        comments1.add(new CommentDetailResponse(1L, 1L, "content1",
+            LocalDateTime.of(2023, 2, 9, 13, 26),
+            LocalDateTime.of(2023, 2, 9, 13, 27)));
         Long commaId1 = 1L;
 
         CommaDetailResponse commaDetailResponse1 = new CommaDetailResponse(
@@ -239,14 +244,20 @@ class CommaSearchControllerTest extends InitContollerTest{
 
 
         List<CommentDetailResponse> comments2 = new ArrayList<>();
-        comments2.add(new CommentDetailResponse(2L, "username2", 2L, "content2"));
+        comments2.add(new CommentDetailResponse(1L, 1L, "content1",
+            LocalDateTime.of(2023, 2, 9, 13, 26),
+            LocalDateTime.of(2023, 2, 9, 13, 27)));
         Long commaId2 = 2L;
 
         CommaDetailResponse commaDetailResponse2 = new CommaDetailResponse(
-            commaId2, "title2", "content2", "username2", 2L, LocalDateTime.of(2022, 12, 28, 15, 13),3, comments2);
+            commaId2, "title2", "content2", "username2", 2L,
+            LocalDateTime.of(2023, 2, 9, 13, 43, 26), 3, comments2
+        );
 
         List<CommentDetailResponse> comments3 = new ArrayList<>();
-        comments3.add(new CommentDetailResponse(3L, "username3", 3L, "content3"));
+        comments3.add(new CommentDetailResponse(1L, 1L, "content1",
+            LocalDateTime.of(2023, 2, 9, 13, 26),
+            LocalDateTime.of(2023, 2, 9, 13, 27)));
         Long commaId3 = 3L;
 
         CommaDetailResponse commaDetailResponse3 = new CommaDetailResponse(
