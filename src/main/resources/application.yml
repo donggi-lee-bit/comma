@@ -7,4 +7,5 @@ spring:
       test: "test-auth"
     include:
       - auth
+      - auth-test
       - db
