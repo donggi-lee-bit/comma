@@ -7,7 +7,9 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import commaproject.be.commaserver.service.CommaSearchService;
 import commaproject.be.commaserver.service.CommaService;
+import commaproject.be.commaserver.service.CommentService;
 import commaproject.be.commaserver.service.JwtProvider;
 import commaproject.be.commaserver.tool.TestWebConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,10 +24,17 @@ import org.springframework.web.context.WebApplicationContext;
 
 @Import(TestWebConfig.class)
 @ActiveProfiles("test")
-public class InitContollerTest {
+public class InitControllerTest {
 
     @MockBean
     protected CommaService commaService;
+
+    @MockBean
+    protected CommaSearchService commaSearchService;
+
+    @MockBean
+    protected CommentService commentService;
+
     @Autowired
     protected MockMvc mockMvc;
 

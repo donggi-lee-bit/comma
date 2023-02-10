@@ -1,7 +1,6 @@
 package commaproject.be.commaserver.service;
 
 import commaproject.be.commaserver.repository.CommaRepository;
-import commaproject.be.commaserver.repository.CommentRepository;
 import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.tool.DatabaseConfigurator;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +20,6 @@ public abstract class InitIntegrationTest {
 
     @Autowired
     protected CommaRepository commaRepository;
-
-    @Autowired
-    protected CommentRepository commentRepository;
 
     @Autowired
     protected UserRepository userRepository;

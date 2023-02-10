@@ -32,8 +32,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 @ExtendWith({RestDocumentationExtension.class})
 @WebMvcTest(CommaController.class)
-
-class CommaControllerTest extends InitContollerTest {
+class CommaControllerTest extends InitControllerTest {
 
     @Test
     @DisplayName("특정 회고 조회 성공")
