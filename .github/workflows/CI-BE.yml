@@ -30,14 +30,8 @@ jobs:
     steps:
       - uses: mirromutth/mysql-action@v1.1
         with:
-          host port: 3800
-          container port: 3307
-          character set server: 'utf8'
-          collation server: 'utf8_general_ci'
-          mysql version: '8.0'
-          mysql database: 'some_test'
-          mysql root password: ${{ secrets.RootPassword }}
-          mysql user: 'developer'
+          mysql database: 'commatest'
+          mysql user: 'donggi'
           mysql password: ${{ secrets.DatabasePassword }}
 
       - uses: actions/checkout@v3

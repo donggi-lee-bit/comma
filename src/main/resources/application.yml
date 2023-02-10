@@ -7,6 +7,5 @@ spring:
       local: "local-db, local-auth"
       test: "test-db, test-auth"
     include:
-      - auth
       - auth-test
       - db
