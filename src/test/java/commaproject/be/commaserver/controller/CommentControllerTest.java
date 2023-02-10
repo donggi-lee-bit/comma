@@ -36,26 +36,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith({RestDocumentationExtension.class})
 @WebMvcTest(CommentController.class)
-class CommentControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    private CommentService commentService;
-
-    @BeforeEach
-    public void setUp(WebApplicationContext webApplicationContext,
-        RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-            .apply(documentationConfiguration(restDocumentation))
-            .alwaysDo(document("{method-name}",
-                preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
-            .build();
-    }
+class CommentControllerTest extends InitControllerTest {
 
     @Test
     @DisplayName("댓글 생성 성공")

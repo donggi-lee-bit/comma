@@ -2,9 +2,10 @@ spring:
   profiles:
     active:
       - local
+      - test
     group:
       local: "local-db, local-auth"
-      test: "test-auth"
+      test: "test-db, test-auth"
     include:
-      - auth
+      - auth-test
       - db

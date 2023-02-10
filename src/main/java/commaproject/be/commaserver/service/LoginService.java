@@ -17,12 +17,13 @@ public class LoginService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
+    @Transactional
     public LoginInformation login(String code) {
         UserInformation userInformation = oauthService.oauth(code);
 
         User user = userRepository.findByEmail(userInformation.getEmail())
             .orElseGet(() -> userRepository.save(User.from(userInformation.getUsername(),
-                userInformation.getEmail(), userInformation.getImages())));
+                userInformation.getEmail(), userInformation.getUserImageUri())));
 
         String accessToken = jwtProvider.generateAccessToken(user.getId());
         String refreshToken = jwtProvider.generateRefreshToken(user.getId());

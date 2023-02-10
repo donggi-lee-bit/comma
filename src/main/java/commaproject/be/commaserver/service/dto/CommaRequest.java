@@ -11,13 +11,9 @@ public class CommaRequest {
 
     private String title;
     private String content;
-    private String username;
-    private Long userId;
 
-    public CommaRequest(String title, String content, String username, Long userId) {
+    public CommaRequest(String title, String content) {
         this.title = title;
         this.content = content;
-        this.username = username;
-        this.userId = userId;
     }
 }

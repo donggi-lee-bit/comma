@@ -1,6 +1,8 @@
 package commaproject.be.commaserver.controller;
 
-import commaproject.be.commaserver.common.BaseResponse;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.OAUTH_LOGIN_SUCCESS;
+
+import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.service.LoginService;
 import commaproject.be.commaserver.service.dto.LoginInformation;
 import commaproject.be.commaserver.service.dto.LoginRequest;
@@ -21,6 +23,6 @@ public class LoginController {
     public BaseResponse<LoginInformation> login(@RequestBody LoginRequest loginRequest) {
         LoginInformation loginInformation = loginService.login(loginRequest.getCode());
 
-        return new BaseResponse<>("code", "OK", loginInformation);
+        return new BaseResponse<>(OAUTH_LOGIN_SUCCESS, loginInformation);
     }
 }

@@ -11,9 +11,9 @@ public interface CommaService {
 
     List<CommaDetailResponse> readAll();
 
-    CommaResponse create(CommaRequest commaRequest);
+    CommaResponse create(Long loginUserId, CommaRequest commaRequest);
 
-    CommaDetailResponse update(Long commaId, CommaRequest commaRequest);
+    CommaDetailResponse update(Long loginUserId, Long commaId, CommaRequest commaRequest);
 
-    CommaResponse remove(Long commaId);
+    CommaResponse remove(Long loginUserId, Long commaId);
 }

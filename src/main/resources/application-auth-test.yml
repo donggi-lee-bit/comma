@@ -1,0 +1,24 @@
+spring:
+
+  config:
+    activate:
+      on-profile: test-auth
+
+kakao:
+  kakao-env: test
+  client-id: clientId
+  redirect-uri: redirectUri
+  response-type: code
+  access-token-uri: accessTokenUri
+  user-information-uri: UserInformationUri
+
+jwt:
+  jwt-env: test
+  secret-key: thanthanthanthankyou12dfvbiudndsiu1iuhdks
+  access-token-expired-time: 6000000
+  refresh-token-expired-time: 600000000
+  access-token-subject: access
+  refresh-token-subject: refresh
+  issuer: nada
+  token-type: bearer
+
