@@ -11,11 +11,13 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
 import commaproject.be.commaserver.service.dto.CommentResponse;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -158,6 +160,49 @@ class CommentControllerTest extends InitControllerTest {
                         fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                         fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("삭제된 댓글 아이디")
+                    )
+                ));
+    }
+
+    @Test
+    @DisplayName("전체 댓글 조회 성공")
+    void read_all_comment_success() throws Exception {
+
+        // given
+        Long commaId = 1L;
+
+        List<CommentDetailResponse> commentResponses = createCommentTestData();
+        BaseResponse<List<CommentDetailResponse>> baseResponse = new BaseResponse<>("200", "OK", commentResponses);
+
+        when(commentService.readAll(commaId)).thenReturn(commentResponses);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            RestDocumentationRequestBuilders.get("/api/commas/{commaId}/comments", commaId)
+                .content(objectMapper
+                    .writeValueAsString(baseResponse))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "read-all-comment",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("commaId").description("조회하고자 하는 회고 게시글 아이디")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
+                        fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
+                        fieldWithPath("data[].content").type(JsonFieldType.STRING).description("댓글 본문"),
+                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("댓글 생성 시간"),
+                        fieldWithPath("data[].lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
                     )
                 ));
     }

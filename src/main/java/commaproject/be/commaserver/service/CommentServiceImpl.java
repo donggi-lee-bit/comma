@@ -13,6 +13,8 @@ import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
 import commaproject.be.commaserver.service.dto.CommentResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,6 +86,23 @@ public class CommentServiceImpl implements CommentService{
         comment.delete();
 
         return comment;
+    }
+
+    @Override
+    public List<CommentDetailResponse> readAll(Long commaId) {
+        Comma comma = commaRepository.findById(commaId)
+            .orElseThrow(NotFoundCommaException::new);
+
+        List<Comment> comments = commentRepository.findAllByCommaId(comma.getId());
+
+        return comments.stream()
+            .map(comment -> new CommentDetailResponse(
+                comment.getId(),
+                comment.getUserId(),
+                comment.getContent(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private void validateUpdateComment(Long loginUserId, Long commenterId) {
