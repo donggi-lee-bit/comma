@@ -100,11 +100,14 @@ public class DatabaseConfigurator implements InitializingBean {
         }
     }
 
+    /**
+     * 댓글 아이디와 댓글 작성자 아이디는 같은 숫자
+     * ex) commentId = 2L, userId = 2L
+     */
     private void initCommentData() {
-        Long userId = 1L;
         Long commaId = 1L;
         for (int i = 1; i <= 3; i++) {
-            commentRepository.save(Comment.from("content1", userId, "username1", commaId));
+            commentRepository.save(Comment.from("content1", (long) i, "username1", commaId));
         }
     }
 }

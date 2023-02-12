@@ -53,10 +53,13 @@ public class CommentServiceImpl implements CommentService{
         User user = userRepository.findById(loginUserId)
             .orElseThrow(NotFoundUserException::new);
 
+        commaRepository.findById(commaId)
+            .orElseThrow(NotFoundCommaException::new);
+
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(NotFoundCommentException::new);
 
-        validateUpdateComment(loginUserId, comment.getUserId());
+        validateUpdateComment(user.getId(), comment.getUserId());
 
         Comment updateComment = comment.update(commentRequest.getContent());
 
