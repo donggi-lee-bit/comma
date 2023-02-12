@@ -31,7 +31,8 @@ public class Comment extends BaseEntity {
 //    private Comma comma;
 
 
-    private Comment(String content, Long userId, String username, Long commaId) {
+    public Comment(Long id, String content, Long userId, String username, Long commaId) {
+        this.id = id;
         this.content = content;
         this.userId = userId;
         this.username = username;
@@ -45,5 +46,20 @@ public class Comment extends BaseEntity {
 
     public static Comment from(String content, Long userId, String username, Long commaId) {
         return new Comment(content, userId, username, commaId);
+    }
+
+    public void delete() {
+        this.deleted = true;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    private Comment(String content, Long userId, String username, Long commaId) {
+        this.content = content;
+        this.userId = userId;
+        this.username = username;
+        this.commaId = commaId;
     }
 }

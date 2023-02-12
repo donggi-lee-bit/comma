@@ -11,6 +11,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
 import commaproject.be.commaserver.service.dto.CommentResponse;
@@ -129,9 +130,9 @@ class CommentControllerTest extends InitControllerTest {
         Long commaId = 1L;
         Long commentId = 1L;
         Long loginUserId = 1L;
-        CommentResponse commentResponse = new CommentResponse(commentId);
+        Comment comment = new Comment(1L, "content1", loginUserId, "username", commaId);
 
-        when(commentService.delete(loginUserId, commaId, commentId)).thenReturn(commentResponse);
+        when(commentService.delete(loginUserId, commaId, commentId)).thenReturn(comment);
 
         // when
         ResultActions result = mockMvc.perform(

@@ -1,7 +1,9 @@
 package commaproject.be.commaserver.service;
 
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
+import commaproject.be.commaserver.common.exception.comment.NotFoundCommentException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
+import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.domain.user.User;
@@ -66,12 +68,26 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public CommentResponse delete(Long loginUserId, Long commaId, Long commentId) {
-        return null;
+    @Transactional
+    public Comment delete(Long loginUserId, Long commaId, Long commentId) {
+        User user = userRepository.findById(loginUserId)
+            .orElseThrow(NotFoundUserException::new);
+
+        Comma comma = commaRepository.findById(commaId)
+            .orElseThrow(NotFoundCommaException::new);
+
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(NotFoundCommentException::new);
+
+        validateUpdateComment(user.getId(), comment.getUserId());
+
+        comment.delete();
+
+        return comment;
     }
 
-    private void validateUpdateComment(Long loginUserId, Long writerId) {
-        if (!writerId.equals(loginUserId)) {
+    private void validateUpdateComment(Long loginUserId, Long commenterId) {
+        if (!commenterId.equals(loginUserId)) {
             throw new UnAuthorizedUserException();
         }
     }

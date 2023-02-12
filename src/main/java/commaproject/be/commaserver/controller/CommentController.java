@@ -5,6 +5,8 @@ import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage
 import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.UPDATE_COMMENT_LOG_SUCCESS;
 
 import commaproject.be.commaserver.common.response.BaseResponse;
+import commaproject.be.commaserver.domain.comment.Comment;
+import commaproject.be.commaserver.domain.user.AuthenticatedUser;
 import commaproject.be.commaserver.service.CommentService;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
@@ -43,8 +45,11 @@ public class CommentController {
     }
 
     @DeleteMapping("/api/commas/{commaId}/comments/{commentId}")
-    public BaseResponse<CommentResponse> delete(@PathVariable Long commaId, @PathVariable Long commentId) {
-        CommentResponse commentResponse = commentService.delete(commaId, commentId);
-        return new BaseResponse<>(DELETE_COMMENT_LOG_SUCCESS, commentResponse);
+    public BaseResponse<CommentResponse> delete(
+        @AuthenticatedUser Long loginUserId,
+        @PathVariable Long commaId,
+        @PathVariable Long commentId) {
+        Comment comment = commentService.delete(loginUserId, commaId, commentId);
+        return new BaseResponse<>(DELETE_COMMENT_LOG_SUCCESS, new CommentResponse(comment.getId()));
     }
 }
