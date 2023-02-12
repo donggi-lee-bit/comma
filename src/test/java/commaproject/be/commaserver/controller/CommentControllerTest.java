@@ -83,7 +83,7 @@ class CommentControllerTest extends InitControllerTest {
         Long commentId = 1L;
         Long loginUserId = 1L;
         CommentRequest commentRequest = new CommentRequest("댓글 본문1");
-        CommentDetailResponse commentDetailResponse = new CommentDetailResponse(1L, 1L, "content1",
+        CommentDetailResponse commentDetailResponse = new CommentDetailResponse(1L, 1L, "usernam1", "content1",
             LocalDateTime.of(2023, 2, 9, 13, 26),
             LocalDateTime.of(2023, 2, 9, 13, 27)
         );
@@ -117,6 +117,7 @@ class CommentControllerTest extends InitControllerTest {
                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                         fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
                         fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("수정한 작성자 아이디"),
+                        fieldWithPath("data.username").type(JsonFieldType.STRING).description("수정한 작성자"),
                         fieldWithPath("data.content").type(JsonFieldType.STRING).description("수정된 댓글 내용"),
                         fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("댓글 생성 시간"),
                         fieldWithPath("data.lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
@@ -200,6 +201,7 @@ class CommentControllerTest extends InitControllerTest {
                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                         fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
                         fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
+                        fieldWithPath("data[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
                         fieldWithPath("data[].content").type(JsonFieldType.STRING).description("댓글 본문"),
                         fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("댓글 생성 시간"),
                         fieldWithPath("data[].lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
@@ -216,7 +218,7 @@ class CommentControllerTest extends InitControllerTest {
         Long commentId = 1L;
         Long userId = 1L;
 
-        CommentDetailResponse commentResponse = new CommentDetailResponse(1L, userId, "content1",
+        CommentDetailResponse commentResponse = new CommentDetailResponse(1L, userId, "username1", "content1",
             LocalDateTime.of(2023, 2, 9, 13, 26),
             LocalDateTime.of(2023, 2, 9, 13, 27)
         );
@@ -249,6 +251,7 @@ class CommentControllerTest extends InitControllerTest {
                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                         fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
                         fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
+                        fieldWithPath("data.username").type(JsonFieldType.STRING).description("댓글 작성자"),
                         fieldWithPath("data.content").type(JsonFieldType.STRING).description("댓글 본문"),
                         fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("댓글 생성 시간"),
                         fieldWithPath("data.lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")

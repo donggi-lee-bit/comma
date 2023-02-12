@@ -66,6 +66,7 @@ public class CommentServiceImpl implements CommentService{
         return new CommentDetailResponse(
             updateComment.getId(),
             updateComment.getUserId(),
+            updateComment.getUsername(),
             updateComment.getContent(),
             updateComment.getCreatedAt(),
             updateComment.getUpdatedAt()
@@ -102,6 +103,7 @@ public class CommentServiceImpl implements CommentService{
             .map(comment -> new CommentDetailResponse(
                 comment.getId(),
                 comment.getUserId(),
+                comment.getUsername(),
                 comment.getContent(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()))
@@ -120,6 +122,7 @@ public class CommentServiceImpl implements CommentService{
             comment.getId(),
             comment.getUserId(),
             comment.getContent(),
+            comment.getUsername(),
             comment.getCreatedAt(),
             comment.getUpdatedAt()
         );

@@ -63,7 +63,7 @@ public class InitControllerTest {
 
     protected List<CommaDetailResponse> createCommaTestData() {
         List<CommentDetailResponse> comments1 = new ArrayList<>();
-        comments1.add(new CommentDetailResponse(1L, 1L, "content1",
+        comments1.add(new CommentDetailResponse(1L, 1L, "username1", "content1",
             LocalDateTime.of(2023, 2, 9, 13, 26),
             LocalDateTime.of(2023, 2, 9, 13, 27)));
         Long commaId1 = 1L;
@@ -73,7 +73,7 @@ public class InitControllerTest {
 
 
         List<CommentDetailResponse> comments2 = new ArrayList<>();
-        comments2.add(new CommentDetailResponse(1L, 1L, "content1",
+        comments2.add(new CommentDetailResponse(1L, 1L, "username2", "content1",
             LocalDateTime.of(2023, 2, 9, 13, 26),
             LocalDateTime.of(2023, 2, 9, 13, 27)));
         Long commaId2 = 2L;
@@ -90,18 +90,17 @@ public class InitControllerTest {
     protected List<CommentDetailResponse> createCommentTestData() {
         List<CommentDetailResponse> comments = new ArrayList<>();
 
-        comments.add(new CommentDetailResponse(1L, 1L, "content1",
+        comments.add(new CommentDetailResponse(1L, 1L, "username1", "content1",
             LocalDateTime.of(2023, 2, 9, 13, 26),
             LocalDateTime.of(2023, 2, 9, 13, 27)));
 
-        comments.add(new CommentDetailResponse(2L, 1L, "content2",
+        comments.add(new CommentDetailResponse(2L, 1L, "username2", "content2",
             LocalDateTime.of(2023, 2, 9, 13, 26),
             LocalDateTime.of(2023, 2, 9, 13, 27)));
 
-        comments.add(new CommentDetailResponse(3L, 1L, "content3",
+        comments.add(new CommentDetailResponse(3L, 1L, "username3", "content3",
             LocalDateTime.of(2023, 2, 9, 13, 26),
             LocalDateTime.of(2023, 2, 9, 13, 27)));
-
 
         return comments;
     }
