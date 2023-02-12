@@ -2,7 +2,6 @@ package commaproject.be.commaserver.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -12,27 +11,19 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import commaproject.be.commaserver.service.CommentService;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
 import commaproject.be.commaserver.service.dto.CommentResponse;
-import org.junit.jupiter.api.BeforeEach;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 @ExtendWith({RestDocumentationExtension.class})
 @WebMvcTest(CommentController.class)
@@ -45,14 +36,17 @@ class CommentControllerTest extends InitControllerTest {
         // given
         Long commaId = 1L;
         Long commentId = 1L;
-        CommentRequest commentRequest = new CommentRequest(commaId, "댓글 본문1", "username1", 1L);
+        Long loginUserId = 1L;
+        CommentRequest commentRequest = new CommentRequest("댓글 본문1");
         CommentResponse commentResponse = new CommentResponse(commentId);
 
-        when(commentService.create(commaId, commentRequest)).thenReturn(commentResponse);
+        when(commentService.create(loginUserId, commaId, commentRequest)).thenReturn(commentResponse);
 
         // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.post("/api/commas/{commaId}/comments", commaId)
+                .header("Authorization",
+                    "Bearer " + jwtProvider.generateAccessToken(loginUserId))
                 .content(objectMapper
                     .writeValueAsString(commentRequest))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -84,19 +78,20 @@ class CommentControllerTest extends InitControllerTest {
         // given
         Long commaId = 1L;
         Long commentId = 1L;
-        CommentRequest commentRequest = new CommentRequest(commaId, "댓글 본문1", "username1", 1L);
-        CommentDetailResponse commentDetailResponse = new CommentDetailResponse(
-            commentId,
-            commentRequest.getUsername(),
-            commentRequest.getUserId(),
-            commentRequest.getContent()
+        Long loginUserId = 1L;
+        CommentRequest commentRequest = new CommentRequest("댓글 본문1");
+        CommentDetailResponse commentDetailResponse = new CommentDetailResponse(1L, 1L, "content1",
+            LocalDateTime.of(2023, 2, 9, 13, 26),
+            LocalDateTime.of(2023, 2, 9, 13, 27)
         );
 
-        when(commentService.update(commaId, commentId, commentRequest)).thenReturn(commentDetailResponse);
+        when(commentService.update(loginUserId, commaId, commentId, commentRequest)).thenReturn(commentDetailResponse);
 
         // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.put("/api/commas/{commaId}/comments/{commentId}", commaId, commentId)
+                .header("Authorization",
+                    "Bearer " + jwtProvider.generateAccessToken(loginUserId))
                 .content(objectMapper
                     .writeValueAsString(commentRequest))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -118,9 +113,10 @@ class CommentControllerTest extends InitControllerTest {
                         fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                         fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
-                        fieldWithPath("data.username").type(JsonFieldType.STRING).description("수정한 작성자 닉네임"),
                         fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("수정한 작성자 아이디"),
-                        fieldWithPath("data.content").type(JsonFieldType.STRING).description("수정된 댓글 내용")
+                        fieldWithPath("data.content").type(JsonFieldType.STRING).description("수정된 댓글 내용"),
+                        fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("댓글 생성 시간"),
+                        fieldWithPath("data.lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
                     )
                 ));
     }
@@ -132,13 +128,16 @@ class CommentControllerTest extends InitControllerTest {
         // given
         Long commaId = 1L;
         Long commentId = 1L;
+        Long loginUserId = 1L;
         CommentResponse commentResponse = new CommentResponse(commentId);
 
-        when(commentService.delete(commaId, commentId)).thenReturn(commentResponse);
+        when(commentService.delete(loginUserId, commaId, commentId)).thenReturn(commentResponse);
 
         // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.delete("/api/commas/{commaId}/comments/{commentId}", commaId, commentId)
+                .header("Authorization",
+                    "Bearer " + jwtProvider.generateAccessToken(loginUserId))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
