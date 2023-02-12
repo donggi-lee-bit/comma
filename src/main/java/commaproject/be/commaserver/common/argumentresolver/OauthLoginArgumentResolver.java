@@ -1,6 +1,6 @@
 package commaproject.be.commaserver.common.argumentresolver;
 
-import commaproject.be.commaserver.common.exception.InvalidUserException;
+import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.user.AuthenticatedUser;
 import commaproject.be.commaserver.service.JwtProvider;
 import java.util.NoSuchElementException;
@@ -44,7 +44,7 @@ public class OauthLoginArgumentResolver implements HandlerMethodArgumentResolver
         String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
 
         if (Objects.isNull(authorizationHeader) || authorizationHeader.isEmpty()) {
-            throw new InvalidUserException();
+            throw new UnAuthorizedUserException();
         }
 
         return authorizationHeader.replace(TOKEN_TYPE, "");

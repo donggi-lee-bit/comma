@@ -1,6 +1,5 @@
 package commaproject.be.commaserver.common.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

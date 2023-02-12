@@ -1,6 +1,5 @@
 package commaproject.be.commaserver.common.response;
 
-import commaproject.be.commaserver.common.response.CodeAndMessage;
 import lombok.Getter;
 
 @Getter
@@ -28,6 +27,7 @@ public enum ResponseCodeAndMessage implements CodeAndMessage {
     CREATE_COMMENT_LOG_SUCCESS("C-CE001", "댓글 작성을 성공했습니다."),
     UPDATE_COMMENT_LOG_SUCCESS("C-CE002", "댓글 수정을 성공했습니다."),
     DELETE_COMMENT_LOG_SUCCESS("C-CE003", "댓글 삭제를 성공했습니다."),
+    READ_ALL_COMMENT_LOG_SUCCESS("C-CE004", "해당 게시글의 모든 댓글 조회를 성공했습니다."),
 
     /**
      * Login

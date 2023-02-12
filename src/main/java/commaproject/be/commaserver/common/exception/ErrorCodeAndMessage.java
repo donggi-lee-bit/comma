@@ -11,6 +11,7 @@ public enum ErrorCodeAndMessage implements CodeAndMessage {
      */
     NOT_FOUND_USER_ERROR("E-NF001", "해당 유저를 찾을 수 없습니다."),
     NOT_FOUND_COMMA_ERROR("E-NF002", "해당 게시글을 찾을 수 없습니다."),
+    NOT_FOUND_COMMENT_ERROR("E-NF003", "해당 댓글을 찾을 수 없습니다."),
 
     /**
      * 400 Bad Request
