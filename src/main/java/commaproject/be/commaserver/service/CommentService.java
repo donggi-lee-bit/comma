@@ -15,4 +15,6 @@ public interface CommentService {
     Comment delete(Long loginUserId, Long commaId, Long commentId);
 
     List<CommentDetailResponse> readAll(Long commaId);
+
+    CommentDetailResponse readOne(Long commaId, Long commentId);
 }

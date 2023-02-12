@@ -108,6 +108,23 @@ public class CommentServiceImpl implements CommentService{
             .collect(Collectors.toUnmodifiableList());
     }
 
+    @Override
+    public CommentDetailResponse readOne(Long commaId, Long commentId) {
+        Comma comma = commaRepository.findById(commaId)
+            .orElseThrow(NotFoundCommaException::new);
+
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(NotFoundCommentException::new);
+
+        return new CommentDetailResponse(
+            comment.getId(),
+            comment.getUserId(),
+            comment.getContent(),
+            comment.getCreatedAt(),
+            comment.getUpdatedAt()
+        );
+    }
+
     private void validateUpdateComment(Long loginUserId, Long commenterId) {
         if (!commenterId.equals(loginUserId)) {
             throw new UnAuthorizedUserException();

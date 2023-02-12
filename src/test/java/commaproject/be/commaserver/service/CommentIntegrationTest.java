@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
+import commaproject.be.commaserver.common.exception.comment.NotFoundCommentException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
 import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.comment.Comment;
@@ -167,5 +168,47 @@ class CommentIntegrationTest extends InitIntegrationTest {
         // then
         assertThatThrownBy(() -> commentService.readAll(commaId))
             .isInstanceOf(NotFoundCommaException.class);
+    }
+
+    @Test
+    @DisplayName("유효한 회고 게시글의 유효한 댓글 id면 댓글을 조회하고 테스트가 성공한다")
+    void read_one_comment_success() {
+        // given
+        Long commaId = 1L;
+        Long commentId = 1L;
+
+        // when
+        CommentDetailResponse commentDetailResponse = commentService.readOne(commaId, commentId);
+
+        // then
+        assertThat(commentDetailResponse.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회고 게시글의 댓글을 조회하려고 하면 예외를 발생시킨다")
+    void invalid_comma_read_one_comment() {
+        // given
+        Long commaId = Long.MAX_VALUE;
+        Long commentId = 1L;
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> commentService.readOne(commaId, commentId))
+            .isInstanceOf(NotFoundCommaException.class);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회고 댓글을 조회하려고 하면 예외를 발생시킨다")
+    void invalid_comment_read_one() {
+        // given
+        Long commaId = 1L;
+        Long commentId = Long.MAX_VALUE;
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> commentService.readOne(commaId, commentId))
+            .isInstanceOf(NotFoundCommentException.class);
     }
 }

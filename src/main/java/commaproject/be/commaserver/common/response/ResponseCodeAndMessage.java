@@ -28,6 +28,7 @@ public enum ResponseCodeAndMessage implements CodeAndMessage {
     UPDATE_COMMENT_LOG_SUCCESS("C-CE002", "댓글 수정을 성공했습니다."),
     DELETE_COMMENT_LOG_SUCCESS("C-CE003", "댓글 삭제를 성공했습니다."),
     READ_ALL_COMMENT_LOG_SUCCESS("C-CE004", "해당 게시글의 모든 댓글 조회를 성공했습니다."),
+    READ_ONE_COMMENT_LOG_SUCCESS("C-CE005", "해당 게시글의 댓글 조회를 성공했습니다"),
 
     /**
      * Login

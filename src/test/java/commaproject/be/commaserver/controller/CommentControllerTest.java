@@ -206,4 +206,53 @@ class CommentControllerTest extends InitControllerTest {
                     )
                 ));
     }
+
+    @Test
+    @DisplayName("특정 댓글 조회 성공")
+    void read_one_comment_success() throws Exception {
+
+        // given
+        Long commaId = 1L;
+        Long commentId = 1L;
+        Long userId = 1L;
+
+        CommentDetailResponse commentResponse = new CommentDetailResponse(1L, userId, "content1",
+            LocalDateTime.of(2023, 2, 9, 13, 26),
+            LocalDateTime.of(2023, 2, 9, 13, 27)
+        );
+        BaseResponse<CommentDetailResponse> baseResponse = new BaseResponse<>("200", "OK", commentResponse);
+
+        when(commentService.readOne(commaId, commentId)).thenReturn(commentResponse);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            RestDocumentationRequestBuilders.get("/api/commas/{commaId}/comments/{commentId}", commaId, commentId)
+                .content(objectMapper
+                    .writeValueAsString(baseResponse))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "read-one-comment",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("commaId").description("회고 게시글 아이디"),
+                        parameterWithName("commentId").description("조회하고자 하는 댓글 아이디")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
+                        fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
+                        fieldWithPath("data.content").type(JsonFieldType.STRING).description("댓글 본문"),
+                        fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("댓글 생성 시간"),
+                        fieldWithPath("data.lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
+                    )
+                ));
+    }
 }

@@ -3,6 +3,7 @@ package commaproject.be.commaserver.controller;
 import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.CREATE_COMMENT_LOG_SUCCESS;
 import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.DELETE_COMMENT_LOG_SUCCESS;
 import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.READ_ALL_COMMENT_LOG_SUCCESS;
+import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.READ_ONE_COMMENT_LOG_SUCCESS;
 import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.UPDATE_COMMENT_LOG_SUCCESS;
 
 import commaproject.be.commaserver.common.response.BaseResponse;
@@ -32,6 +33,12 @@ public class CommentController {
     public BaseResponse<List<CommentDetailResponse>> readAll(@PathVariable Long commaId) {
         List<CommentDetailResponse> commentDetailResponses = commentService.readAll(commaId);
         return new BaseResponse<>(READ_ALL_COMMENT_LOG_SUCCESS, commentDetailResponses);
+    }
+
+    @GetMapping("/api/commas/{commaId}/comments/{commentId}")
+    public BaseResponse<CommentDetailResponse> readOne(@PathVariable Long commaId, @PathVariable Long commentId) {
+        CommentDetailResponse commentDetailResponse = commentService.readOne(commaId, commentId);
+        return new BaseResponse<>(READ_ONE_COMMENT_LOG_SUCCESS, commentDetailResponse);
     }
 
     @PostMapping("/api/commas/{commaId}/comments")
