@@ -24,6 +24,7 @@ public class Comment extends BaseEntity {
     private Long userId;
     private String username;
     private Long commaId;
+    private boolean deleted = Boolean.FALSE;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "comma_id")
@@ -35,6 +36,11 @@ public class Comment extends BaseEntity {
         this.userId = userId;
         this.username = username;
         this.commaId = commaId;
+    }
+
+    public Comment update(String content) {
+        this.content = content;
+        return this;
     }
 
     public static Comment from(String content, Long userId, String username, Long commaId) {

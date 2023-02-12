@@ -43,13 +43,36 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
+    @Transactional
     public CommentDetailResponse update(Long loginUserId, Long commaId, Long commentId,
         CommentRequest commentRequest) {
-        return null;
+        User user = userRepository.findById(loginUserId)
+            .orElseThrow(NotFoundUserException::new);
+
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(NotFoundCommentException::new);
+
+        validateUpdateComment(loginUserId, comment.getUserId());
+
+        Comment updateComment = comment.update(commentRequest.getContent());
+
+        return new CommentDetailResponse(
+            updateComment.getId(),
+            updateComment.getUserId(),
+            updateComment.getContent(),
+            updateComment.getCreatedAt(),
+            updateComment.getUpdatedAt()
+            );
     }
 
     @Override
     public CommentResponse delete(Long loginUserId, Long commaId, Long commentId) {
         return null;
+    }
+
+    private void validateUpdateComment(Long loginUserId, Long writerId) {
+        if (!writerId.equals(loginUserId)) {
+            throw new UnAuthorizedUserException();
+        }
     }
 }

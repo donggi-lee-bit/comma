@@ -33,8 +33,12 @@ public class CommentController {
     }
 
     @PutMapping("/api/commas/{commaId}/comments/{commentId}")
-    public BaseResponse<CommentDetailResponse> update(@PathVariable Long commaId, @PathVariable Long commentId, @RequestBody CommentRequest commentRequest) {
-        CommentDetailResponse commentDetailResponse = commentService.update(commaId, commentId, commentRequest);
+    public BaseResponse<CommentDetailResponse> update(
+        @AuthenticatedUser Long loginUserId,
+        @PathVariable Long commaId,
+        @PathVariable Long commentId,
+        @RequestBody CommentRequest commentRequest) {
+        CommentDetailResponse commentDetailResponse = commentService.update(loginUserId, commaId, commentId, commentRequest);
         return new BaseResponse<>(UPDATE_COMMENT_LOG_SUCCESS, commentDetailResponse);
     }
 

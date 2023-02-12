@@ -2,6 +2,7 @@ package commaproject.be.commaserver.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
 import commaproject.be.commaserver.service.dto.CommentResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -24,5 +25,23 @@ class CommentIntegrationTest extends InitIntegrationTest {
 
         // then
         assertThat(commentResponse.getId()).isEqualTo(4L);
+    }
+
+    @Test
+    @DisplayName("정상적인 요청이라면 댓글을 수정하고 테스트가 성공한다")
+    void update_comma_success() {
+        // given
+        Long loginUserId = 1L;
+        Long commaId = 1L;
+        Long commentId = 1L;
+        CommentRequest commentRequest = new CommentRequest("update content1");
+
+        // when
+        CommentDetailResponse updateCommentDetailResponse = commentService.update(loginUserId, commaId, commentId,
+            commentRequest);
+
+        // then
+        assertThat(updateCommentDetailResponse.getId()).isEqualTo(1L);
+        assertThat(updateCommentDetailResponse.getContent()).isEqualTo("update content1");
     }
 }
