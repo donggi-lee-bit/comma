@@ -16,6 +16,9 @@ public abstract class InitIntegrationTest {
     protected CommaServiceImpl commaService;
 
     @Autowired
+    protected CommentServiceImpl commentService;
+
+    @Autowired
     protected LoginService loginService;
 
     @Autowired

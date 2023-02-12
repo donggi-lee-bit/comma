@@ -24,8 +24,11 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/api/commas/{commaId}/comments")
-    public BaseResponse<CommentResponse> create(@PathVariable Long commaId, @RequestBody CommentRequest commentRequest) {
-        CommentResponse commentResponse = commentService.create(commaId, commentRequest);
+    public BaseResponse<CommentResponse> create(
+        @AuthenticatedUser Long loginUserId,
+        @PathVariable Long commaId,
+        @RequestBody CommentRequest commentRequest) {
+        CommentResponse commentResponse = commentService.create(loginUserId, commaId, commentRequest);
         return new BaseResponse<>(CREATE_COMMENT_LOG_SUCCESS, commentResponse);
     }
 
