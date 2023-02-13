@@ -78,8 +78,11 @@ class CommentIntegrationTest extends InitIntegrationTest {
             commentRequest);
 
         // then
-        assertThat(updateCommentDetailResponse.getId()).isEqualTo(1L);
-        assertThat(updateCommentDetailResponse.getContent()).isEqualTo("update content1");
+
+        assertSoftly(softly -> {
+            softly.assertThat(updateCommentDetailResponse.getId()).isEqualTo(1L);
+            softly.assertThat(updateCommentDetailResponse.getContent()).isEqualTo("update content1");
+        });
     }
 
     @Test
