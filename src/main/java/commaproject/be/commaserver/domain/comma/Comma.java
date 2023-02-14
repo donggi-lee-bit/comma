@@ -1,8 +1,8 @@
 package commaproject.be.commaserver.domain.comma;
 
 import commaproject.be.commaserver.domain.BaseEntity;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,7 +29,7 @@ public class Comma extends BaseEntity {
     private boolean deleted = Boolean.FALSE;
 
     @ElementCollection
-    private List<Long> likeUsers = new ArrayList<>();
+    private Set<Long> likeUsers = new HashSet<>();
 
 
     private Comma(String title, String content, String username, Long userId) {
@@ -57,5 +57,9 @@ public class Comma extends BaseEntity {
 
     public boolean isDuplicatePostLike(Long userId) {
         return this.likeUsers.contains(userId);
+    }
+
+    public void unlike(Long userId) {
+        this.likeUsers.remove(userId);
     }
 }

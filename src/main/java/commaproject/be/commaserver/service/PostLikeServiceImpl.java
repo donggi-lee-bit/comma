@@ -2,6 +2,7 @@ package commaproject.be.commaserver.service;
 
 import commaproject.be.commaserver.common.exception.postlike.AlreadyPostLikeException;
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
+import commaproject.be.commaserver.common.exception.postlike.AlreadyPostUnlikeException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.user.User;
@@ -34,5 +35,21 @@ public class PostLikeServiceImpl implements PostLikeService {
 
         user.add(comma.getId());
         comma.add(user.getId());
+    }
+
+    @Override
+    public void unlike(PostLikeRequest postLikeRequest, Long loginUserId, Long commaId) {
+        User user = userRepository.findById(loginUserId)
+            .orElseThrow(NotFoundUserException::new);
+
+        Comma comma = commaRepository.findById(commaId)
+            .orElseThrow(NotFoundCommaException::new);
+
+        if (!user.isDuplicatePostLike(comma.getId()) || !comma.isDuplicatePostLike(user.getId())) {
+            throw new AlreadyPostUnlikeException();
+        }
+
+        user.unlike(comma.getId());
+        comma.unlike(user.getId());
     }
 }

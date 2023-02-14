@@ -1,7 +1,7 @@
 package commaproject.be.commaserver.domain.user;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +24,7 @@ public class User {
     private String userImageUri;
 
     @ElementCollection
-    private List<Long> likes = new ArrayList<>();
+    private Set<Long> likes = new HashSet<>();
 
     private User(String username, String email, String userImageUri) {
         this.username = username;
@@ -48,5 +48,9 @@ public class User {
 
     public boolean isDuplicatePostLike(Long commaId) {
         return this.likes.contains(commaId);
+    }
+
+    public void unlike(Long commaId) {
+        this.likes.remove(commaId);
     }
 }
