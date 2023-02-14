@@ -30,15 +30,6 @@ public class Comment extends BaseEntity {
 //    @JoinColumn(name = "comma_id")
 //    private Comma comma;
 
-
-    public Comment(Long id, String content, Long userId, String username, Long commaId) {
-        this.id = id;
-        this.content = content;
-        this.userId = userId;
-        this.username = username;
-        this.commaId = commaId;
-    }
-
     public Comment update(String content) {
         this.content = content;
         return this;

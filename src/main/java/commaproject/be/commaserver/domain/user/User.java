@@ -26,13 +26,6 @@ public class User {
         this.userImageUri = userImageUri;
     }
 
-    public User(Long id, String username, String email, String userImageUri) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.userImageUri = userImageUri;
-    }
-
     public static User from(String username, String email, String userImageUri) {
         return new User(username, email, userImageUri);
     }

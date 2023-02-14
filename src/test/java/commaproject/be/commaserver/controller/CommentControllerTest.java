@@ -26,6 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
 
 @ExtendWith({RestDocumentationExtension.class})
@@ -133,7 +134,9 @@ class CommentControllerTest extends InitControllerTest {
         Long commaId = 1L;
         Long commentId = 1L;
         Long loginUserId = 1L;
-        Comment comment = new Comment(1L, "content1", loginUserId, "username", commaId);
+
+        Comment comment = Comment.from("content1", loginUserId, "username", commaId);
+        ReflectionTestUtils.setField(comment, "id", 1L);
 
         when(commentService.delete(loginUserId, commaId, commentId)).thenReturn(comment);
 

@@ -66,7 +66,7 @@ public class DatabaseConfigurator implements InitializingBean {
 
     private void initUserData() {
         this.testUser = userRepository.save(
-            new User(10000L, "donggi", "donggi@kakao.com", "donggi_image_uri.jpg")
+            User.from("donggi", "donggi@kakao.com", "donggi_image_uri.jpg")
         );
     }
 
