@@ -26,10 +26,6 @@ public class Comment extends BaseEntity {
     private Long commaId;
     private boolean deleted = Boolean.FALSE;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "comma_id")
-//    private Comma comma;
-
     public Comment update(String content) {
         this.content = content;
         return this;
