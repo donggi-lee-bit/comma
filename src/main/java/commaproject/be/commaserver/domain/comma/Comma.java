@@ -3,11 +3,13 @@ package commaproject.be.commaserver.domain.comma;
 import commaproject.be.commaserver.domain.BaseEntity;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -29,6 +31,7 @@ public class Comma extends BaseEntity {
     private boolean deleted = Boolean.FALSE;
 
     @ElementCollection
+    @CollectionTable(name = "like_users", joinColumns = @JoinColumn(name = "user_id"))
     private Set<Long> likeUsers = new HashSet<>();
 
 
