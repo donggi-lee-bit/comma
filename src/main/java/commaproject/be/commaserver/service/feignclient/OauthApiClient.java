@@ -1,4 +1,4 @@
-package commaproject.be.commaserver.service;
+package commaproject.be.commaserver.service.feignclient;
 
 import commaproject.be.commaserver.service.dto.UserInformation;
 import org.springframework.cloud.openfeign.FeignClient;

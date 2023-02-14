@@ -3,6 +3,8 @@ package commaproject.be.commaserver.service;
 import commaproject.be.commaserver.service.dto.properties.KakaoProperties;
 import commaproject.be.commaserver.service.dto.OauthTokenResponse;
 import commaproject.be.commaserver.service.dto.UserInformation;
+import commaproject.be.commaserver.service.feignclient.OauthApiClient;
+import commaproject.be.commaserver.service.feignclient.OauthTokenClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
