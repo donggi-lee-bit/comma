@@ -31,11 +31,14 @@ public enum ResponseCodeAndMessage implements CodeAndMessage {
     READ_ONE_COMMENT_LOG_SUCCESS("C-CE005", "해당 게시글의 댓글 조회를 성공했습니다"),
 
     /**
+     * Post Like
+     */
+    LIKE_POST_LOG_SUCCESS("C-PL001", "좋아요 누르기를 성공했습니다."),
+
+    /**
      * Login
      */
     OAUTH_LOGIN_SUCCESS("C-LO001", "OAUTH 로그인을 성공했습니다."),
-
-
     ;
 
     private final String code;

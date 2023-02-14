@@ -11,6 +11,7 @@ import commaproject.be.commaserver.service.CommaSearchService;
 import commaproject.be.commaserver.service.CommaService;
 import commaproject.be.commaserver.service.CommentService;
 import commaproject.be.commaserver.service.JwtProvider;
+import commaproject.be.commaserver.service.PostLikeService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.tool.TestWebConfig;
@@ -39,6 +40,9 @@ public class InitControllerTest {
 
     @MockBean
     protected CommentService commentService;
+
+    @MockBean
+    protected PostLikeService postLikeService;
 
     @Autowired
     protected MockMvc mockMvc;
