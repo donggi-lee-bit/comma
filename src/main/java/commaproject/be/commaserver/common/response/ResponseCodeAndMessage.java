@@ -34,6 +34,7 @@ public enum ResponseCodeAndMessage implements CodeAndMessage {
      * Post Like
      */
     LIKE_POST_LOG_SUCCESS("C-PL001", "좋아요 누르기를 성공했습니다."),
+    UNLIKE_POST_LOG_SUCCESS("C-PL002", "좋아요 취소를 성공했습니다."),
 
     /**
      * Login

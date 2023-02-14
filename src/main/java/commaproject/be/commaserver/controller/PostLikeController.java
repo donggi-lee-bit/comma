@@ -3,6 +3,7 @@ package commaproject.be.commaserver.controller;
 import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.LIKE_POST_LOG_SUCCESS;
 
 import commaproject.be.commaserver.common.response.BaseResponse;
+import commaproject.be.commaserver.common.response.ResponseCodeAndMessage;
 import commaproject.be.commaserver.domain.user.AuthenticatedUser;
 import commaproject.be.commaserver.service.PostLikeService;
 import commaproject.be.commaserver.service.dto.PostLikeRequest;
@@ -25,5 +26,14 @@ public class PostLikeController {
         @RequestBody PostLikeRequest postLikeRequest) {
 
         return new BaseResponse<>(LIKE_POST_LOG_SUCCESS, null);
+    }
+
+    @PostMapping("/api/likes/{commaId}/unlike")
+    public BaseResponse<Void> clickPostUnlike(
+        @PathVariable Long commaId,
+        @AuthenticatedUser Long loginUserId,
+        @RequestBody PostLikeRequest postLikeRequest) {
+
+        return new BaseResponse<>(ResponseCodeAndMessage.UNLIKE_POST_LOG_SUCCESS, null);
     }
 }

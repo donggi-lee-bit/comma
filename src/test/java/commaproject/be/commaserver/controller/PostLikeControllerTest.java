@@ -59,4 +59,39 @@ public class PostLikeControllerTest extends InitControllerTest{
                 )
             );
     }
+
+    @Test
+    @DisplayName("사용자가 특정 회고 게시글 좋아요 취소 성공")
+    void user_click_unlike_success() throws Exception {
+        Long userId = 1L;
+        Long commaId = 1L;
+        PostLikeRequest postLikeRequest = new PostLikeRequest(false);
+
+        ResultActions result = mockMvc.perform(
+            RestDocumentationRequestBuilders.post("/api/likes/{commaId}/unlike", commaId)
+                .header("Authorization",
+                    "Bearer " + jwtProvider.generateAccessToken(userId))
+                .content(objectMapper
+                    .writeValueAsString(postLikeRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result
+            .andExpect(status().isOk())
+            .andDo(
+                document(
+                    "post-unlike",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                        parameterWithName("commaId").description("수정된 회고 아이디")
+                    ),
+                    responseFields(
+                        fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data").type(JsonFieldType.NULL).description("응답 데이터")
+                    )
+                )
+            );
+    }
 }
