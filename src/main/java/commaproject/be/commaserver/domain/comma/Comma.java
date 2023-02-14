@@ -27,7 +27,6 @@ public class Comma extends BaseEntity {
     private String username;
     private Long userId;
     private boolean deleted = Boolean.FALSE;
-    private boolean likeStatus = Boolean.FALSE;
 
     @ElementCollection
     private List<Long> likeUsers = new ArrayList<>();
@@ -52,19 +51,11 @@ public class Comma extends BaseEntity {
         return this;
     }
 
-    public void like() {
-        this.likeStatus = true;
-    }
-
-    public void unlike() {
-        this.likeStatus = false;
-    }
-
-    public boolean isLikeStatus() {
-        return likeStatus;
-    }
-
     public void add(Long userId) {
         this.likeUsers.add(userId);
+    }
+
+    public boolean isDuplicatePostLike(Long userId) {
+        return this.likeUsers.contains(userId);
     }
 }

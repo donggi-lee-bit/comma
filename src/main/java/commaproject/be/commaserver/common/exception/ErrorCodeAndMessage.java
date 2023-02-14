@@ -17,6 +17,7 @@ public enum ErrorCodeAndMessage implements CodeAndMessage {
      * 400 Bad Request
      */
     UN_AUTHORIZED_USER_ERROR("E-BR001", "해당 행위가 허용되지 않은 유저입니다."),
+    ALREADY_POST_LIKE_ERROR("E-BR002", "이미 좋아요 한 게시글입니다."),
     ;
 
     private final String code;
