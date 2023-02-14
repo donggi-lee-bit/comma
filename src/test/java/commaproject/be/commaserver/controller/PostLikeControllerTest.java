@@ -49,7 +49,7 @@ public class PostLikeControllerTest extends InitControllerTest{
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     pathParameters(
-                        parameterWithName("commaId").description("수정된 회고 아이디")
+                        parameterWithName("commaId").description("회고 아이디")
                     ),
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
@@ -84,7 +84,7 @@ public class PostLikeControllerTest extends InitControllerTest{
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     pathParameters(
-                        parameterWithName("commaId").description("수정된 회고 아이디")
+                        parameterWithName("commaId").description("회고 아이디")
                     ),
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
