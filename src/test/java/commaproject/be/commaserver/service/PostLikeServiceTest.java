@@ -1,9 +1,11 @@
 package commaproject.be.commaserver.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.when;
 
+import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
 import commaproject.be.commaserver.common.exception.postlike.AlreadyPostLikeException;
 import commaproject.be.commaserver.common.exception.postlike.AlreadyPostUnlikeException;
 import commaproject.be.commaserver.domain.comma.Comma;
@@ -86,5 +88,35 @@ class PostLikeServiceTest extends InitServiceTest{
 
         assertThatThrownBy(() -> postLikeService.unlike(postLikeRequest, loginUserId, commaId))
             .isInstanceOf(AlreadyPostUnlikeException.class);
+    }
+
+    @Test
+    @DisplayName("특정 게시글 좋아요 개수를 조회하고 테스트가 성공한다")
+    void read_post_like_count() {
+        PostLikeRequest postLikeRequest = new PostLikeRequest(true);
+        Long commaId = 1L;
+        Long loginUserId = 1L;
+        User user = setUserData(loginUserId);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        Long loginUserId2 = 2L;
+        User user2 = setUserData(loginUserId2);
+        when(userRepository.findById(user2.getId())).thenReturn(Optional.of(user2));
+        Comma comma = setCommaData(commaId, loginUserId);
+        when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
+        postLikeService.like(postLikeRequest, loginUserId, commaId);
+        postLikeService.like(postLikeRequest, loginUserId2, commaId);
+
+        int postLikeCount = postLikeService.readPostLikeCount(commaId);
+
+        assertThat(postLikeCount).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("유효하지 않은 게시글 id로 게시글의 좋아요 개수를 조회하면 예외를 발생시킨다")
+    void read_post_invalid_like_count() {
+        Long commaId = Long.MAX_VALUE;
+
+        assertThatThrownBy(() -> postLikeService.readPostLikeCount(commaId))
+            .isInstanceOf(NotFoundCommaException.class);
     }
 }

@@ -21,6 +21,7 @@ public class PostLikeServiceImpl implements PostLikeService {
     private final CommaRepository commaRepository;
     private final UserRepository userRepository;
 
+    @Override
     @Transactional
     public void like(PostLikeRequest postLikeRequest, Long loginUserId, Long commaId) {
         User user = userRepository.findById(loginUserId)
@@ -38,6 +39,7 @@ public class PostLikeServiceImpl implements PostLikeService {
     }
 
     @Override
+    @Transactional
     public void unlike(PostLikeRequest postLikeRequest, Long loginUserId, Long commaId) {
         User user = userRepository.findById(loginUserId)
             .orElseThrow(NotFoundUserException::new);
@@ -51,5 +53,13 @@ public class PostLikeServiceImpl implements PostLikeService {
 
         user.unlike(comma.getId());
         comma.unlike(user.getId());
+    }
+
+    @Override
+    public int readPostLikeCount(Long commaId) {
+        Comma comma = commaRepository.findById(commaId)
+            .orElseThrow(NotFoundCommaException::new);
+
+        return comma.postLikeCount();
     }
 }

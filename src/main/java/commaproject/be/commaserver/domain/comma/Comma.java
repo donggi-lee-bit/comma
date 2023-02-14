@@ -62,4 +62,8 @@ public class Comma extends BaseEntity {
     public void unlike(Long userId) {
         this.likeUsers.remove(userId);
     }
+
+    public int postLikeCount() {
+        return this.likeUsers.size();
+    }
 }
