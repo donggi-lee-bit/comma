@@ -107,7 +107,7 @@ public class CommaServiceImpl implements CommaService {
 
     @Override
     @Transactional
-    public CommaResponse remove(Long loginUserId, Long commaId) {
+    public Comma remove(Long loginUserId, Long commaId) {
         userRepository.findById(loginUserId)
             .orElseThrow(NotFoundUserException::new);
 
@@ -116,9 +116,9 @@ public class CommaServiceImpl implements CommaService {
 
         validateAuthorizedUserModifyComma(loginUserId, comma.getUserId());
 
-        commaRepository.delete(comma);
+        comma.delete();
 
-        return new CommaResponse(comma.getId());
+        return comma;
     }
 
     private void validateAuthorizedUserModifyComma(Long loginUserId, Long writerId) {

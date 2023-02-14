@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
@@ -107,10 +105,9 @@ class CommaServiceTest extends InitServiceTest{
         Comma comma = setCommaData(commaId, userId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
 
-        CommaResponse removeComma = commaService.remove(userId, commaId);
+        Comma removeComma = commaService.remove(userId, commaId);
 
-        verify(commaRepository, times(1)).delete(comma);
-        assertThat(removeComma).isNotNull();
+        assertThat(removeComma.isDeleted()).isTrue();
     }
 
     @Test

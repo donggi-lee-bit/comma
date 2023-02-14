@@ -1,5 +1,6 @@
 package commaproject.be.commaserver.service;
 
+import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
@@ -15,5 +16,5 @@ public interface CommaService {
 
     CommaDetailResponse update(Long loginUserId, Long commaId, CommaRequest commaRequest);
 
-    CommaResponse remove(Long loginUserId, Long commaId);
+    Comma remove(Long loginUserId, Long commaId);
 }

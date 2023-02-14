@@ -51,6 +51,14 @@ public class Comma extends BaseEntity {
         return this;
     }
 
+    public void delete() {
+        this.deleted = true;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
     public void add(Long userId) {
         this.likeUsers.add(userId);
     }

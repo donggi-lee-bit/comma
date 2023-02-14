@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import commaproject.be.commaserver.common.response.BaseResponse;
+import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
@@ -27,6 +28,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
 
 @ExtendWith({RestDocumentationExtension.class})
@@ -239,9 +241,10 @@ class CommaControllerTest extends InitControllerTest {
         // given
         Long commaId = 1L;
         Long loginUserId = 1L;
-        CommaResponse commaResponse = new CommaResponse(commaId);
+        Comma comma = Comma.from("title1", "content1", "username", loginUserId);
+        ReflectionTestUtils.setField(comma, "id", commaId);
 
-        when(commaService.remove(loginUserId, commaId)).thenReturn(commaResponse);
+        when(commaService.remove(loginUserId, commaId)).thenReturn(comma);
 
         // when
         ResultActions result = mockMvc.perform(
