@@ -41,7 +41,7 @@ class CommaServiceTest {
     @Test
     @DisplayName("회고를 조회하면 DB에 저장된 모든 회고를 조회하고 테스트가 성공한다")
     void findAll() {
-        List<Comma> commas = setCommaData();
+        List<Comma> commas = setCommasData();
         when(commaRepository.findAll()).thenReturn(commas);
 
         List<CommaDetailResponse> commaDetailResponsesExpected = commaService.readAll();
@@ -68,11 +68,9 @@ class CommaServiceTest {
     void update_comma() {
         Long commaId = 1L;
         Long userId = 1L;
-        Comma comma = Comma.from("title1", "content1", "username1", userId);
-        ReflectionTestUtils.setField(comma, "id", commaId);
+        Comma comma = setCommaData(commaId, userId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
-        User user = User.from("username1", "email1", "kakao@kakao.com");
-        ReflectionTestUtils.setField(user, "id", 1L);
+        User user = setUserData(userId);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         CommaRequest commaRequest = new CommaRequest("title1", "update content1");
@@ -87,11 +85,9 @@ class CommaServiceTest {
         Long commaId = 1L;
         Long userId = 1L;
         Long unauthorizedUserId = Long.MAX_VALUE;
-        Comma comma = Comma.from("title1", "content1", "username1", userId);
-        ReflectionTestUtils.setField(comma, "id", commaId);
+        Comma comma = setCommaData(commaId, userId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
-        User user = User.from("username1", "email1", "kakao@kakao.com");
-        ReflectionTestUtils.setField(user, "id", unauthorizedUserId);
+        User user = setUserData(unauthorizedUserId);
         when(userRepository.findById(unauthorizedUserId)).thenReturn(Optional.of(user));
 
         CommaRequest commaRequest = new CommaRequest("title1", "update content1");
@@ -105,11 +101,9 @@ class CommaServiceTest {
     void save_comma() {
         Long commaId = 1L;
         Long userId = 1L;
-        User user = User.from("username1", "email1", "kakao@kakao.com");
-        ReflectionTestUtils.setField(user, "id", 1L);
+        User user = setUserData(userId);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        Comma comma = Comma.from("title1", "content1", "username1", userId);
-        ReflectionTestUtils.setField(comma, "id", commaId);
+        Comma comma = setCommaData(commaId, userId);
         when(commaRepository.save(any(Comma.class))).thenReturn(comma);
 
         CommaResponse saveCommaResponse = commaService.create(userId,
@@ -123,15 +117,14 @@ class CommaServiceTest {
     void remove_comma() {
         Long commaId = 1L;
         Long userId = 1L;
-        User user = User.from("username1", "email1", "kakao@kakao.com");
-        ReflectionTestUtils.setField(user, "id", 1L);
+        User user = setUserData(userId);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        Optional<Comma> comma = Optional.of(Comma.from("title1", "content1", "username1", userId));
-        when(commaRepository.findById(commaId)).thenReturn(comma);
+        Comma comma = setCommaData(commaId, userId);
+        when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
 
         CommaResponse removeComma = commaService.remove(userId, commaId);
 
-        verify(commaRepository, times(1)).delete(comma.get());
+        verify(commaRepository, times(1)).delete(comma);
         assertThat(removeComma).isNotNull();
     }
 
@@ -141,22 +134,33 @@ class CommaServiceTest {
         Long commaId = 1L;
         Long userId = 1L;
         Long unauthorizedUserId = Long.MAX_VALUE;
-        User user = User.from("username1", "email1", "kakao@kakao.com");
-        ReflectionTestUtils.setField(user, "id", unauthorizedUserId);
+        User user = setUserData(unauthorizedUserId);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        Optional<Comma> comma = Optional.of(Comma.from("title1", "content1", "username1", userId));
-        when(commaRepository.findById(commaId)).thenReturn(comma);
+        Comma comma = setCommaData(commaId, userId);
+        when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
 
         assertThatThrownBy(() -> commaService.remove(unauthorizedUserId, commaId))
             .isInstanceOf(UnAuthorizedUserException.class);
     }
 
-    private static List<Comma> setCommaData() {
+    private List<Comma> setCommasData() {
         List<Comma> commas = new ArrayList<>();
         Long userId = 1L;
         for (int i = 1; i <= 3; i++) {
             commas.add(Comma.from("title1", "content1", "username1", userId));
         }
         return commas;
+    }
+
+    private User setUserData(Long userId) {
+        User user = User.from("username1", "email1", "kakao@kakao.com");
+        ReflectionTestUtils.setField(user, "id", userId);
+        return user;
+    }
+
+    private Comma setCommaData(Long commaId, Long userId) {
+        Comma comma = Comma.from("title1", "content1", "username1", userId);
+        ReflectionTestUtils.setField(comma, "id", commaId);
+        return comma;
     }
 }
