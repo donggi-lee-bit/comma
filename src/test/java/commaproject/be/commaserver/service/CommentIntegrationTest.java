@@ -13,6 +13,7 @@ import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
 import commaproject.be.commaserver.service.dto.CommentResponse;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -108,7 +109,7 @@ class CommentIntegrationTest extends InitIntegrationTest {
     }
 
     @Test
-    @DisplayName("정상적인 요청이라면 댓글을 soft delete 하고 해당 댓글을 조회했을때 예외를 발생시킨다")
+    @DisplayName("정상적인 요청이라면 댓글을 soft delete 하고 해당 댓글을 조회하면 비어있는 객체를 반환한다")
     void soft_delete_comment_success_2() {
         Long loginUserId = 1L;
         Long commaId = 1L;
@@ -116,10 +117,7 @@ class CommentIntegrationTest extends InitIntegrationTest {
 
         Comment comment = commentService.delete(loginUserId, commaId, commentId);
 
-        System.out.println(commentRepository.findById(comment.getId()));
-
-//        assertThatThrownBy(() -> commentRepository.findById(comment.getId()))
-//            .isInstanceOf();
+        assertThat(commentRepository.findById(comment.getId())).isEqualTo(Optional.empty());
     }
 
     @Test
