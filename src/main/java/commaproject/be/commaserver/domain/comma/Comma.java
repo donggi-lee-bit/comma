@@ -1,6 +1,9 @@
 package commaproject.be.commaserver.domain.comma;
 
 import commaproject.be.commaserver.domain.BaseEntity;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +28,9 @@ public class Comma extends BaseEntity {
     private Long userId;
     private boolean deleted = Boolean.FALSE;
     private boolean likeStatus = Boolean.FALSE;
+
+    @ElementCollection
+    private List<Long> likeUsers = new ArrayList<>();
 
 
     private Comma(String title, String content, String username, Long userId) {
@@ -56,5 +62,9 @@ public class Comma extends BaseEntity {
 
     public boolean isLikeStatus() {
         return likeStatus;
+    }
+
+    public void add(Long userId) {
+        this.likeUsers.add(userId);
     }
 }

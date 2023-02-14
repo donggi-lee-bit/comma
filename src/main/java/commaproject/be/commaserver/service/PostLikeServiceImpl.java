@@ -7,7 +7,6 @@ import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
 import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.service.dto.PostLikeRequest;
-import commaproject.be.commaserver.service.dto.PostLikeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,15 +20,14 @@ public class PostLikeServiceImpl implements PostLikeService {
     private final UserRepository userRepository;
 
     @Transactional
-    public PostLikeResponse like(PostLikeRequest postLikeRequest, Long loginUserId, Long commaId) {
+    public void like(PostLikeRequest postLikeRequest, Long loginUserId, Long commaId) {
         User user = userRepository.findById(loginUserId)
             .orElseThrow(NotFoundUserException::new);
 
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        comma.like();
-
-        return new PostLikeResponse(comma.getId(), comma.isLikeStatus());
+        user.add(comma.getId());
+        comma.add(user.getId());
     }
 }

@@ -24,7 +24,6 @@ public class PostLikeController {
         @PathVariable Long commaId,
         @AuthenticatedUser Long loginUserId,
         @RequestBody PostLikeRequest postLikeRequest) {
-
         return new BaseResponse<>(LIKE_POST_LOG_SUCCESS, null);
     }
 
