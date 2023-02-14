@@ -54,12 +54,4 @@ public class PostLikeServiceImpl implements PostLikeService {
         user.unlike(comma.getId());
         comma.unlike(user.getId());
     }
-
-    @Override
-    public int readPostLikeCount(Long commaId) {
-        Comma comma = commaRepository.findById(commaId)
-            .orElseThrow(NotFoundCommaException::new);
-
-        return comma.postLikeCount();
-    }
 }

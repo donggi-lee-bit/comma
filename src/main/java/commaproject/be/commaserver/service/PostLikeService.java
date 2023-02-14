@@ -9,5 +9,4 @@ public interface PostLikeService {
 
     void unlike(PostLikeRequest postLikeRequest, Long loginUserId, Long commaId);
 
-    int readPostLikeCount(Long commaId);
 }
