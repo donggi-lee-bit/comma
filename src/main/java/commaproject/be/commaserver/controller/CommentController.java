@@ -46,8 +46,8 @@ public class CommentController {
         @AuthenticatedUser Long loginUserId,
         @PathVariable Long commaId,
         @RequestBody CommentRequest commentRequest) {
-        CommentResponse commentResponse = commentService.create(loginUserId, commaId, commentRequest);
-        return new BaseResponse<>(CREATE_COMMENT_LOG_SUCCESS, commentResponse);
+        Comment comment = commentService.create(loginUserId, commaId, commentRequest);
+        return new BaseResponse<>(CREATE_COMMENT_LOG_SUCCESS, new CommentResponse(comment.getId()));
     }
 
     @PutMapping("/api/commas/{commaId}/comments/{commentId}")

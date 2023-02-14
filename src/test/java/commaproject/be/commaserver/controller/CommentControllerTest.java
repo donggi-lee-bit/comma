@@ -15,7 +15,6 @@ import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
-import commaproject.be.commaserver.service.dto.CommentResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -39,12 +38,12 @@ class CommentControllerTest extends InitControllerTest {
 
         // given
         Long commaId = 1L;
-        Long commentId = 1L;
         Long loginUserId = 1L;
         CommentRequest commentRequest = new CommentRequest("댓글 본문1");
-        CommentResponse commentResponse = new CommentResponse(commentId);
+        Comment comment = Comment.from("댓글 본문1", loginUserId, "username1", commaId);
+        ReflectionTestUtils.setField(comment, "id", 1L);
 
-        when(commentService.create(loginUserId, commaId, commentRequest)).thenReturn(commentResponse);
+        when(commentService.create(loginUserId, commaId, commentRequest)).thenReturn(comment);
 
         // when
         ResultActions result = mockMvc.perform(

@@ -11,7 +11,6 @@ import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserExcepti
 import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
-import commaproject.be.commaserver.service.dto.CommentResponse;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -27,10 +26,10 @@ class CommentIntegrationTest extends InitIntegrationTest {
         Long commaId = 1L;
         CommentRequest commentRequest = new CommentRequest("content1");
 
-        CommentResponse commentResponse = commentService.create(loginUserId, commaId,
+        Comment comment = commentService.create(loginUserId, commaId,
             commentRequest);
 
-        assertThat(commentResponse.getId()).isEqualTo(4L);
+        assertThat(comment.getContent()).isEqualTo("content1");
     }
 
     @Test
