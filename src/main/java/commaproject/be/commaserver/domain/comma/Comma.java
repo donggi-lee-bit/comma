@@ -24,6 +24,7 @@ public class Comma extends BaseEntity {
     private String username;
     private Long userId;
     private boolean deleted = Boolean.FALSE;
+    private boolean likeStatus = Boolean.FALSE;
 
 
     private Comma(String title, String content, String username, Long userId) {
@@ -43,5 +44,17 @@ public class Comma extends BaseEntity {
         this.username = username;
         this.userId = userId;
         return this;
+    }
+
+    public void like() {
+        this.likeStatus = true;
+    }
+
+    public void unlike() {
+        this.likeStatus = false;
+    }
+
+    public boolean isLikeStatus() {
+        return likeStatus;
     }
 }
