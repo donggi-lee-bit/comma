@@ -12,7 +12,6 @@ import commaproject.be.commaserver.repository.CommentRepository;
 import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
-import commaproject.be.commaserver.service.dto.CommentResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional
-    public CommentResponse create(Long loginUserId, Long commaId, CommentRequest commentRequest) {
+    public Comment create(Long loginUserId, Long commaId, CommentRequest commentRequest) {
         User user = userRepository.findById(loginUserId)
             .orElseThrow(NotFoundUserException::new);
 
@@ -43,7 +42,7 @@ public class CommentServiceImpl implements CommentService{
                 user.getUsername(),
                 comma.getId()
             ));
-        return new CommentResponse(comment.getId());
+        return comment;
     }
 
     @Override
@@ -97,7 +96,8 @@ public class CommentServiceImpl implements CommentService{
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        List<Comment> comments = commentRepository.findAllByCommaId(comma.getId());
+        List<Comment> comments = commentRepository.findAllByCommaId(comma.getId())
+            .orElseThrow(NotFoundCommentException::new);
 
         return comments.stream()
             .map(comment -> new CommentDetailResponse(
@@ -115,7 +115,7 @@ public class CommentServiceImpl implements CommentService{
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        Comment comment = commentRepository.findById(commentId)
+        Comment comment = commentRepository.findByIdAndCommaId(commentId, commaId)
             .orElseThrow(NotFoundCommentException::new);
 
         return new CommentDetailResponse(
