@@ -2,6 +2,7 @@ package commaproject.be.commaserver.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -59,8 +60,10 @@ class CommaServiceTest {
 
         CommaDetailResponse commaDetailResponse = commaService.readOne(commaId);
 
-        assertThat(commaDetailResponse).isNotNull();
-        assertThat(commaDetailResponse.getTitle()).isEqualTo("title1");
+        assertSoftly(softly -> {
+            softly.assertThat(commaDetailResponse).isNotNull();
+            softly.assertThat(commaDetailResponse.getTitle()).isEqualTo("title1");
+        });
     }
 
     @Test
@@ -109,7 +112,7 @@ class CommaServiceTest {
         CommaResponse saveCommaResponse = commaService.create(userId,
             new CommaRequest("title1", "content1"));
 
-        assertThat(saveCommaResponse).isNotNull();
+        assertThat(saveCommaResponse.getId()).isEqualTo(1L);
     }
 
     @Test
