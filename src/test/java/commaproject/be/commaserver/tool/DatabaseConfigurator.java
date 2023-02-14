@@ -1,8 +1,10 @@
 package commaproject.be.commaserver.tool;
 
 import commaproject.be.commaserver.domain.comma.Comma;
+import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
+import commaproject.be.commaserver.repository.CommentRepository;
 import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.service.JwtProvider;
 import java.sql.Connection;
@@ -23,6 +25,9 @@ public class DatabaseConfigurator implements InitializingBean {
 
     @Autowired
     private CommaRepository commaRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -49,6 +54,7 @@ public class DatabaseConfigurator implements InitializingBean {
 
     public void initDataSource() {
         initCommaData();
+        initCommentData();
         initUserData();
         initUserAuthorizationData();
     }
@@ -60,7 +66,7 @@ public class DatabaseConfigurator implements InitializingBean {
 
     private void initUserData() {
         this.testUser = userRepository.save(
-            new User(10000L, "donggi", "donggi@kakao.com", "donggi_image_uri.jpg")
+            User.from("donggi", "donggi@kakao.com", "donggi_image_uri.jpg")
         );
     }
 
@@ -91,6 +97,17 @@ public class DatabaseConfigurator implements InitializingBean {
         Long userId = 1L;
         for (int i = 1; i <= 3; i++) {
             commaRepository.save(Comma.from("title1", "content1", "username1", userId));
+        }
+    }
+
+    /**
+     * 댓글 아이디와 댓글 작성자 아이디는 같은 숫자
+     * ex) commentId = 2L, userId = 2L
+     */
+    private void initCommentData() {
+        Long commaId = 1L;
+        for (int i = 1; i <= 3; i++) {
+            commentRepository.save(Comment.from("content1", (long) i, "username1", commaId));
         }
     }
 }

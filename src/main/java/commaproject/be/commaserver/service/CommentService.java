@@ -1,22 +1,19 @@
 package commaproject.be.commaserver.service;
 
+import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentRequest;
-import commaproject.be.commaserver.service.dto.CommentResponse;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-@Service
-public class CommentService {
+public interface CommentService {
 
-    public CommentResponse create(Long commaId, CommentRequest commentRequest) {
-        return null;
-    }
+    Comment create(Long loginUserId, Long commaId, CommentRequest commentRequest);
 
-    public CommentDetailResponse update(Long commaId, Long commentId, CommentRequest commentRequest) {
-        return null;
-    }
+    CommentDetailResponse update(Long loginUserId, Long commaId, Long commentId, CommentRequest commentRequest);
 
-    public CommentResponse delete(Long commaId, Long commentId) {
-        return null;
-    }
+    Comment delete(Long loginUserId, Long commaId, Long commentId);
+
+    List<CommentDetailResponse> readAll(Long commaId);
+
+    CommentDetailResponse readOne(Long commaId, Long commentId);
 }

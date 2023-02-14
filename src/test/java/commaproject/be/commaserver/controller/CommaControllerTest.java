@@ -18,7 +18,6 @@ import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,8 +38,7 @@ class CommaControllerTest extends InitControllerTest {
     void read_comma_success() throws Exception {
 
         // given
-        List<CommentDetailResponse> comments = new ArrayList<>();
-        comments.add(new CommentDetailResponse(1L, "username1", 1L, "content1"));
+        List<CommentDetailResponse> comments = createCommentTestData();
         Long commaId = 1L;
         CommaDetailResponse commaDetailResponse = new CommaDetailResponse(
             commaId, "title1", "content1", "username1", 1L, LocalDateTime.of(2022, 12, 27, 15, 13),1, comments);
@@ -81,9 +79,11 @@ class CommaControllerTest extends InitControllerTest {
                         fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
                         fieldWithPath("data.likeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                         fieldWithPath("data.comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
-                        fieldWithPath("data.comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
                         fieldWithPath("data.comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
-                        fieldWithPath("data.comments[].content").type(JsonFieldType.STRING).description("댓글 내용")
+                        fieldWithPath("data.comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
+                        fieldWithPath("data.comments[].content").type(JsonFieldType.STRING).description("댓글 내용"),
+                        fieldWithPath("data.comments[].createdAt").type(JsonFieldType.STRING).description("댓글 생성 시간"),
+                        fieldWithPath("data.comments[].lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
                     )
             ));
     }
@@ -93,7 +93,7 @@ class CommaControllerTest extends InitControllerTest {
     void read_all_comma_success() throws Exception {
 
         // given
-        List<CommaDetailResponse> commaDetailResponses = createTestData();
+        List<CommaDetailResponse> commaDetailResponses = createCommaTestData();
 
         BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
             commaDetailResponses);
@@ -128,9 +128,11 @@ class CommaControllerTest extends InitControllerTest {
                         fieldWithPath("data[].likeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                         fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
                         fieldWithPath("data[].comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
-                        fieldWithPath("data[].comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
                         fieldWithPath("data[].comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
-                        fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용")
+                        fieldWithPath("data[].comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
+                        fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용"),
+                        fieldWithPath("data[].comments[].createdAt").type(JsonFieldType.STRING).description("댓글 생성 시간"),
+                        fieldWithPath("data[].comments[].lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
                     )
                 ));
     }
@@ -183,8 +185,7 @@ class CommaControllerTest extends InitControllerTest {
         Long userId = 1L;
         CommaRequest commaRequest = new CommaRequest("title1", "content1");
 
-        List<CommentDetailResponse> comments = new ArrayList<>();
-        comments.add(new CommentDetailResponse(1L, "username1", 1L, "content1"));
+        List<CommentDetailResponse> comments = createCommentTestData();
 
         CommaDetailResponse commaDetailResponse = new CommaDetailResponse(commaId, "title1", "content1", "username1", userId, LocalDateTime.of(2022, 12, 28, 15, 30), 1, comments);
 
@@ -222,9 +223,11 @@ class CommaControllerTest extends InitControllerTest {
                         fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
                         fieldWithPath("data.likeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                         fieldWithPath("data.comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
-                        fieldWithPath("data.comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
                         fieldWithPath("data.comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
-                        fieldWithPath("data.comments[].content").type(JsonFieldType.STRING).description("댓글 내용")
+                        fieldWithPath("data.comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
+                        fieldWithPath("data.comments[].content").type(JsonFieldType.STRING).description("댓글 내용"),
+                        fieldWithPath("data.comments[].createdAt").type(JsonFieldType.STRING).description("댓글 생성 시간"),
+                        fieldWithPath("data.comments[].lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
                     )
                 ));
     }
@@ -265,27 +268,5 @@ class CommaControllerTest extends InitControllerTest {
                         fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("삭제된 회고 아이디")
                     )
                 ));
-    }
-
-    private List<CommaDetailResponse> createTestData() {
-        List<CommentDetailResponse> comments1 = new ArrayList<>();
-        comments1.add(new CommentDetailResponse(1L, "username1", 1L, "content1"));
-        Long commaId1 = 1L;
-
-        CommaDetailResponse commaDetailResponse1 = new CommaDetailResponse(
-            commaId1, "title1", "content1", "username1", 1L, LocalDateTime.of(2022, 12, 27, 15, 13),2, comments1);
-
-
-        List<CommentDetailResponse> comments2 = new ArrayList<>();
-        comments2.add(new CommentDetailResponse(2L, "username2", 2L, "content2"));
-        Long commaId2 = 2L;
-
-        CommaDetailResponse commaDetailResponse2 = new CommaDetailResponse(
-            commaId2, "title2", "content2", "username2", 2L, LocalDateTime.of(2022, 12, 28, 15, 13),3, comments2);
-
-        List<CommaDetailResponse> commaDetailResponses = new ArrayList<>();
-        commaDetailResponses.add(commaDetailResponse1);
-        commaDetailResponses.add(commaDetailResponse2);
-        return commaDetailResponses;
     }
 }

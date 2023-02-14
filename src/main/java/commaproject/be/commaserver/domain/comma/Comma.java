@@ -33,14 +33,6 @@ public class Comma extends BaseEntity {
         this.userId = userId;
     }
 
-    public Comma(Long id, String title, String content, String username, Long userId) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.username = username;
-        this.userId = userId;
-    }
-
     public static Comma from(String title, String content, String username, Long userId) {
         return new Comma(title, content, username, userId);
     }
