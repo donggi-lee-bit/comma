@@ -3,6 +3,7 @@ package commaproject.be.commaserver.service;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
+import commaproject.be.commaserver.repository.PostLikeRepository;
 import commaproject.be.commaserver.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,9 @@ public class InitServiceTest {
 
     @Mock
     protected UserRepository userRepository;
+
+    @Mock
+    protected PostLikeRepository postLikeRepository;
 
     protected List<Comma> setCommasData() {
         List<Comma> commas = new ArrayList<>();

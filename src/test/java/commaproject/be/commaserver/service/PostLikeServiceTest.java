@@ -1,5 +1,6 @@
 package commaproject.be.commaserver.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.when;
@@ -7,6 +8,7 @@ import static org.mockito.Mockito.when;
 import commaproject.be.commaserver.common.exception.postlike.AlreadyPostLikeException;
 import commaproject.be.commaserver.common.exception.postlike.AlreadyPostUnlikeException;
 import commaproject.be.commaserver.domain.comma.Comma;
+import commaproject.be.commaserver.domain.like.Like;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.service.dto.PostLikeRequest;
 import java.util.Optional;
@@ -25,13 +27,13 @@ class PostLikeServiceTest extends InitServiceTest{
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Comma comma = setCommaData(commaId, loginUserId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
+        Like like = Like.from(false, loginUserId, commaId);
+        when(postLikeRepository.findByIdAndCommaId(loginUserId, commaId)).thenReturn(
+            Optional.of(like));
 
         postLikeService.like(postLikeRequest, loginUserId, commaId);
 
-        assertSoftly(softly -> {
-            softly.assertThat(user.getLikes().size()).isEqualTo(1);
-            softly.assertThat(comma.getLikeUsers().size()).isEqualTo(1);
-        });
+        assertThat(like.isLikeStatus()).isTrue();
     }
 
     @Test
@@ -44,9 +46,9 @@ class PostLikeServiceTest extends InitServiceTest{
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Comma comma = setCommaData(commaId, loginUserId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
-
-        user.add(commaId);
-        comma.add(loginUserId);
+        Like like = Like.from(true, loginUserId, commaId);
+        when(postLikeRepository.findByIdAndCommaId(loginUserId, commaId)).thenReturn(
+            Optional.of(like));
 
         assertThatThrownBy(() -> postLikeService.like(postLikeRequest, loginUserId, commaId))
             .isInstanceOf(AlreadyPostLikeException.class);
