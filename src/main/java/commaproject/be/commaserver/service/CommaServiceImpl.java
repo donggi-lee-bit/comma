@@ -6,6 +6,7 @@ import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserExcepti
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
+import commaproject.be.commaserver.repository.PostLikeRepository;
 import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
@@ -25,11 +26,14 @@ public class CommaServiceImpl implements CommaService {
 
     private final CommaRepository commaRepository;
     private final UserRepository userRepository;
+    private final PostLikeRepository postLikeRepository;
 
     @Override
     public CommaDetailResponse readOne(Long commaId) {
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
+
+        Long postLikeCount = getPostLikeCount(commaId);
 
         List<CommentDetailResponse> comments = new ArrayList<>();
 
@@ -40,7 +44,7 @@ public class CommaServiceImpl implements CommaService {
             comma.getUsername(),
             comma.getUserId(),
             comma.getCreatedAt(),
-            comma.postLikeCount(),
+            postLikeCount,
             comments
             );
     }
@@ -49,7 +53,7 @@ public class CommaServiceImpl implements CommaService {
     public List<CommaDetailResponse> readAll() {
         List<Comma> commas = commaRepository.findAll();
 
-        // todo likeCount, comments 상수 입력 상태
+        // todo comments 상수 입력 상태
 
         return commas.stream()
             .map(comma -> new CommaDetailResponse(
@@ -59,7 +63,7 @@ public class CommaServiceImpl implements CommaService {
                 comma.getUsername(),
                 comma.getUserId(),
                 comma.getCreatedAt(),
-                comma.postLikeCount(),
+                getPostLikeCount(comma.getId()),
                 new ArrayList<>()))
             .collect(Collectors.toUnmodifiableList());
     }
@@ -101,7 +105,7 @@ public class CommaServiceImpl implements CommaService {
             updateComma.getUsername(),
             updateComma.getUserId(),
             updateComma.getCreatedAt(),
-            updateComma.postLikeCount(),
+            getPostLikeCount(updateComma.getId()),
             new ArrayList<>());
     }
 
@@ -119,6 +123,10 @@ public class CommaServiceImpl implements CommaService {
         comma.delete();
 
         return comma;
+    }
+
+    private Long getPostLikeCount(Long commaId) {
+        return postLikeRepository.countLikeByCommaIdAndLikeStatus(commaId, true);
     }
 
     private void validateAuthorizedUserModifyComma(Long loginUserId, Long writerId) {

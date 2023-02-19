@@ -1,15 +1,10 @@
 package commaproject.be.commaserver.domain.comma;
 
 import commaproject.be.commaserver.domain.BaseEntity;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -29,11 +24,6 @@ public class Comma extends BaseEntity {
     private String username;
     private Long userId;
     private boolean deleted = Boolean.FALSE;
-
-    @ElementCollection
-    @CollectionTable(name = "like_users", joinColumns = @JoinColumn(name = "user_id"))
-    private Set<Long> likeUsers = new HashSet<>();
-
 
     private Comma(String title, String content, String username, Long userId) {
         this.title = title;
@@ -60,21 +50,5 @@ public class Comma extends BaseEntity {
 
     public boolean isDeleted() {
         return deleted;
-    }
-
-    public void add(Long userId) {
-        this.likeUsers.add(userId);
-    }
-
-    public boolean isDuplicatePostLike(Long userId) {
-        return this.likeUsers.contains(userId);
-    }
-
-    public void unlike(Long userId) {
-        this.likeUsers.remove(userId);
-    }
-
-    public int postLikeCount() {
-        return this.likeUsers.size();
     }
 }

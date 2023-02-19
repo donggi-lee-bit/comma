@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class CommaServiceTest extends InitServiceTest{
 
@@ -35,14 +36,17 @@ class CommaServiceTest extends InitServiceTest{
     void valid_comma_id_find_comma() {
         Long commaId = 1L;
         Long userId = 1L;
-        Optional<Comma> comma = Optional.of(Comma.from("title1", "content1", "username1", userId));
-        when(commaRepository.findById(commaId)).thenReturn(comma);
+        Comma comma = Comma.from("title1", "content1", "username1", userId);
+        ReflectionTestUtils.setField(comma, "id", 1L);
+        when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
+        when(postLikeRepository.countLikeByCommaIdAndLikeStatus(commaId, true)).thenReturn(1L);
 
         CommaDetailResponse commaDetailResponse = commaService.readOne(commaId);
 
         assertSoftly(softly -> {
-            softly.assertThat(commaDetailResponse).isNotNull();
+            softly.assertThat(commaDetailResponse.getId()).isEqualTo(1L);
             softly.assertThat(commaDetailResponse.getTitle()).isEqualTo("title1");
+            softly.assertThat(commaDetailResponse.getPostLikeCount()).isEqualTo(1);
         });
     }
 
@@ -52,6 +56,7 @@ class CommaServiceTest extends InitServiceTest{
         Long commaId = 1L;
         Long userId = 1L;
         Comma comma = setCommaData(commaId, userId);
+        ReflectionTestUtils.setField(comma, "id", 1L);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         User user = setUserData(userId);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
@@ -59,7 +64,10 @@ class CommaServiceTest extends InitServiceTest{
         CommaRequest commaRequest = new CommaRequest("title1", "update content1");
         CommaDetailResponse updateCommaDetailResponse = commaService.update(userId, commaId, commaRequest);
 
-        assertThat(updateCommaDetailResponse.getContent()).isEqualTo("update content1");
+        assertSoftly(softly -> {
+            softly.assertThat(updateCommaDetailResponse.getId()).isEqualTo(1L);
+            softly.assertThat(updateCommaDetailResponse.getContent()).isEqualTo("update content1");
+        });
     }
 
     @Test

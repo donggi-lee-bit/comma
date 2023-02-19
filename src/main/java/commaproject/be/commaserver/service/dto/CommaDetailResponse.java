@@ -13,11 +13,11 @@ public class CommaDetailResponse {
     private String username;
     private Long userId;
     private LocalDateTime createdAt;
-    private int postLikeCount;
+    private Long postLikeCount;
     private List<CommentDetailResponse> comments;
 
     public CommaDetailResponse(Long id, String title, String content, String username, Long userId,
-        LocalDateTime createdAt, int postLikeCount, List<CommentDetailResponse> comments) {
+        LocalDateTime createdAt, Long postLikeCount, List<CommentDetailResponse> comments) {
         this.id = id;
         this.title = title;
         this.content = content;

@@ -42,7 +42,7 @@ public class OauthLoginIntegrationTest {
 
         assertThat(loginInformation.getUserId()).isEqualTo(1);
         assertThat(loginInformation.getUsername()).isEqualTo("donggi");
-        assertThat(loginInformation.getUserImageUri()).isEqualTo("http://yyy.kakaoo.com/img_110x110.jpg");
+        assertThat(loginInformation.getUserImageUri()).isEqualTo("donggi_image_uri.jpg");
         assertThat(loginInformation.getEmail()).isEqualTo("donggi@kakao.com");
     }
 }

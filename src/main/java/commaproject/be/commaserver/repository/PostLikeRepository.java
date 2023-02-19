@@ -7,4 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PostLikeRepository extends JpaRepository<Like, Long> {
 
     Optional<Like> findByIdAndCommaId(Long loginUserId, Long commaId);
+
+    Long countLikeByCommaIdAndLikeStatus(Long commaId, boolean likeStatus);
+
 }
