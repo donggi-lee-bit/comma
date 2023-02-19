@@ -6,11 +6,9 @@ import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.common.response.ResponseCodeAndMessage;
 import commaproject.be.commaserver.domain.user.AuthenticatedUser;
 import commaproject.be.commaserver.service.PostLikeService;
-import commaproject.be.commaserver.service.dto.PostLikeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,9 +28,8 @@ public class PostLikeController {
     @PostMapping("/api/likes/{commaId}/unlike")
     public BaseResponse<Void> clickPostUnlike(
         @PathVariable Long commaId,
-        @AuthenticatedUser Long loginUserId,
-        @RequestBody PostLikeRequest postLikeRequest) {
-
+        @AuthenticatedUser Long loginUserId) {
+        postLikeService.unlike(loginUserId, commaId);
         return new BaseResponse<>(ResponseCodeAndMessage.UNLIKE_POST_LOG_SUCCESS, null);
     }
 }

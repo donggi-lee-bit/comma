@@ -11,7 +11,6 @@ import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
 import commaproject.be.commaserver.repository.PostLikeRepository;
 import commaproject.be.commaserver.repository.UserRepository;
-import commaproject.be.commaserver.service.dto.PostLikeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +42,24 @@ public class PostLikeServiceImpl implements PostLikeService {
         like.clickPostLike(true);                      // 6. likeStatus 가 false 면 true 로 상태를 변경해준다
     }
 
+    @Override
+    @Transactional
+    public void unlike(Long loginUserId, Long commaId) {
+        User user = userRepository.findById(loginUserId)
+            .orElseThrow(NotFoundUserException::new);
+
+        Comma comma = commaRepository.findById(commaId)
+            .orElseThrow(NotFoundCommaException::new);
+
+        Like like = findLike(user.getId(), comma.getId());
+
+        if (!like.isLikeStatus()) {
+            throw new AlreadyPostUnlikeException();
+        }
+
+        like.clickPostLike(false);
+    }
+
     private Like findLike(Long loginUserId, Long commaId) {
         if (postLikeRepository.findByIdAndCommaId(loginUserId, commaId).isEmpty()) {
             return postLikeRepository.save(Like.of(loginUserId, commaId));
@@ -50,22 +67,5 @@ public class PostLikeServiceImpl implements PostLikeService {
 
         return postLikeRepository.findByIdAndCommaId(loginUserId, commaId)
             .orElseThrow(NotFoundLikeException::new);
-    }
-
-    @Override
-    @Transactional
-    public void unlike(PostLikeRequest postLikeRequest, Long loginUserId, Long commaId) {
-        User user = userRepository.findById(loginUserId)
-            .orElseThrow(NotFoundUserException::new);
-
-        Comma comma = commaRepository.findById(commaId)
-            .orElseThrow(NotFoundCommaException::new);
-
-        if (!user.isDuplicatePostLike(comma.getId()) || !comma.isDuplicatePostLike(user.getId())) {
-            throw new AlreadyPostUnlikeException();
-        }
-
-        user.unlike(comma.getId());
-        comma.unlike(user.getId());
     }
 }
