@@ -30,14 +30,11 @@ public class PostLikeControllerTest extends InitControllerTest{
     void user_click_like_success() throws Exception {
         Long userId = 1L;
         Long commaId = 1L;
-        PostLikeRequest postLikeRequest = new PostLikeRequest(true);
 
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.post("/api/likes/{commaId}/like", commaId)
                 .header("Authorization",
                     "Bearer " + jwtProvider.generateAccessToken(userId))
-                .content(objectMapper
-                    .writeValueAsString(postLikeRequest))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 

@@ -22,9 +22,8 @@ public class PostLikeController {
     @PostMapping("/api/likes/{commaId}/like")
     public BaseResponse<Void> clickPostLike(
         @PathVariable Long commaId,
-        @AuthenticatedUser Long loginUserId,
-        @RequestBody PostLikeRequest postLikeRequest) {
-        postLikeService.like(postLikeRequest, loginUserId, commaId);
+        @AuthenticatedUser Long loginUserId) {
+        postLikeService.like(loginUserId, commaId);
         return new BaseResponse<>(LIKE_POST_LOG_SUCCESS, null);
     }
 

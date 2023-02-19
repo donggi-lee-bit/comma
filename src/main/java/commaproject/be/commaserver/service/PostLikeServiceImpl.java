@@ -27,28 +27,29 @@ public class PostLikeServiceImpl implements PostLikeService {
 
     @Override
     @Transactional
-    public void like(PostLikeRequest postLikeRequest, Long loginUserId, Long commaId) {
+    public void like(Long loginUserId, Long commaId) {
         User user = userRepository.findById(loginUserId)
             .orElseThrow(NotFoundUserException::new);
 
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        if (postLikeRepository.findByIdAndCommaId(loginUserId, commaId).isEmpty()) { // 1. Like 를 findById 해왔는데 값이 비어있으면
-            postLikeRepository.save(Like.from(postLikeRequest.isPostLikeStatus(),    // 2. Like entity 새로 저장
-                loginUserId,
-                commaId)
-            );
-        }
-
-        Like like = postLikeRepository.findByIdAndCommaId(loginUserId, commaId)      // 3. Like entity 가 존재한다면
-            .orElseThrow(NotFoundLikeException::new);
+        Like like = findLike(user.getId(), comma.getId());
 
         if (like.isLikeStatus()) {                                                   // 4. 해당 Like entity 에서 likeStatus 확인
             throw new AlreadyPostLikeException();                                    // 5. likeStatus 가 true 면 이미 해당 유저는 해당 게시글을 좋아요 했다는 예외 발생
         }
 
-        like.clickPostLike(postLikeRequest.isPostLikeStatus());                      // 6. likeStatus 가 false 면 true 로 상태를 변경해준다
+        like.clickPostLike(true);                      // 6. likeStatus 가 false 면 true 로 상태를 변경해준다
+    }
+
+    private Like findLike(Long loginUserId, Long commaId) {
+        if (postLikeRepository.findByIdAndCommaId(loginUserId, commaId).isEmpty()) {
+            return postLikeRepository.save(Like.of(loginUserId, commaId));
+        }
+
+        return postLikeRepository.findByIdAndCommaId(loginUserId, commaId)
+            .orElseThrow(NotFoundLikeException::new);
     }
 
     @Override

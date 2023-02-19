@@ -20,17 +20,17 @@ public class Like extends BaseEntity {
     private Long userId;
     private Long commaId;
 
-    public static Like from(boolean postLikeStatus, Long loginUserId, Long commaId) {
-        return new Like(postLikeStatus, loginUserId, commaId);
-    }
-
-    public void clickPostLike(boolean likeStatus) {
-        this.likeStatus = likeStatus;
-    }
-
     private Like(boolean likeStatus, Long userId, Long commaId) {
         this.likeStatus = likeStatus;
         this.userId = userId;
         this.commaId = commaId;
+    }
+
+    public static Like of(Long loginUserId, Long commaId) {
+        return new Like(Boolean.FALSE, loginUserId, commaId);
+    }
+
+    public void clickPostLike(boolean likeStatus) {
+        this.likeStatus = likeStatus;
     }
 }
