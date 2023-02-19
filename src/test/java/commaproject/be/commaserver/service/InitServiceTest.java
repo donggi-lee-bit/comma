@@ -51,5 +51,4 @@ public class InitServiceTest {
         ReflectionTestUtils.setField(comma, "id", commaId);
         return comma;
     }
-
 }
