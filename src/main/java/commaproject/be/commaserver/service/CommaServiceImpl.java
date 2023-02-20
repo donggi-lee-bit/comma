@@ -2,7 +2,6 @@ package commaproject.be.commaserver.service;
 
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
-import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
@@ -90,7 +89,7 @@ public class CommaServiceImpl implements CommaService {
         User user = userRepository.findById(loginUserId)
             .orElseThrow(NotFoundUserException::new);
 
-        validateAuthorizedUserModifyComma(loginUserId, comma.getUserId());
+        comma.validateAuthorizedUserModifyComma(loginUserId, comma.getUserId());
 
         Comma updateComma = comma.update(
             commaRequest.getTitle(),
@@ -118,7 +117,7 @@ public class CommaServiceImpl implements CommaService {
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        validateAuthorizedUserModifyComma(loginUserId, comma.getUserId());
+        comma.validateAuthorizedUserModifyComma(loginUserId, comma.getUserId());
 
         comma.delete();
 
@@ -127,11 +126,5 @@ public class CommaServiceImpl implements CommaService {
 
     private Long getPostLikeCount(Long commaId) {
         return postLikeRepository.countLikeByCommaIdAndLikeStatus(commaId, true);
-    }
-
-    private void validateAuthorizedUserModifyComma(Long loginUserId, Long writerId) {
-        if (!writerId.equals(loginUserId)) {
-            throw new UnAuthorizedUserException();
-        }
     }
 }

@@ -1,5 +1,6 @@
 package commaproject.be.commaserver.domain.comma;
 
+import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.BaseEntity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -50,5 +51,11 @@ public class Comma extends BaseEntity {
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public void validateAuthorizedUserModifyComma(Long loginUserId, Long writerId) {
+        if (!writerId.equals(loginUserId)) {
+            throw new UnAuthorizedUserException();
+        }
     }
 }
