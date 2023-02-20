@@ -53,9 +53,9 @@ public class DatabaseConfigurator implements InitializingBean {
     }
 
     public void initDataSource() {
+        initUserData();
         initCommaData();
         initCommentData();
-        initUserData();
         initUserAuthorizationData();
     }
 
@@ -94,9 +94,8 @@ public class DatabaseConfigurator implements InitializingBean {
     }
 
     private void initCommaData() {
-        Long userId = 1L;
         for (int i = 1; i <= 3; i++) {
-            commaRepository.save(Comma.from("title1", "content1", "username1", userId));
+            commaRepository.save(Comma.from("title1", "content1", testUser));
         }
     }
 

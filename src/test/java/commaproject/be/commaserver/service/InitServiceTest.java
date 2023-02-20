@@ -41,7 +41,7 @@ public class InitServiceTest {
         Long userId = 1L;
         Long commaId = 1L;
         for (int i = 1; i <= 3; i++) {
-            Comma comma = Comma.from("title1", "content1", "username1", userId);
+            Comma comma = Comma.from("title1", "content1", setUserData(userId));
             commas.add(comma);
             ReflectionTestUtils.setField(comma, "id", commaId);
         }
@@ -55,7 +55,7 @@ public class InitServiceTest {
     }
 
     protected Comma setCommaData(Long commaId, Long userId) {
-        Comma comma = Comma.from("title1", "content1", "username1", userId);
+        Comma comma = Comma.from("title1", "content1", setUserData(userId));
         ReflectionTestUtils.setField(comma, "id", commaId);
         return comma;
     }

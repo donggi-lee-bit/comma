@@ -2,10 +2,14 @@ package commaproject.be.commaserver.domain.comma;
 
 import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.BaseEntity;
+import commaproject.be.commaserver.domain.user.User;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -22,26 +26,31 @@ public class Comma extends BaseEntity {
     private Long id;
     private String title;
     private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     private String username;
-    private Long userId;
+
     private boolean deleted = Boolean.FALSE;
 
-    private Comma(String title, String content, String username, Long userId) {
+    private Comma(String title, String content, User user) {
         this.title = title;
         this.content = content;
-        this.username = username;
-        this.userId = userId;
+        this.user = user;
+        this.username = user.getUsername();
     }
 
-    public static Comma from(String title, String content, String username, Long userId) {
-        return new Comma(title, content, username, userId);
+    public static Comma from(String title, String content, User user) {
+        return new Comma(title, content, user);
     }
 
-    public Comma update(String title, String content, String username, Long userId) {
+    public Comma update(String title, String content, User user) {
         this.title = title;
         this.content = content;
-        this.username = username;
-        this.userId = userId;
+        this.user = user;
+        this.username = user.getUsername();
         return this;
     }
 

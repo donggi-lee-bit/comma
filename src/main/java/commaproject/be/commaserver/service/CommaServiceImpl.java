@@ -40,7 +40,7 @@ public class CommaServiceImpl implements CommaService {
             comma.getTitle(),
             comma.getContent(),
             comma.getUsername(),
-            comma.getUserId(),
+            comma.getUser().getId(),
             comma.getCreatedAt(),
             getPostLikeCount(commaId),
             getCommentDetailResponses(comma.getId())
@@ -57,7 +57,7 @@ public class CommaServiceImpl implements CommaService {
                 comma.getTitle(),
                 comma.getContent(),
                 comma.getUsername(),
-                comma.getUserId(),
+                comma.getUser().getId(),
                 comma.getCreatedAt(),
                 getPostLikeCount(comma.getId()),
                 getCommentDetailResponses(comma.getId())))
@@ -72,7 +72,7 @@ public class CommaServiceImpl implements CommaService {
 
         Comma saveComma = commaRepository.save(
             Comma.from(commaRequest.getTitle(), commaRequest.getContent(),
-                user.getUsername(), user.getId()));
+                user));
 
         return new CommaResponse(saveComma.getId());
     }
@@ -86,20 +86,20 @@ public class CommaServiceImpl implements CommaService {
         User user = userRepository.findById(loginUserId)
             .orElseThrow(NotFoundUserException::new);
 
-        comma.validateAuthorizedUserModifyComma(loginUserId, comma.getUserId());
+        comma.validateAuthorizedUserModifyComma(loginUserId, comma.getUser().getId());
 
         Comma updateComma = comma.update(
             commaRequest.getTitle(),
             commaRequest.getContent(),
-            user.getUsername(),
-            user.getId());
+            user
+        );
 
         return new CommaDetailResponse(
             updateComma.getId(),
             updateComma.getTitle(),
             updateComma.getContent(),
             updateComma.getUsername(),
-            updateComma.getUserId(),
+            updateComma.getUser().getId(),
             updateComma.getCreatedAt(),
             getPostLikeCount(updateComma.getId()),
             getCommentDetailResponses(comma.getId()));
@@ -114,7 +114,7 @@ public class CommaServiceImpl implements CommaService {
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        comma.validateAuthorizedUserModifyComma(loginUserId, comma.getUserId());
+        comma.validateAuthorizedUserModifyComma(loginUserId, comma.getUser().getId());
 
         comma.delete();
 
