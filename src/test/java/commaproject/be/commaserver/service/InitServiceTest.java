@@ -1,8 +1,10 @@
 package commaproject.be.commaserver.service;
 
 import commaproject.be.commaserver.domain.comma.Comma;
+import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
+import commaproject.be.commaserver.repository.CommentRepository;
 import commaproject.be.commaserver.repository.PostLikeRepository;
 import commaproject.be.commaserver.repository.UserRepository;
 import java.util.ArrayList;
@@ -31,11 +33,17 @@ public class InitServiceTest {
     @Mock
     protected PostLikeRepository postLikeRepository;
 
+    @Mock
+    protected CommentRepository commentRepository;
+
     protected List<Comma> setCommasData() {
         List<Comma> commas = new ArrayList<>();
         Long userId = 1L;
+        Long commaId = 1L;
         for (int i = 1; i <= 3; i++) {
-            commas.add(Comma.from("title1", "content1", "username1", userId));
+            Comma comma = Comma.from("title1", "content1", "username1", userId);
+            commas.add(comma);
+            ReflectionTestUtils.setField(comma, "id", commaId);
         }
         return commas;
     }
@@ -50,5 +58,16 @@ public class InitServiceTest {
         Comma comma = Comma.from("title1", "content1", "username1", userId);
         ReflectionTestUtils.setField(comma, "id", commaId);
         return comma;
+    }
+
+    protected List<Comment> setCommentsData(Long commaId, Long userId) {
+        Long commentId = 1L;
+        List<Comment> comments = new ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            Comment comment = Comment.from("content1", userId, "username1", commaId);
+            comments.add(comment);
+            ReflectionTestUtils.setField(comment, "id", commentId);
+        }
+        return comments;
     }
 }
