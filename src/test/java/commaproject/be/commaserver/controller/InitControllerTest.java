@@ -11,6 +11,7 @@ import commaproject.be.commaserver.service.CommaSearchService;
 import commaproject.be.commaserver.service.CommaService;
 import commaproject.be.commaserver.service.CommentService;
 import commaproject.be.commaserver.service.JwtProvider;
+import commaproject.be.commaserver.service.PostLikeService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import commaproject.be.commaserver.tool.TestWebConfig;
@@ -39,6 +40,9 @@ public class InitControllerTest {
 
     @MockBean
     protected CommentService commentService;
+
+    @MockBean
+    protected PostLikeService postLikeService;
 
     @Autowired
     protected MockMvc mockMvc;
@@ -69,7 +73,7 @@ public class InitControllerTest {
         Long commaId1 = 1L;
 
         CommaDetailResponse commaDetailResponse1 = new CommaDetailResponse(
-            commaId1, "title1", "content1", "username1", 1L, LocalDateTime.of(2022, 12, 27, 15, 13),2, comments1);
+            commaId1, "title1", "content1", "username1", 1L, LocalDateTime.of(2022, 12, 27, 15, 13),2L, comments1);
 
 
         List<CommentDetailResponse> comments2 = new ArrayList<>();
@@ -79,7 +83,7 @@ public class InitControllerTest {
         Long commaId2 = 2L;
 
         CommaDetailResponse commaDetailResponse2 = new CommaDetailResponse(
-            commaId2, "title2", "content2", "username2", 2L, LocalDateTime.of(2022, 12, 28, 15, 13),3, comments2);
+            commaId2, "title2", "content2", "username2", 2L, LocalDateTime.of(2022, 12, 28, 15, 13),3L, comments2);
 
         List<CommaDetailResponse> commaDetailResponses = new ArrayList<>();
         commaDetailResponses.add(commaDetailResponse1);

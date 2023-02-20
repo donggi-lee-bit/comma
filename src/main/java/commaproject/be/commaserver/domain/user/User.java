@@ -1,5 +1,8 @@
 package commaproject.be.commaserver.domain.user;
 
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

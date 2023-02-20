@@ -2,10 +2,10 @@ package commaproject.be.commaserver.service;
 
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
-import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
+import commaproject.be.commaserver.repository.PostLikeRepository;
 import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
@@ -25,24 +25,25 @@ public class CommaServiceImpl implements CommaService {
 
     private final CommaRepository commaRepository;
     private final UserRepository userRepository;
+    private final PostLikeRepository postLikeRepository;
 
     @Override
     public CommaDetailResponse readOne(Long commaId) {
-        // user, like, comment 도메인 개발 예정
-        Comma findComma = commaRepository.findById(commaId)
+        Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        int likeCount = 1;
+        Long postLikeCount = getPostLikeCount(commaId);
+
         List<CommentDetailResponse> comments = new ArrayList<>();
 
         return new CommaDetailResponse(
-            findComma.getId(),
-            findComma.getTitle(),
-            findComma.getContent(),
-            findComma.getUsername(),
-            findComma.getUserId(),
-            findComma.getCreatedAt(),
-            likeCount,
+            comma.getId(),
+            comma.getTitle(),
+            comma.getContent(),
+            comma.getUsername(),
+            comma.getUserId(),
+            comma.getCreatedAt(),
+            postLikeCount,
             comments
             );
     }
@@ -51,13 +52,17 @@ public class CommaServiceImpl implements CommaService {
     public List<CommaDetailResponse> readAll() {
         List<Comma> commas = commaRepository.findAll();
 
-        // todo likeCount, comments 상수 입력 상태
+        // todo comments 상수 입력 상태
 
         return commas.stream()
             .map(comma -> new CommaDetailResponse(
-                comma.getId(), comma.getTitle(), comma.getContent(),
-                comma.getUsername(), comma.getUserId(), comma.getCreatedAt(),
-                0,
+                comma.getId(),
+                comma.getTitle(),
+                comma.getContent(),
+                comma.getUsername(),
+                comma.getUserId(),
+                comma.getCreatedAt(),
+                getPostLikeCount(comma.getId()),
                 new ArrayList<>()))
             .collect(Collectors.toUnmodifiableList());
     }
@@ -78,14 +83,13 @@ public class CommaServiceImpl implements CommaService {
     @Override
     @Transactional
     public CommaDetailResponse update(Long loginUserId, Long commaId, CommaRequest commaRequest) {
-        // todo likeCount, comments 상수 입력 상태
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
         User user = userRepository.findById(loginUserId)
             .orElseThrow(NotFoundUserException::new);
 
-        validateUpdateComma(loginUserId, comma.getUserId());
+        comma.validateAuthorizedUserModifyComma(loginUserId, comma.getUserId());
 
         Comma updateComma = comma.update(
             commaRequest.getTitle(),
@@ -93,36 +97,34 @@ public class CommaServiceImpl implements CommaService {
             user.getUsername(),
             user.getId());
 
-        return new CommaDetailResponse(updateComma.getId(), updateComma.getTitle(),
-            updateComma.getContent(), updateComma.getUsername(), updateComma.getUserId(),
-            updateComma.getCreatedAt(), 0, new ArrayList<>());
+        return new CommaDetailResponse(
+            updateComma.getId(),
+            updateComma.getTitle(),
+            updateComma.getContent(),
+            updateComma.getUsername(),
+            updateComma.getUserId(),
+            updateComma.getCreatedAt(),
+            getPostLikeCount(updateComma.getId()),
+            new ArrayList<>());
     }
 
     @Override
     @Transactional
-    public CommaResponse remove(Long loginUserId, Long commaId) {
-        // todo exception exception exception
-        // 생ㅇ성, 수정, 삭제 순서로 login user id 로직을 추가하면서
-        // login user id 와 comma 엔티티에 저장된 user id 를 비교하는 작업을
-        // 동일하게 동작시키고 있는데 이걸 매번 service 에서 해주는 게 맞겠지?
-        // repository 에서 db 를 통해 엔티티를 가져와야하는 작업이 필요하니까
-        // 왠지 여러번의 반복이 이뤄지면서 다른 곳에서 처리해줄 수 있지도 않나 생각이 든다
+    public Comma remove(Long loginUserId, Long commaId) {
         userRepository.findById(loginUserId)
             .orElseThrow(NotFoundUserException::new);
 
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        validateUpdateComma(loginUserId, comma.getUserId());
+        comma.validateAuthorizedUserModifyComma(loginUserId, comma.getUserId());
 
-        commaRepository.delete(comma);
+        comma.delete();
 
-        return new CommaResponse(comma.getId());
+        return comma;
     }
 
-    private void validateUpdateComma(Long loginUserId, Long writerId) {
-        if (!writerId.equals(loginUserId)) {
-            throw new UnAuthorizedUserException();
-        }
+    private Long getPostLikeCount(Long commaId) {
+        return postLikeRepository.countLikeByCommaIdAndLikeStatus(commaId, true);
     }
 }

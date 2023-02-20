@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService{
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(NotFoundCommentException::new);
 
-        validateUpdateComment(user.getId(), comment.getUserId());
+        validateAuthorizedUserModifyComment(user.getId(), comment.getUserId());
 
         Comment updateComment = comment.update(commentRequest.getContent());
 
@@ -84,7 +84,7 @@ public class CommentServiceImpl implements CommentService{
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(NotFoundCommentException::new);
 
-        validateUpdateComment(user.getId(), comment.getUserId());
+        validateAuthorizedUserModifyComment(user.getId(), comment.getUserId());
 
         comment.delete();
 
@@ -128,7 +128,7 @@ public class CommentServiceImpl implements CommentService{
         );
     }
 
-    private void validateUpdateComment(Long loginUserId, Long commenterId) {
+    private void validateAuthorizedUserModifyComment(Long loginUserId, Long commenterId) {
         if (!commenterId.equals(loginUserId)) {
             throw new UnAuthorizedUserException();
         }

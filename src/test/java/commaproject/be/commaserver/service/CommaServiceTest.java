@@ -4,40 +4,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.user.User;
-import commaproject.be.commaserver.repository.CommaRepository;
-import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-@ExtendWith(MockitoExtension.class)
-class CommaServiceTest {
-
-    @InjectMocks
-    private CommaServiceImpl commaService;
-
-    @Mock
-    private CommaRepository commaRepository;
-
-    @Mock
-    private UserRepository userRepository;
+class CommaServiceTest extends InitServiceTest{
 
     @Test
     @DisplayName("회고를 조회하면 DB에 저장된 모든 회고를 조회하고 테스트가 성공한다")
@@ -55,14 +36,17 @@ class CommaServiceTest {
     void valid_comma_id_find_comma() {
         Long commaId = 1L;
         Long userId = 1L;
-        Optional<Comma> comma = Optional.of(Comma.from("title1", "content1", "username1", userId));
-        when(commaRepository.findById(commaId)).thenReturn(comma);
+        Comma comma = Comma.from("title1", "content1", "username1", userId);
+        ReflectionTestUtils.setField(comma, "id", 1L);
+        when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
+        when(postLikeRepository.countLikeByCommaIdAndLikeStatus(commaId, true)).thenReturn(1L);
 
         CommaDetailResponse commaDetailResponse = commaService.readOne(commaId);
 
         assertSoftly(softly -> {
-            softly.assertThat(commaDetailResponse).isNotNull();
+            softly.assertThat(commaDetailResponse.getId()).isEqualTo(1L);
             softly.assertThat(commaDetailResponse.getTitle()).isEqualTo("title1");
+            softly.assertThat(commaDetailResponse.getPostLikeCount()).isEqualTo(1);
         });
     }
 
@@ -72,6 +56,7 @@ class CommaServiceTest {
         Long commaId = 1L;
         Long userId = 1L;
         Comma comma = setCommaData(commaId, userId);
+        ReflectionTestUtils.setField(comma, "id", 1L);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         User user = setUserData(userId);
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
@@ -79,7 +64,10 @@ class CommaServiceTest {
         CommaRequest commaRequest = new CommaRequest("title1", "update content1");
         CommaDetailResponse updateCommaDetailResponse = commaService.update(userId, commaId, commaRequest);
 
-        assertThat(updateCommaDetailResponse.getContent()).isEqualTo("update content1");
+        assertSoftly(softly -> {
+            softly.assertThat(updateCommaDetailResponse.getId()).isEqualTo(1L);
+            softly.assertThat(updateCommaDetailResponse.getContent()).isEqualTo("update content1");
+        });
     }
 
     @Test
@@ -125,10 +113,9 @@ class CommaServiceTest {
         Comma comma = setCommaData(commaId, userId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
 
-        CommaResponse removeComma = commaService.remove(userId, commaId);
+        Comma removeComma = commaService.remove(userId, commaId);
 
-        verify(commaRepository, times(1)).delete(comma);
-        assertThat(removeComma).isNotNull();
+        assertThat(removeComma.isDeleted()).isTrue();
     }
 
     @Test
@@ -146,24 +133,5 @@ class CommaServiceTest {
             .isInstanceOf(UnAuthorizedUserException.class);
     }
 
-    private List<Comma> setCommasData() {
-        List<Comma> commas = new ArrayList<>();
-        Long userId = 1L;
-        for (int i = 1; i <= 3; i++) {
-            commas.add(Comma.from("title1", "content1", "username1", userId));
-        }
-        return commas;
-    }
 
-    private User setUserData(Long userId) {
-        User user = User.from("username1", "email1", "kakao@kakao.com");
-        ReflectionTestUtils.setField(user, "id", userId);
-        return user;
-    }
-
-    private Comma setCommaData(Long commaId, Long userId) {
-        Comma comma = Comma.from("title1", "content1", "username1", userId);
-        ReflectionTestUtils.setField(comma, "id", commaId);
-        return comma;
-    }
 }

@@ -4,6 +4,7 @@ import static commaproject.be.commaserver.integration.auth.stub.OAuthMocks.setup
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
+import commaproject.be.commaserver.service.InitIntegrationTest;
 import commaproject.be.commaserver.service.LoginService;
 import commaproject.be.commaserver.service.dto.LoginInformation;
 import java.io.IOException;
@@ -23,7 +24,7 @@ import org.springframework.test.context.TestPropertySource;
     "kakao.user-information-uri=http://localhost:${wiremock.server.port}"
 })
 @SpringBootTest
-public class OauthLoginIntegrationTest {
+public class OauthLoginIntegrationTest extends InitIntegrationTest {
 
     @Autowired
     private LoginService loginService;
@@ -40,9 +41,9 @@ public class OauthLoginIntegrationTest {
 
         LoginInformation loginInformation = loginService.login("code");
 
-        assertThat(loginInformation.getUserId()).isEqualTo(1);
+        assertThat(loginInformation.getUserId()).isEqualTo(2);
         assertThat(loginInformation.getUsername()).isEqualTo("donggi");
         assertThat(loginInformation.getUserImageUri()).isEqualTo("http://yyy.kakaoo.com/img_110x110.jpg");
-        assertThat(loginInformation.getEmail()).isEqualTo("donggi@kakao.com");
+        assertThat(loginInformation.getEmail()).isEqualTo("donggi@gmail.com");
     }
 }

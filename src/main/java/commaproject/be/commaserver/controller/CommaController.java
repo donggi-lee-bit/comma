@@ -7,6 +7,7 @@ import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage
 import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.UPDATE_COMMA_LOG_SUCCESS;
 
 import commaproject.be.commaserver.common.response.BaseResponse;
+import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.user.AuthenticatedUser;
 import commaproject.be.commaserver.service.CommaService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
@@ -59,7 +60,7 @@ public class CommaController {
 
     @DeleteMapping("/api/commas/{commaId}")
     public BaseResponse<CommaResponse> delete(@PathVariable Long commaId, @AuthenticatedUser Long loginUserId) {
-        CommaResponse deleteCommaResponse = commaService.remove(loginUserId, commaId);
-        return new BaseResponse<>(DELETE_COMMA_LOG_SUCCESS, deleteCommaResponse);
+        Comma comma = commaService.remove(loginUserId, commaId);
+        return new BaseResponse<>(DELETE_COMMA_LOG_SUCCESS, new CommaResponse(comma.getId()));
     }
 }
