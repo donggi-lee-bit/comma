@@ -43,7 +43,7 @@ class PostLikeServiceTest extends InitServiceTest {
         Comma comma = setCommaData(commaId, loginUserId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         Like like = Like.of(loginUserId, commaId);
-        like.clickPostLike(true);
+        like.update(true);
         when(postLikeRepository.findByIdAndCommaId(loginUserId, commaId)).thenReturn(
             Optional.of(like));
 
@@ -61,7 +61,7 @@ class PostLikeServiceTest extends InitServiceTest {
         Comma comma = setCommaData(commaId, loginUserId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         Like like = Like.of(loginUserId, commaId);
-        like.clickPostLike(true);
+        like.update(true);
         when(postLikeRepository.findByIdAndCommaId(loginUserId, commaId)).thenReturn(
             Optional.of(like));
 

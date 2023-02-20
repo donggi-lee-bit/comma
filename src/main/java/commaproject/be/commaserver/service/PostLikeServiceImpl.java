@@ -39,7 +39,7 @@ public class PostLikeServiceImpl implements PostLikeService {
             throw new AlreadyPostLikeException();
         }
 
-        like.clickPostLike(true);
+        like.update(true);
     }
 
     @Override
@@ -58,6 +58,6 @@ public class PostLikeServiceImpl implements PostLikeService {
             throw new AlreadyPostUnlikeException();
         }
 
-        like.clickPostLike(false);
+        like.update(false);
     }
 }

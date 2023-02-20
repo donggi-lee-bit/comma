@@ -30,7 +30,7 @@ public class Like extends BaseEntity {
         return new Like(Boolean.FALSE, loginUserId, commaId);
     }
 
-    public void clickPostLike(boolean likeStatus) {
+    public void update(boolean likeStatus) {
         this.likeStatus = likeStatus;
     }
 }
