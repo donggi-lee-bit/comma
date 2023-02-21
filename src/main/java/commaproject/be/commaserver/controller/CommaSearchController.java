@@ -6,7 +6,7 @@ import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage
 import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.SEARCH_BY_USER_LOG_SUCCESS;
 
 import commaproject.be.commaserver.common.response.BaseResponse;
-import commaproject.be.commaserver.service.CommaSearchService;
+import commaproject.be.commaserver.service.CommaSearchServiceImpl;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
 import java.util.List;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CommaSearchController {
 
-    private final CommaSearchService searchService;
+    private final CommaSearchServiceImpl searchService;
 
     @GetMapping(path = "/api/commas", params = "type=date")
     public BaseResponse<List<CommaDetailResponse>> searchByDateCondition(
