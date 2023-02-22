@@ -95,7 +95,7 @@ class CommaSearchControllerTest extends InitControllerTest {
         String username = "donggi";
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
-        when(commaSearchService.searchByDateCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
+        when(commaSearchService.searchByUserCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
 
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
