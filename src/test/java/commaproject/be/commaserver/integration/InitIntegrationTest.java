@@ -1,8 +1,12 @@
-package commaproject.be.commaserver.service;
+package commaproject.be.commaserver.integration;
 
 import commaproject.be.commaserver.repository.CommaRepository;
 import commaproject.be.commaserver.repository.CommentRepository;
 import commaproject.be.commaserver.repository.UserRepository;
+import commaproject.be.commaserver.service.CommaSearchServiceImpl;
+import commaproject.be.commaserver.service.CommaServiceImpl;
+import commaproject.be.commaserver.service.CommentServiceImpl;
+import commaproject.be.commaserver.service.LoginService;
 import commaproject.be.commaserver.tool.DatabaseConfigurator;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,9 @@ public abstract class InitIntegrationTest {
 
     @Autowired
     protected CommentServiceImpl commentService;
+
+    @Autowired
+    protected CommaSearchServiceImpl commaSearchService;
 
     @Autowired
     protected LoginService loginService;

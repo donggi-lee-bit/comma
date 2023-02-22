@@ -13,6 +13,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,24 +32,22 @@ class CommaSearchControllerTest extends InitControllerTest {
     @DisplayName("특정 날짜, 특정 유저가 쓴 글 조회 성공")
     @Test
     void read_search_date_user() throws Exception {
-
-        // given
         List<CommaDetailResponse> commaDetailResponses = createCommaTestData();
 
         BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
             commaDetailResponses);
 
-        String date = "20221228";
+        // 2022-12-28T12:00
+        LocalDateTime date = LocalDateTime.of(2022, 12, 28, 12, 0, 0);
         String username = "donggi";
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
         when(commaSearchService.searchByCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
 
-        // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
                 .queryParam("type", "userdate")
-                .queryParam("date", commaSearchConditionRequest.getDate())
+                .queryParam("date", "20221228120000")
                 .queryParam("username", commaSearchConditionRequest.getUsername())
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())
@@ -57,7 +56,6 @@ class CommaSearchControllerTest extends InitControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
         );
 
-        // then
         result
             .andExpect(status().isOk())
             .andDo(
@@ -89,20 +87,17 @@ class CommaSearchControllerTest extends InitControllerTest {
     @DisplayName("특정 사용자가 쓴 글 조회 성공")
     @Test
     void read_search_user() throws Exception {
-
-        // given
         List<CommaDetailResponse> commaDetailResponses = createCommaTestData();
 
         BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
             commaDetailResponses);
 
-        String date = null;
+        LocalDateTime date = null;
         String username = "donggi";
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
         when(commaSearchService.searchByCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
 
-        // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
                 .queryParam("type", "user")
@@ -114,7 +109,6 @@ class CommaSearchControllerTest extends InitControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
         );
 
-        // then
         result
             .andExpect(status().isOk())
             .andDo(
@@ -146,24 +140,21 @@ class CommaSearchControllerTest extends InitControllerTest {
     @DisplayName("특정 날짜에 쓴 글 조회 성공")
     @Test
     void read_search_date() throws Exception {
-
-        // given
         List<CommaDetailResponse> commaDetailResponses = createCommaTestData();
 
         BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
             commaDetailResponses);
 
-        String date = "20221228";
+        LocalDateTime date = LocalDateTime.of(2022, 12, 28, 12, 0);
         String username = null;
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
         when(commaSearchService.searchByCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
 
-        // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
                 .queryParam("type", "date")
-                .queryParam("date", commaSearchConditionRequest.getDate())
+                .queryParam("date", "20221228120000")
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())
                     .writeValueAsString(baseResponse))
@@ -171,7 +162,6 @@ class CommaSearchControllerTest extends InitControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
         );
 
-        // then
         result
             .andExpect(status().isOk())
             .andDo(
