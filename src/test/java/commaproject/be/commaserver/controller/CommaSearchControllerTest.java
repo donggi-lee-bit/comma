@@ -42,7 +42,7 @@ class CommaSearchControllerTest extends InitControllerTest {
         String username = "donggi";
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
-        when(commaSearchService.searchByCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
+        when(commaSearchService.searchByDateCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
 
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
@@ -96,7 +96,7 @@ class CommaSearchControllerTest extends InitControllerTest {
         String username = "donggi";
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
-        when(commaSearchService.searchByCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
+        when(commaSearchService.searchByDateCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
 
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
@@ -149,7 +149,7 @@ class CommaSearchControllerTest extends InitControllerTest {
         String username = null;
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
-        when(commaSearchService.searchByCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
+        when(commaSearchService.searchByDateCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
 
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")

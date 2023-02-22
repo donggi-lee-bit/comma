@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface CommaSearchService {
 
-    List<CommaDetailResponse> searchByCondition(CommaSearchConditionRequest commaSearchConditionRequest);
+    List<CommaDetailResponse> searchByDateCondition(CommaSearchConditionRequest commaSearchConditionRequest);
+
+    List<CommaDetailResponse> searchByUserCondition(CommaSearchConditionRequest commaSearchConditionRequest);
 }

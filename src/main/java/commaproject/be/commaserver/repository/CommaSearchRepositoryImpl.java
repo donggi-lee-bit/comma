@@ -19,4 +19,12 @@ public class CommaSearchRepositoryImpl implements CommaSearchRepository {
             .where(comma.createdAt.between(start, end))
             .fetch();
     }
+
+    @Override
+    public List<Comma> searchByUserCondition(String username) {
+        return jpaQueryFactory
+            .selectFrom(comma)
+            .where(comma.username.eq(username))
+            .fetch();
+    }
 }

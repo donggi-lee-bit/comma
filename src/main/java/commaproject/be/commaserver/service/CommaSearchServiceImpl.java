@@ -25,11 +25,28 @@ public class CommaSearchServiceImpl implements CommaSearchService {
     private final CommaRepository commaRepository;
 
     @Transactional
-    public List<CommaDetailResponse> searchByCondition(CommaSearchConditionRequest commaSearchConditionRequest) {
+    public List<CommaDetailResponse> searchByDateCondition(CommaSearchConditionRequest commaSearchConditionRequest) {
         LocalDateTime startDate = commaSearchConditionRequest.getDate();
         LocalDateTime endDate = startDate.plusDays(1);
 
         List<Comma> commas = commaRepository.searchByDateCondition(startDate, endDate);
+
+        return commas.stream()
+            .map(comma -> new CommaDetailResponse(
+                comma.getId(),
+                comma.getTitle(),
+                comma.getContent(),
+                comma.getUser().getUsername(),
+                comma.getUser().getId(),
+                comma.getCreatedAt(),
+                getPostLikeCount(comma.getId()),
+                getCommentDetailResponses(comma.getId())))
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Transactional
+    public List<CommaDetailResponse> searchByUserCondition(CommaSearchConditionRequest commaSearchConditionRequest) {
+        List<Comma> commas = commaRepository.searchByUserCondition(commaSearchConditionRequest.getUsername());
 
         return commas.stream()
             .map(comma -> new CommaDetailResponse(

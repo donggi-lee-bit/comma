@@ -8,4 +8,6 @@ public interface CommaSearchRepository {
 
     List<Comma> searchByDateCondition(LocalDateTime start, LocalDateTime end);
 
+    List<Comma> searchByUserCondition(String username);
+
 }
