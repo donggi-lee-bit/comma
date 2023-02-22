@@ -37,12 +37,11 @@ class CommaSearchControllerTest extends InitControllerTest {
         BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
             commaDetailResponses);
 
-        // 2022-12-28T12:00
         LocalDateTime date = LocalDateTime.of(2022, 12, 28, 12, 0, 0);
         String username = "donggi";
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
-        when(commaSearchService.searchByDateCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
+        when(commaSearchService.searchByUserDateCondition(commaSearchConditionRequest)).thenReturn(commaDetailResponses);
 
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")

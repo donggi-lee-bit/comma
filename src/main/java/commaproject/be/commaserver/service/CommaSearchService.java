@@ -9,4 +9,6 @@ public interface CommaSearchService {
     List<CommaDetailResponse> searchByDateCondition(CommaSearchConditionRequest commaSearchConditionRequest);
 
     List<CommaDetailResponse> searchByUserCondition(CommaSearchConditionRequest commaSearchConditionRequest);
+
+    List<CommaDetailResponse> searchByUserDateCondition(CommaSearchConditionRequest commaSearchConditionRequest);
 }

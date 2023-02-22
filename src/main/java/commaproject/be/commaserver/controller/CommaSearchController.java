@@ -39,7 +39,7 @@ public class CommaSearchController {
     @GetMapping(path = "/api/commas", params = "type=userdate")
     public BaseResponse<List<CommaDetailResponse>> searchByUserDateCondition(
         CommaSearchConditionRequest commaSearchConditionRequest) {
-        List<CommaDetailResponse> commaDetailResponses = searchService.searchByDateCondition(
+        List<CommaDetailResponse> commaDetailResponses = searchService.searchByUserDateCondition(
             commaSearchConditionRequest);
         return new BaseResponse<>(SEARCH_BY_USER_DATE_LOG_SUCCESS, commaDetailResponses);
     }

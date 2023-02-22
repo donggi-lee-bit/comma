@@ -18,13 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommaSearchServiceImpl implements CommaSearchService {
 
     private final PostLikeRepository postLikeRepository;
     private final CommentRepository commentRepository;
     private final CommaRepository commaRepository;
 
-    @Transactional
     public List<CommaDetailResponse> searchByDateCondition(CommaSearchConditionRequest commaSearchConditionRequest) {
         LocalDateTime startDate = commaSearchConditionRequest.getDate();
         LocalDateTime endDate = startDate.plusDays(1);
@@ -44,9 +44,27 @@ public class CommaSearchServiceImpl implements CommaSearchService {
             .collect(Collectors.toUnmodifiableList());
     }
 
-    @Transactional
     public List<CommaDetailResponse> searchByUserCondition(CommaSearchConditionRequest commaSearchConditionRequest) {
         List<Comma> commas = commaRepository.searchByUserCondition(commaSearchConditionRequest.getUsername());
+
+        return commas.stream()
+            .map(comma -> new CommaDetailResponse(
+                comma.getId(),
+                comma.getTitle(),
+                comma.getContent(),
+                comma.getUser().getUsername(),
+                comma.getUser().getId(),
+                comma.getCreatedAt(),
+                getPostLikeCount(comma.getId()),
+                getCommentDetailResponses(comma.getId())))
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public List<CommaDetailResponse> searchByUserDateCondition(CommaSearchConditionRequest commaSearchConditionRequest) {
+        LocalDateTime startDate = commaSearchConditionRequest.getDate();
+        LocalDateTime endDate = startDate.plusDays(1);
+        List<Comma> commas = commaRepository.searchByUserDateCondition(commaSearchConditionRequest.getUsername(), startDate, endDate);
 
         return commas.stream()
             .map(comma -> new CommaDetailResponse(

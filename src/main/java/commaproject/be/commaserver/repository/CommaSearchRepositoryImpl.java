@@ -27,4 +27,13 @@ public class CommaSearchRepositoryImpl implements CommaSearchRepository {
             .where(comma.username.eq(username))
             .fetch();
     }
+
+    @Override
+    public List<Comma> searchByUserDateCondition(String username, LocalDateTime start, LocalDateTime end) {
+        return jpaQueryFactory
+            .selectFrom(comma)
+            .where(comma.createdAt.between(start, end))
+            .where(comma.username.eq(username))
+            .fetch();
+    }
 }

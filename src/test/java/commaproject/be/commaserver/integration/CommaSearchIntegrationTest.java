@@ -40,4 +40,20 @@ public class CommaSearchIntegrationTest extends InitIntegrationTest {
             softly.assertThat(commaDetailResponses.size()).isEqualTo(3);
         });
     }
+
+    @Test
+    @DisplayName("특정 날짜에 특정 유저가 작성한 회고 게시글을 조회하면 테스트가 성공한다")
+    void search_by_user_date_condition_success() {
+        CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(
+            LocalDateTime.now().minusMinutes(30L), "donggi"
+        );
+
+        List<CommaDetailResponse> commaDetailResponses = commaSearchService.searchByUserDateCondition(commaSearchConditionRequest);
+        String username = commaDetailResponses.get(0).getUsername();
+
+        assertSoftly(softly -> {
+            softly.assertThat(username).isEqualTo("donggi");
+            softly.assertThat(commaDetailResponses.size()).isEqualTo(3);
+        });
+    }
 }
