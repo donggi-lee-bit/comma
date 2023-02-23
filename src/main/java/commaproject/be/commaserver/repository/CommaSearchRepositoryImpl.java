@@ -13,6 +13,7 @@ public class CommaSearchRepositoryImpl implements CommaSearchRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
+    @Override
     public List<Comma> searchByDateCondition(LocalDateTime start, LocalDateTime end) {
         return jpaQueryFactory
             .selectFrom(comma)
