@@ -3,15 +3,16 @@ package commaproject.be.commaserver.service;
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
+import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.repository.CommaRepository;
+import commaproject.be.commaserver.repository.CommentRepository;
 import commaproject.be.commaserver.repository.PostLikeRepository;
 import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -26,33 +27,28 @@ public class CommaServiceImpl implements CommaService {
     private final CommaRepository commaRepository;
     private final UserRepository userRepository;
     private final PostLikeRepository postLikeRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public CommaDetailResponse readOne(Long commaId) {
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        Long postLikeCount = getPostLikeCount(commaId);
-
-        List<CommentDetailResponse> comments = new ArrayList<>();
-
         return new CommaDetailResponse(
             comma.getId(),
             comma.getTitle(),
             comma.getContent(),
             comma.getUsername(),
-            comma.getUserId(),
+            comma.getUser().getId(),
             comma.getCreatedAt(),
-            postLikeCount,
-            comments
-            );
+            getPostLikeCount(commaId),
+            getCommentDetailResponses(comma.getId())
+        );
     }
 
     @Override
     public List<CommaDetailResponse> readAll() {
         List<Comma> commas = commaRepository.findAll();
-
-        // todo comments 상수 입력 상태
 
         return commas.stream()
             .map(comma -> new CommaDetailResponse(
@@ -60,10 +56,10 @@ public class CommaServiceImpl implements CommaService {
                 comma.getTitle(),
                 comma.getContent(),
                 comma.getUsername(),
-                comma.getUserId(),
+                comma.getUser().getId(),
                 comma.getCreatedAt(),
                 getPostLikeCount(comma.getId()),
-                new ArrayList<>()))
+                getCommentDetailResponses(comma.getId())))
             .collect(Collectors.toUnmodifiableList());
     }
 
@@ -75,7 +71,7 @@ public class CommaServiceImpl implements CommaService {
 
         Comma saveComma = commaRepository.save(
             Comma.from(commaRequest.getTitle(), commaRequest.getContent(),
-                user.getUsername(), user.getId()));
+                user));
 
         return new CommaResponse(saveComma.getId());
     }
@@ -89,23 +85,23 @@ public class CommaServiceImpl implements CommaService {
         User user = userRepository.findById(loginUserId)
             .orElseThrow(NotFoundUserException::new);
 
-        comma.validateAuthorizedUserModifyComma(loginUserId, comma.getUserId());
+        comma.validateAuthorizedUserModifyComma(loginUserId, comma.getUser().getId());
 
         Comma updateComma = comma.update(
             commaRequest.getTitle(),
             commaRequest.getContent(),
-            user.getUsername(),
-            user.getId());
+            user
+        );
 
         return new CommaDetailResponse(
             updateComma.getId(),
             updateComma.getTitle(),
             updateComma.getContent(),
             updateComma.getUsername(),
-            updateComma.getUserId(),
+            updateComma.getUser().getId(),
             updateComma.getCreatedAt(),
             getPostLikeCount(updateComma.getId()),
-            new ArrayList<>());
+            getCommentDetailResponses(comma.getId()));
     }
 
     @Override
@@ -117,11 +113,25 @@ public class CommaServiceImpl implements CommaService {
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        comma.validateAuthorizedUserModifyComma(loginUserId, comma.getUserId());
+        comma.validateAuthorizedUserModifyComma(loginUserId, comma.getUser().getId());
 
         comma.delete();
 
         return comma;
+    }
+
+    private List<CommentDetailResponse> getCommentDetailResponses(Long commaId) {
+        List<Comment> comments = commentRepository.findAllByCommaId(commaId);
+
+        return comments.stream()
+            .map(comment -> new CommentDetailResponse(
+                comment.getId(),
+                comment.getUserId(),
+                comment.getUsername(),
+                comment.getContent(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt()))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private Long getPostLikeCount(Long commaId) {

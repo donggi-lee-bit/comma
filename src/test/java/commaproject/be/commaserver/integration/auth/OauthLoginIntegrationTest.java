@@ -4,7 +4,7 @@ import static commaproject.be.commaserver.integration.auth.stub.OAuthMocks.setup
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import commaproject.be.commaserver.service.InitIntegrationTest;
+import commaproject.be.commaserver.integration.InitIntegrationTest;
 import commaproject.be.commaserver.service.LoginService;
 import commaproject.be.commaserver.service.dto.LoginInformation;
 import java.io.IOException;

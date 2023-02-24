@@ -26,13 +26,20 @@ public class Comment extends BaseEntity {
     private Long commaId;
     private boolean deleted = Boolean.FALSE;
 
-    public Comment update(String content) {
+    private Comment(String content, Long userId, String username, Long commaId) {
         this.content = content;
-        return this;
+        this.userId = userId;
+        this.username = username;
+        this.commaId = commaId;
     }
 
     public static Comment from(String content, Long userId, String username, Long commaId) {
         return new Comment(content, userId, username, commaId);
+    }
+
+    public Comment update(String content) {
+        this.content = content;
+        return this;
     }
 
     public void delete() {
@@ -41,12 +48,5 @@ public class Comment extends BaseEntity {
 
     public boolean isDeleted() {
         return deleted;
-    }
-
-    private Comment(String content, Long userId, String username, Long commaId) {
-        this.content = content;
-        this.userId = userId;
-        this.username = username;
-        this.commaId = commaId;
     }
 }

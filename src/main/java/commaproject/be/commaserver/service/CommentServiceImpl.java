@@ -96,8 +96,7 @@ public class CommentServiceImpl implements CommentService{
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        List<Comment> comments = commentRepository.findAllByCommaId(comma.getId())
-            .orElseThrow(NotFoundCommentException::new);
+        List<Comment> comments = commentRepository.findAllByCommaId(comma.getId());
 
         return comments.stream()
             .map(comment -> new CommentDetailResponse(

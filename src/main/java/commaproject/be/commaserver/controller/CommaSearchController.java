@@ -23,7 +23,7 @@ public class CommaSearchController {
     @GetMapping(path = "/api/commas", params = "type=date")
     public BaseResponse<List<CommaDetailResponse>> searchByDateCondition(
         CommaSearchConditionRequest commaSearchConditionRequest) {
-        List<CommaDetailResponse> commaDetailResponses = searchService.searchByCondition(
+        List<CommaDetailResponse> commaDetailResponses = searchService.searchByDateCondition(
             commaSearchConditionRequest);
         return new BaseResponse<>(SEARCH_BY_DATE_LOG_SUCCESS, commaDetailResponses);
     }
@@ -31,7 +31,7 @@ public class CommaSearchController {
     @GetMapping(path = "/api/commas", params = "type=user")
     public BaseResponse<List<CommaDetailResponse>> searchByUserCondition(
         CommaSearchConditionRequest commaSearchConditionRequest) {
-        List<CommaDetailResponse> commaDetailResponses = searchService.searchByCondition(
+        List<CommaDetailResponse> commaDetailResponses = searchService.searchByUserCondition(
             commaSearchConditionRequest);
         return new BaseResponse<>(SEARCH_BY_USER_LOG_SUCCESS, commaDetailResponses);
     }
@@ -39,7 +39,7 @@ public class CommaSearchController {
     @GetMapping(path = "/api/commas", params = "type=userdate")
     public BaseResponse<List<CommaDetailResponse>> searchByUserDateCondition(
         CommaSearchConditionRequest commaSearchConditionRequest) {
-        List<CommaDetailResponse> commaDetailResponses = searchService.searchByCondition(
+        List<CommaDetailResponse> commaDetailResponses = searchService.searchByUserDateCondition(
             commaSearchConditionRequest);
         return new BaseResponse<>(SEARCH_BY_USER_DATE_LOG_SUCCESS, commaDetailResponses);
     }

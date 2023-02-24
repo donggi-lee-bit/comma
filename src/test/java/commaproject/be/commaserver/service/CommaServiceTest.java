@@ -8,23 +8,27 @@ import static org.mockito.Mockito.when;
 
 import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
+import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
-class CommaServiceTest extends InitServiceTest{
+class CommaServiceTest extends InitServiceTest {
 
     @Test
     @DisplayName("회고를 조회하면 DB에 저장된 모든 회고를 조회하고 테스트가 성공한다")
     void findAll() {
+        Long commaId = 1L;
         List<Comma> commas = setCommasData();
+        List<Comment> comments = new ArrayList<>();
         when(commaRepository.findAll()).thenReturn(commas);
+        when(commentRepository.findAllByCommaId(commaId)).thenReturn(comments);
 
         List<CommaDetailResponse> commaDetailResponsesExpected = commaService.readAll();
 
@@ -36,10 +40,11 @@ class CommaServiceTest extends InitServiceTest{
     void valid_comma_id_find_comma() {
         Long commaId = 1L;
         Long userId = 1L;
-        Comma comma = Comma.from("title1", "content1", "username1", userId);
-        ReflectionTestUtils.setField(comma, "id", 1L);
+        Comma comma = setCommaData(commaId, userId);
+        List<Comment> comments = setCommentsData(commaId, userId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         when(postLikeRepository.countLikeByCommaIdAndLikeStatus(commaId, true)).thenReturn(1L);
+        when(commentRepository.findAllByCommaId(commaId)).thenReturn(comments);
 
         CommaDetailResponse commaDetailResponse = commaService.readOne(commaId);
 
@@ -47,6 +52,7 @@ class CommaServiceTest extends InitServiceTest{
             softly.assertThat(commaDetailResponse.getId()).isEqualTo(1L);
             softly.assertThat(commaDetailResponse.getTitle()).isEqualTo("title1");
             softly.assertThat(commaDetailResponse.getPostLikeCount()).isEqualTo(1);
+            softly.assertThat(commaDetailResponse.getComments().size()).isEqualTo(3);
         });
     }
 
@@ -56,10 +62,11 @@ class CommaServiceTest extends InitServiceTest{
         Long commaId = 1L;
         Long userId = 1L;
         Comma comma = setCommaData(commaId, userId);
-        ReflectionTestUtils.setField(comma, "id", 1L);
-        when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         User user = setUserData(userId);
+        List<Comment> comments = setCommentsData(commaId, userId);
+        when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(commentRepository.findAllByCommaId(commaId)).thenReturn(comments);
 
         CommaRequest commaRequest = new CommaRequest("title1", "update content1");
         CommaDetailResponse updateCommaDetailResponse = commaService.update(userId, commaId, commaRequest);
@@ -77,8 +84,8 @@ class CommaServiceTest extends InitServiceTest{
         Long userId = 1L;
         Long unauthorizedUserId = Long.MAX_VALUE;
         Comma comma = setCommaData(commaId, userId);
-        when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         User user = setUserData(unauthorizedUserId);
+        when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         when(userRepository.findById(unauthorizedUserId)).thenReturn(Optional.of(user));
 
         CommaRequest commaRequest = new CommaRequest("title1", "update content1");
@@ -93,8 +100,8 @@ class CommaServiceTest extends InitServiceTest{
         Long commaId = 1L;
         Long userId = 1L;
         User user = setUserData(userId);
-        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Comma comma = setCommaData(commaId, userId);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(commaRepository.save(any(Comma.class))).thenReturn(comma);
 
         CommaResponse saveCommaResponse = commaService.create(userId,
@@ -109,8 +116,8 @@ class CommaServiceTest extends InitServiceTest{
         Long commaId = 1L;
         Long userId = 1L;
         User user = setUserData(userId);
-        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Comma comma = setCommaData(commaId, userId);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
 
         Comma removeComma = commaService.remove(userId, commaId);
@@ -125,8 +132,8 @@ class CommaServiceTest extends InitServiceTest{
         Long userId = 1L;
         Long unauthorizedUserId = Long.MAX_VALUE;
         User user = setUserData(unauthorizedUserId);
-        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Comma comma = setCommaData(commaId, userId);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
 
         assertThatThrownBy(() -> commaService.remove(unauthorizedUserId, commaId))

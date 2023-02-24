@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    Optional<List<Comment>> findAllByCommaId(Long commaId);
+    List<Comment> findAllByCommaId(Long commaId);
 
     Optional<Comment> findByIdAndCommaId(Long commentId, Long commaId);
 }

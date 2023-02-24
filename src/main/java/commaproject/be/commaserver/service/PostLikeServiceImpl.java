@@ -33,7 +33,7 @@ public class PostLikeServiceImpl implements PostLikeService {
             .orElseThrow(NotFoundCommaException::new);
 
         Like like = postLikeRepository.findByIdAndCommaId(user.getId(), comma.getId())
-            .orElseGet(() -> postLikeRepository.save(Like.of(user.getId(), comma.getId())));
+            .orElseGet(() -> postLikeRepository.save(Like.of(user, comma)));
 
         if (like.isLikeStatus()) {
             throw new AlreadyPostLikeException();
@@ -52,7 +52,7 @@ public class PostLikeServiceImpl implements PostLikeService {
             .orElseThrow(NotFoundCommaException::new);
 
         Like like = postLikeRepository.findByIdAndCommaId(user.getId(), comma.getId())
-            .orElseGet(() -> postLikeRepository.save(Like.of(user.getId(), comma.getId())));
+            .orElseGet(() -> postLikeRepository.save(Like.of(user, comma)));
 
         if (!like.isLikeStatus()) {
             throw new AlreadyPostUnlikeException();

@@ -3,13 +3,12 @@ package commaproject.be.commaserver.service;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
 import java.util.List;
-import org.springframework.stereotype.Service;
 
-@Service
-public class CommaSearchService {
+public interface CommaSearchService {
 
-    public List<CommaDetailResponse> searchByCondition(
-        CommaSearchConditionRequest commaSearchConditionRequest) {
-        return null;
-    }
+    List<CommaDetailResponse> searchByDateCondition(CommaSearchConditionRequest commaSearchConditionRequest);
+
+    List<CommaDetailResponse> searchByUserCondition(CommaSearchConditionRequest commaSearchConditionRequest);
+
+    List<CommaDetailResponse> searchByUserDateCondition(CommaSearchConditionRequest commaSearchConditionRequest);
 }
