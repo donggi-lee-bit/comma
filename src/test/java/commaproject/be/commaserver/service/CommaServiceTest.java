@@ -28,7 +28,7 @@ class CommaServiceTest extends InitServiceTest {
         List<Comma> commas = setCommasData();
         List<Comment> comments = new ArrayList<>();
         when(commaRepository.findAll()).thenReturn(commas);
-        when(commentRepository.findAllByCommaId(commaId)).thenReturn(Optional.of(comments));
+        when(commentRepository.findAllByCommaId(commaId)).thenReturn(comments);
 
         List<CommaDetailResponse> commaDetailResponsesExpected = commaService.readAll();
 
@@ -44,7 +44,7 @@ class CommaServiceTest extends InitServiceTest {
         List<Comment> comments = setCommentsData(commaId, userId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         when(postLikeRepository.countLikeByCommaIdAndLikeStatus(commaId, true)).thenReturn(1L);
-        when(commentRepository.findAllByCommaId(commaId)).thenReturn(Optional.of(comments));
+        when(commentRepository.findAllByCommaId(commaId)).thenReturn(comments);
 
         CommaDetailResponse commaDetailResponse = commaService.readOne(commaId);
 
@@ -66,7 +66,7 @@ class CommaServiceTest extends InitServiceTest {
         List<Comment> comments = setCommentsData(commaId, userId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        when(commentRepository.findAllByCommaId(commaId)).thenReturn(Optional.of(comments));
+        when(commentRepository.findAllByCommaId(commaId)).thenReturn(comments);
 
         CommaRequest commaRequest = new CommaRequest("title1", "update content1");
         CommaDetailResponse updateCommaDetailResponse = commaService.update(userId, commaId, commaRequest);

@@ -1,7 +1,6 @@
 package commaproject.be.commaserver.service;
 
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
-import commaproject.be.commaserver.common.exception.comment.NotFoundCommentException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.comment.Comment;
@@ -122,8 +121,7 @@ public class CommaServiceImpl implements CommaService {
     }
 
     private List<CommentDetailResponse> getCommentDetailResponses(Long commaId) {
-        List<Comment> comments = commentRepository.findAllByCommaId(commaId)
-            .orElseThrow(NotFoundCommentException::new);
+        List<Comment> comments = commentRepository.findAllByCommaId(commaId);
 
         return comments.stream()
             .map(comment -> new CommentDetailResponse(
