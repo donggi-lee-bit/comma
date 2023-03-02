@@ -3,9 +3,12 @@ spring:
     active:
       - local
       - test
+      - prod
     group:
       local: "local-db, local-auth"
       test: "test-db, test-auth"
+      prod: "prod-db, prod-auth"
     include:
       - auth-test
       - db
+      - auth

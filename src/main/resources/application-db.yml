@@ -32,6 +32,36 @@ spring:
 
   config:
     activate:
+      on-profile: prod-db
+
+  sql:
+    init:
+      mode: always
+
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_DATABASE_URL}
+    username: ${MYSQL_DATABASE_USERNAME}
+    password: ${MYSQL_DATABASE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+    defer-datasource-initialization: true
+
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+---
+spring:
+
+  config:
+    activate:
       on-profile: test-db
 
   sql:
