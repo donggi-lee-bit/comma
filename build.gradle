@@ -94,6 +94,9 @@ dependencies {
     // open feign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+    // monitoring
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:2.7.5'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 }
 
 tasks.named('test') {
