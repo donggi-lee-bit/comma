@@ -1,0 +1,16 @@
+# local 용도
+global:
+  scrape_interval: 15s
+  scrape_timeout: 15s
+  evaluation_interval: 2m
+  external_labels:
+    monitor: 'comma-monitor'
+  query_log_file: query_log_file.log
+
+scrape_configs:
+  - job_name: 'monitoring-item'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['192.168.35.132:8080']
+        labels:
+          service : 'monitor-1'
