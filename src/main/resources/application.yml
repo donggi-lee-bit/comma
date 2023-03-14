@@ -12,3 +12,10 @@ spring:
       - auth-test
       - db
       - auth
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+

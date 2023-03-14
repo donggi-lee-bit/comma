@@ -1,9 +1,8 @@
 package commaproject.be.commaserver.integration.auth;
 
 import static commaproject.be.commaserver.integration.auth.stub.OAuthMocks.setupResponse;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
 import commaproject.be.commaserver.integration.InitIntegrationTest;
 import commaproject.be.commaserver.service.LoginService;
 import commaproject.be.commaserver.service.dto.LoginInformation;
@@ -37,13 +36,13 @@ public class OauthLoginIntegrationTest extends InitIntegrationTest {
     @Test
     @DisplayName("인가 코드로 auth 서버에서 유저 정보를 가져와 UserRepository에 유저를 저장하고 로그인에 성공한다")
     void oauth_login_success() {
-        WireMock.setScenarioState("OAuth Login", "Started");
-
         LoginInformation loginInformation = loginService.login("code");
 
-        assertThat(loginInformation.getUserId()).isEqualTo(2);
-        assertThat(loginInformation.getUsername()).isEqualTo("donggi");
-        assertThat(loginInformation.getUserImageUri()).isEqualTo("http://yyy.kakaoo.com/img_110x110.jpg");
-        assertThat(loginInformation.getEmail()).isEqualTo("donggi@gmail.com");
+        assertSoftly(softly -> {
+            softly.assertThat(loginInformation.getUserId()).isEqualTo(2);
+            softly.assertThat(loginInformation.getUsername()).isEqualTo("donggi");
+            softly.assertThat(loginInformation.getUserImageUri()).isEqualTo("http://yyy.kakaoo.com/img_110x110.jpg");
+            softly.assertThat(loginInformation.getEmail()).isEqualTo("donggi@gmail.com");
+        });
     }
 }

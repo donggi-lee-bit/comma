@@ -6,7 +6,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED;
 import static java.nio.charset.Charset.defaultCharset;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.util.StreamUtils.copyToString;
@@ -34,8 +33,6 @@ public class OAuthMocks {
 
     public static void setupMockUserInformationResponse() throws IOException {
         stubFor(get(urlEqualTo("/v2/user/me"))
-            .inScenario("OAuth Login")
-            .whenScenarioStateIs(STARTED)
             .withHeader("Authorization", equalTo("bearer accessToken"))
             .willReturn(aResponse()
                 .withStatus(OK.value())
