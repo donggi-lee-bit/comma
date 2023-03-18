@@ -204,3 +204,6 @@ gradle-app.setting
 
 # custom ignore files
 src/main/generated
+monitor/prometheus-grafana/grafana
+monitor/prometheus-grafana/prometheus/volume
+monitor/prometheus-grafana/prometheus/config/query_log_file.log
