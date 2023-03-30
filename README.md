@@ -31,7 +31,7 @@
 
 현재 연결된 네트워크의 ip 주소를 지정해줍니다. ip 주소는 mac 기준 시스템 환경설정 -> 네트워크에서 ip 주소를 확인합니다. 
 
-![img.png](img.png)
+![img.png](images/img.png)
 
 해당 ip 주소를 `project root dir/monitor/prometheus-grafana/prometheus/config/prometheus.yml` 의 `scrape_configs` 에서 `targets` 부분에 작성해줍니다. (예시 : 172.30.1.60:8080)
 <br><br>
@@ -58,12 +58,12 @@ docker compose start
 
 1. 브라우저를 실행합니다.
 2. `http://localhost:9090` 로 프로메테우스를 실행합니다. status -> targets 에서 연결을 확인합니다. <br>
-   ![img_1.png](img_1.png)
+   ![img_1.png](images/img_1.png)
 3. `http://localhost:3000` 로 그라파나를 실행합니다. 처음 실행시 id/pw 를 **admin/admin** 으로 접속합니다. 비밀번호를 한 번 바꾼 뒤 `Welcome To Grafana` 페이지를 보게됩니다. <br>
-   ![img_2.png](img_2.png)
+   ![img_2.png](images/img_2.png)
 4. 그라파나에서 data source(프로메테우스) 를 연결합니다. 왼쪽 아래의 톱니바퀴를 눌러 `Data sources` 에 접근합니다. Settings 의 HTTP URL에 `http://{ip address}:9090` 을 입력하여 프로메테우스를 연결합니다.
 5. 그라파나에서 프로메테우스가 수집한 메트릭을 보기 위해 `Dashboard` 를 띄워주어야합니다. Dashboards -> import 에서 `import via grafan.com` 에 `6756` 을 입력하여 대시보드를 만들어줍니다. (6756은 spring boot statistics 를 보여주는 대시보드 템플릿 id입니다.) <br>
-   ![img_3.png](img_3.png)
+   ![img_3.png](images/img_3.png)
 
 </div>
 </details>
