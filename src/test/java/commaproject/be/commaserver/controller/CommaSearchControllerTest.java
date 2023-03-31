@@ -13,7 +13,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class CommaSearchControllerTest extends InitControllerTest {
         BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
             commaDetailResponses);
 
-        LocalDateTime date = LocalDateTime.of(2022, 12, 28, 12, 0, 0);
+        LocalDate date = LocalDate.of(2022, 12, 28);
         String username = "donggi";
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
@@ -46,7 +46,7 @@ class CommaSearchControllerTest extends InitControllerTest {
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
                 .queryParam("type", "userdate")
-                .queryParam("date", "20221228120000")
+                .queryParam("date", "20221228")
                 .queryParam("username", commaSearchConditionRequest.getUsername())
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())
@@ -91,7 +91,7 @@ class CommaSearchControllerTest extends InitControllerTest {
         BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
             commaDetailResponses);
 
-        LocalDateTime date = null;
+        LocalDate date = null;
         String username = "donggi";
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
@@ -144,7 +144,7 @@ class CommaSearchControllerTest extends InitControllerTest {
         BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
             commaDetailResponses);
 
-        LocalDateTime date = LocalDateTime.of(2022, 12, 28, 12, 0);
+        LocalDate date = LocalDate.of(2022, 12, 28);
         String username = null;
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(date, username);
 
@@ -153,7 +153,7 @@ class CommaSearchControllerTest extends InitControllerTest {
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
                 .queryParam("type", "date")
-                .queryParam("date", "20221228120000")
+                .queryParam("date", "20221228")
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())
                     .writeValueAsString(baseResponse))

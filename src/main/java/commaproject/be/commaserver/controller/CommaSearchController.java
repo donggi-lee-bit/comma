@@ -12,6 +12,7 @@ import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -22,7 +23,7 @@ public class CommaSearchController {
 
     @GetMapping(path = "/api/commas", params = "type=date")
     public BaseResponse<List<CommaDetailResponse>> searchByDateCondition(
-        CommaSearchConditionRequest commaSearchConditionRequest) {
+        @ModelAttribute CommaSearchConditionRequest commaSearchConditionRequest) {
         List<CommaDetailResponse> commaDetailResponses = searchService.searchByDateCondition(
             commaSearchConditionRequest);
         return new BaseResponse<>(SEARCH_BY_DATE_LOG_SUCCESS, commaDetailResponses);
@@ -30,7 +31,7 @@ public class CommaSearchController {
 
     @GetMapping(path = "/api/commas", params = "type=user")
     public BaseResponse<List<CommaDetailResponse>> searchByUserCondition(
-        CommaSearchConditionRequest commaSearchConditionRequest) {
+        @ModelAttribute CommaSearchConditionRequest commaSearchConditionRequest) {
         List<CommaDetailResponse> commaDetailResponses = searchService.searchByUserCondition(
             commaSearchConditionRequest);
         return new BaseResponse<>(SEARCH_BY_USER_LOG_SUCCESS, commaDetailResponses);
@@ -38,7 +39,7 @@ public class CommaSearchController {
 
     @GetMapping(path = "/api/commas", params = "type=userdate")
     public BaseResponse<List<CommaDetailResponse>> searchByUserDateCondition(
-        CommaSearchConditionRequest commaSearchConditionRequest) {
+        @ModelAttribute CommaSearchConditionRequest commaSearchConditionRequest) {
         List<CommaDetailResponse> commaDetailResponses = searchService.searchByUserDateCondition(
             commaSearchConditionRequest);
         return new BaseResponse<>(SEARCH_BY_USER_DATE_LOG_SUCCESS, commaDetailResponses);

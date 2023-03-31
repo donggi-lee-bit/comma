@@ -8,7 +8,7 @@ import commaproject.be.commaserver.repository.PostLikeRepository;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +25,8 @@ public class CommaSearchServiceImpl implements CommaSearchService {
     private final CommaRepository commaRepository;
 
     public List<CommaDetailResponse> searchByDateCondition(CommaSearchConditionRequest commaSearchConditionRequest) {
-        LocalDateTime startDate = commaSearchConditionRequest.getDate();
-        LocalDateTime endDate = startDate.plusDays(1);
+        LocalDate startDate = commaSearchConditionRequest.getDate();
+        LocalDate endDate = startDate.plusDays(1);
 
         List<Comma> commas = commaRepository.searchByDateCondition(startDate, endDate);
 
@@ -61,8 +61,8 @@ public class CommaSearchServiceImpl implements CommaSearchService {
 
     @Override
     public List<CommaDetailResponse> searchByUserDateCondition(CommaSearchConditionRequest commaSearchConditionRequest) {
-        LocalDateTime startDate = commaSearchConditionRequest.getDate();
-        LocalDateTime endDate = startDate.plusDays(1);
+        LocalDate startDate = commaSearchConditionRequest.getDate();
+        LocalDate endDate = startDate.plusDays(1);
         List<Comma> commas = commaRepository.searchByUserDateCondition(commaSearchConditionRequest.getUsername(), startDate, endDate);
 
         return commas.stream()

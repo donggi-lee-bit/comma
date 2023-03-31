@@ -1,6 +1,6 @@
 package commaproject.be.commaserver.service.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,11 +9,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 @EqualsAndHashCode
 public class CommaSearchConditionRequest {
 
-    @DateTimeFormat(pattern = "yyyyMMddHHmmss")
-    private final LocalDateTime date;
+    @DateTimeFormat(pattern = "yyyyMMdd")
+    private final LocalDate date;
     private final String username;
 
-    public CommaSearchConditionRequest(LocalDateTime date, String username) {
+    public CommaSearchConditionRequest(LocalDate date, String username) {
         this.date = date;
         this.username = username;
     }
