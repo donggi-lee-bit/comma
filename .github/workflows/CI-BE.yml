@@ -32,7 +32,7 @@ jobs:
         with:
           mysql version: '8.0'
           mysql database: 'commatest'
-          mysql user: 'donggi'
+          mysql user: 'root'
           mysql password: ${{ secrets.DatabasePassword }}
 
       - uses: actions/checkout@v3
