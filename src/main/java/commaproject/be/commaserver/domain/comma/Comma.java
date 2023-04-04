@@ -33,8 +33,6 @@ public class Comma extends BaseEntity {
 
     private String username;
 
-
-
     private boolean deleted = Boolean.FALSE;
 
     private Comma(String title, String content, User user) {
