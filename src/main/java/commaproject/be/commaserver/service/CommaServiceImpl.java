@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +52,7 @@ public class CommaServiceImpl implements CommaService {
 
     @Override
     public List<CommaDetailResponse> readAll(Pageable pageable) {
-        validatePageSize(pageable);
+        validatePageSize(pageable.getPageSize());
         Page<Comma> commas = commaRepository.findAll(pageable);
 
         return commas.stream()
@@ -125,7 +126,7 @@ public class CommaServiceImpl implements CommaService {
     }
 
     private List<CommentDetailResponse> getCommentDetailResponses(Long commaId) {
-        List<Comment> comments = commentRepository.findAllByCommaId(commaId);
+        List<Comment> comments = commentRepository.findAllByCommaId(commaId, commentPageRequest());
 
         return comments.stream()
             .map(comment -> new CommentDetailResponse(
@@ -142,8 +143,12 @@ public class CommaServiceImpl implements CommaService {
         return postLikeRepository.countLikeByCommaIdAndLikeStatus(commaId, true);
     }
 
-    private void validatePageSize(Pageable pageable) {
-        if (pageable.getPageSize() > 100) {
+    private PageRequest commentPageRequest() {
+        return PageRequest.of(0, 10);
+    }
+
+    private void validatePageSize(int pageSize) {
+        if (pageSize > 100) {
             throw new PageSizeOutOfBoundsException();
         }
     }

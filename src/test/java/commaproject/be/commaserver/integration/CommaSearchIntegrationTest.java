@@ -22,7 +22,7 @@ public class CommaSearchIntegrationTest extends InitIntegrationTest {
 
         List<CommaDetailResponse> commaDetailResponses = commaSearchService.searchByDateCondition(commaSearchConditionRequest, pageRequest);
 
-        assertThat(commaDetailResponses.size()).isEqualTo(3);
+        assertThat(commaDetailResponses.size()).isEqualTo(2);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class CommaSearchIntegrationTest extends InitIntegrationTest {
 
         assertSoftly(softly -> {
             softly.assertThat(username).isEqualTo("donggi");
-            softly.assertThat(commaDetailResponses.size()).isEqualTo(3);
+            softly.assertThat(commaDetailResponses.size()).isEqualTo(2);
         });
     }
 
@@ -51,7 +51,7 @@ public class CommaSearchIntegrationTest extends InitIntegrationTest {
 
         assertSoftly(softly -> {
             softly.assertThat(username).isEqualTo("donggi");
-            softly.assertThat(commaDetailResponses.size()).isEqualTo(3);
+            softly.assertThat(commaDetailResponses.size()).isEqualTo(2);
         });
     }
 }

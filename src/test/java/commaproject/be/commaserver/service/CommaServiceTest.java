@@ -30,11 +30,12 @@ class CommaServiceTest extends InitServiceTest {
         Page<Comma> commas = setCommasData();
         List<Comment> comments = new ArrayList<>();
         // mocking 하고 있기 때문에 실제로 해당 테스트 메서드에서는 페이징 처리가 되고 있진 않음
-        PageRequest pageRequest = PageRequest.of(0, 2);
-        when(commaRepository.findAll(pageRequest)).thenReturn(commas);
-        when(commentRepository.findAllByCommaId(commaId)).thenReturn(comments);
+        PageRequest commaPageRequest = PageRequest.of(0, 2);
+        when(commaRepository.findAll(commaPageRequest)).thenReturn(commas);
+        PageRequest commentPageRequest = PageRequest.of(0, 10);
+        when(commentRepository.findAllByCommaId(commaId, commentPageRequest)).thenReturn(comments);
 
-        List<CommaDetailResponse> commaDetailResponsesExpected = commaService.readAll(pageRequest);
+        List<CommaDetailResponse> commaDetailResponsesExpected = commaService.readAll(commaPageRequest);
 
         assertThat(commaDetailResponsesExpected.size()).isEqualTo(3);
     }
@@ -48,7 +49,8 @@ class CommaServiceTest extends InitServiceTest {
         List<Comment> comments = setCommentsData(commaId, userId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         when(postLikeRepository.countLikeByCommaIdAndLikeStatus(commaId, true)).thenReturn(1L);
-        when(commentRepository.findAllByCommaId(commaId)).thenReturn(comments);
+        PageRequest commentPageRequest = PageRequest.of(0, 10);
+        when(commentRepository.findAllByCommaId(commaId, commentPageRequest)).thenReturn(comments);
 
         CommaDetailResponse commaDetailResponse = commaService.readOne(commaId);
 
@@ -70,7 +72,8 @@ class CommaServiceTest extends InitServiceTest {
         List<Comment> comments = setCommentsData(commaId, userId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        when(commentRepository.findAllByCommaId(commaId)).thenReturn(comments);
+        PageRequest commentPageRequest = PageRequest.of(0, 10);
+        when(commentRepository.findAllByCommaId(commaId, commentPageRequest)).thenReturn(comments);
 
         CommaRequest commaRequest = new CommaRequest("title1", "update content1");
         CommaDetailResponse updateCommaDetailResponse = commaService.update(userId, commaId, commaRequest);

@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +28,7 @@ public class CommaSearchServiceImpl implements CommaSearchService {
     private final CommaRepository commaRepository;
 
     public List<CommaDetailResponse> searchByDateCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
-        validatePageSize(pageable);
+        validatePageSize(pageable.getPageSize());
 
         LocalDate startDate = commaSearchConditionRequest.getDate();
         LocalDate endDate = startDate.plusDays(1);
@@ -48,7 +49,7 @@ public class CommaSearchServiceImpl implements CommaSearchService {
     }
 
     public List<CommaDetailResponse> searchByUserCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
-        validatePageSize(pageable);
+        validatePageSize(pageable.getPageSize());
 
         List<Comma> commas = commaRepository.searchByUserCondition(commaSearchConditionRequest.getUsername(), pageable);
 
@@ -67,7 +68,7 @@ public class CommaSearchServiceImpl implements CommaSearchService {
 
     @Override
     public List<CommaDetailResponse> searchByUserDateCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
-        validatePageSize(pageable);
+        validatePageSize(pageable.getPageSize());
 
         LocalDate startDate = commaSearchConditionRequest.getDate();
         LocalDate endDate = startDate.plusDays(1);
@@ -91,7 +92,7 @@ public class CommaSearchServiceImpl implements CommaSearchService {
     }
 
     private List<CommentDetailResponse> getCommentDetailResponses(Long commaId) {
-        List<Comment> comments = commentRepository.findAllByCommaId(commaId);
+        List<Comment> comments = commentRepository.findAllByCommaId(commaId, commentPageRequest());
 
         return comments.stream()
             .map(comment -> new CommentDetailResponse(
@@ -104,8 +105,12 @@ public class CommaSearchServiceImpl implements CommaSearchService {
             .collect(Collectors.toUnmodifiableList());
     }
 
-    private void validatePageSize(Pageable pageable) {
-        if (pageable.getPageSize() > 100) {
+    private PageRequest commentPageRequest() {
+        return PageRequest.of(0, 10);
+    }
+
+    private void validatePageSize(int pageSize) {
+        if (pageSize > 100) {
             throw new PageSizeOutOfBoundsException();
         }
     }
