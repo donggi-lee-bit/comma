@@ -26,6 +26,7 @@ public class Comment extends BaseEntity {
     private Long commaId;
     private boolean deleted = Boolean.FALSE;
 
+
     private Comment(String content, Long userId, String username, Long commaId) {
         this.content = content;
         this.userId = userId;
