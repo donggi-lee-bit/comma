@@ -27,6 +27,7 @@ public class CommaSearchServiceImpl implements CommaSearchService {
     private final CommentRepository commentRepository;
     private final CommaRepository commaRepository;
 
+    @Override
     public List<CommaDetailResponse> searchByDateCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
         validatePageSize(pageable.getPageSize());
 
@@ -48,6 +49,7 @@ public class CommaSearchServiceImpl implements CommaSearchService {
             .collect(Collectors.toUnmodifiableList());
     }
 
+    @Override
     public List<CommaDetailResponse> searchByUserCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
         validatePageSize(pageable.getPageSize());
 
