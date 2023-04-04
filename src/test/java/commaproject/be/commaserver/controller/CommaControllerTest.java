@@ -25,6 +25,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -94,25 +95,24 @@ class CommaControllerTest extends InitControllerTest {
     @Test
     @DisplayName("전체 회고 조회 성공")
     void read_all_comma_success() throws Exception {
-
-        // given
         List<CommaDetailResponse> commaDetailResponses = createCommaTestData();
-
         BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
             commaDetailResponses);
+        int page = 0;
+        int size = 2;
+        PageRequest pageRequest = PageRequest.of(page, size);
+        when(commaService.readAll(pageRequest)).thenReturn(commaDetailResponses);
 
-        when(commaService.readAll()).thenReturn(commaDetailResponses);
-
-        // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
+                .queryParam("page", "0")
+                .queryParam("size", "2")
                 .content(objectMapper
                     .registerModule(new JavaTimeModule())
                     .writeValueAsString(baseResponse))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
-        // then
         result
             .andExpect(status().isOk())
             .andDo(
