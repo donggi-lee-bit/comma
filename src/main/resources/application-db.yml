@@ -71,7 +71,7 @@ spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/commatest
-    username: root
+    username: donggi
     password: dlehdrl12#
 
   jpa:

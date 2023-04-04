@@ -2,8 +2,6 @@ spring:
   profiles:
     active:
       - local
-      - test
-      - prod
     group:
       local: "local-db, local-auth"
       test: "test-db, test-auth"
