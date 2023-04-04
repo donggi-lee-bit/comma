@@ -10,11 +10,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 
-@DisplayName("게시글 통합 테스트")
+@DisplayName("회고 게시글 통합 테스트")
 public class CommaIntegrationTest extends InitIntegrationTest {
 
     @Test
-    @DisplayName("모든 게시글 조회 시 페이징을 적용해서 반환한다")
+    @DisplayName("모든 회고 게시글 조회 시 페이징을 적용해서 반환한다")
     void readAll_comma_pagination() {
         int pageSize = 2;
         int pageSize2 = 1;
@@ -31,7 +31,7 @@ public class CommaIntegrationTest extends InitIntegrationTest {
     }
 
     @Test
-    @DisplayName("100개 이상의 게시글 페이징 처리 요청 시 에러를 발생시킨다")
+    @DisplayName("100개 이상의 회고 게시글 페이징 처리 요청 시 에러를 발생시킨다")
     void comma_page_size_out_of_bounds() {
         int pageSize = 101;
         PageRequest pageRequest = PageRequest.of(0, pageSize);

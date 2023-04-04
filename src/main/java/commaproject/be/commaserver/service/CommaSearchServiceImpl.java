@@ -1,5 +1,6 @@
 package commaproject.be.commaserver.service;
 
+import commaproject.be.commaserver.common.exception.PageSizeOutOfBoundsException;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.repository.CommaRepository;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +26,13 @@ public class CommaSearchServiceImpl implements CommaSearchService {
     private final CommentRepository commentRepository;
     private final CommaRepository commaRepository;
 
-    public List<CommaDetailResponse> searchByDateCondition(CommaSearchConditionRequest commaSearchConditionRequest) {
+    public List<CommaDetailResponse> searchByDateCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
+        validatePageSize(pageable);
+
         LocalDate startDate = commaSearchConditionRequest.getDate();
         LocalDate endDate = startDate.plusDays(1);
 
-        List<Comma> commas = commaRepository.searchByDateCondition(startDate, endDate);
+        List<Comma> commas = commaRepository.searchByDateCondition(startDate, endDate, pageable);
 
         return commas.stream()
             .map(comma -> new CommaDetailResponse(
@@ -43,8 +47,10 @@ public class CommaSearchServiceImpl implements CommaSearchService {
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<CommaDetailResponse> searchByUserCondition(CommaSearchConditionRequest commaSearchConditionRequest) {
-        List<Comma> commas = commaRepository.searchByUserCondition(commaSearchConditionRequest.getUsername());
+    public List<CommaDetailResponse> searchByUserCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
+        validatePageSize(pageable);
+
+        List<Comma> commas = commaRepository.searchByUserCondition(commaSearchConditionRequest.getUsername(), pageable);
 
         return commas.stream()
             .map(comma -> new CommaDetailResponse(
@@ -60,10 +66,12 @@ public class CommaSearchServiceImpl implements CommaSearchService {
     }
 
     @Override
-    public List<CommaDetailResponse> searchByUserDateCondition(CommaSearchConditionRequest commaSearchConditionRequest) {
+    public List<CommaDetailResponse> searchByUserDateCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
+        validatePageSize(pageable);
+
         LocalDate startDate = commaSearchConditionRequest.getDate();
         LocalDate endDate = startDate.plusDays(1);
-        List<Comma> commas = commaRepository.searchByUserDateCondition(commaSearchConditionRequest.getUsername(), startDate, endDate);
+        List<Comma> commas = commaRepository.searchByUserDateCondition(commaSearchConditionRequest.getUsername(), startDate, endDate, pageable);
 
         return commas.stream()
             .map(comma -> new CommaDetailResponse(
@@ -94,5 +102,11 @@ public class CommaSearchServiceImpl implements CommaSearchService {
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()))
             .collect(Collectors.toUnmodifiableList());
+    }
+
+    private void validatePageSize(Pageable pageable) {
+        if (pageable.getPageSize() > 100) {
+            throw new PageSizeOutOfBoundsException();
+        }
     }
 }
