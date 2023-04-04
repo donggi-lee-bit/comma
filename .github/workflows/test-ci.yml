@@ -34,3 +34,5 @@ jobs:
           mysql database: 'commatest'
           mysql user: 'donggi'
           mysql password: ${{ secrets.DatabasePassword }}
+
+      - uses: actions/checkout@v3
