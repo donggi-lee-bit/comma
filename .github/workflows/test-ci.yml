@@ -1,0 +1,36 @@
+name: test-ci
+
+on:
+  push:
+    branches:
+      - be
+  pull_request:
+    branches: [ be ]
+    paths:
+      [
+        "src/**",
+        "build.gradle",
+      ]
+    types: [ opened, synchronize, reopened ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: SpringBoot Test
+    runs-on: ubuntu-20.04
+    environment:
+      name: github actions setup mysql
+      url: https://github.com/donggi-lee-bit/comma/settings/environments/853859783/edit
+    defaults:
+      run:
+        working-directory: ./
+
+    steps:
+      - uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '8.0'
+          mysql database: 'commatest'
+          mysql user: 'donggi'
+          mysql password: ${{ secrets.DatabasePassword }}
