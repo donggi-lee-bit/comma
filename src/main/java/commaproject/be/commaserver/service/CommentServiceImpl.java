@@ -1,5 +1,6 @@
 package commaproject.be.commaserver.service;
 
+import commaproject.be.commaserver.common.exception.PageSizeOutOfBoundsException;
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
 import commaproject.be.commaserver.common.exception.comment.NotFoundCommentException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
@@ -15,6 +16,7 @@ import commaproject.be.commaserver.service.dto.CommentRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,11 +94,13 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<CommentDetailResponse> readAll(Long commaId) {
+    public List<CommentDetailResponse> readAll(Long commaId, Pageable pageable) {
+        validatePageSize(pageable.getPageSize());
+
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        List<Comment> comments = commentRepository.findAllByCommaId(comma.getId());
+        List<Comment> comments = commentRepository.findAllByCommaId(comma.getId(), pageable);
 
         return comments.stream()
             .map(comment -> new CommentDetailResponse(
@@ -130,6 +134,12 @@ public class CommentServiceImpl implements CommentService{
     private void validateAuthorizedUserModifyComment(Long loginUserId, Long commenterId) {
         if (!commenterId.equals(loginUserId)) {
             throw new UnAuthorizedUserException();
+        }
+    }
+
+    private void validatePageSize(int pageSize) {
+        if (pageSize > 10) {
+            throw new PageSizeOutOfBoundsException();
         }
     }
 }

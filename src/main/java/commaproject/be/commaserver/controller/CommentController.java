@@ -15,12 +15,15 @@ import commaproject.be.commaserver.service.dto.CommentRequest;
 import commaproject.be.commaserver.service.dto.CommentResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,8 +33,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/api/commas/{commaId}/comments")
-    public BaseResponse<List<CommentDetailResponse>> readAll(@PathVariable Long commaId) {
-        List<CommentDetailResponse> commentDetailResponses = commentService.readAll(commaId);
+    public BaseResponse<List<CommentDetailResponse>> readAll(@PathVariable Long commaId, @RequestParam int page) {
+        List<CommentDetailResponse> commentDetailResponses = commentService.readAll(commaId, pageable(page));
         return new BaseResponse<>(READ_ALL_COMMENT_LOG_SUCCESS, commentDetailResponses);
     }
 
@@ -67,5 +70,10 @@ public class CommentController {
         @PathVariable Long commentId) {
         Comment comment = commentService.delete(loginUserId, commaId, commentId);
         return new BaseResponse<>(DELETE_COMMENT_LOG_SUCCESS, new CommentResponse(comment.getId()));
+    }
+
+    private Pageable pageable(int page) {
+        int size = 10;
+        return PageRequest.of(page, size);
     }
 }

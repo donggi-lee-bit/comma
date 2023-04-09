@@ -93,6 +93,9 @@ public class DatabaseConfigurator implements InitializingBean {
         }
     }
 
+    /**
+     * 3개의 게시글 데이터
+     */
     private void initCommaData() {
         for (int i = 1; i <= 3; i++) {
             commaRepository.save(Comma.from("title1", "content1", testUser));

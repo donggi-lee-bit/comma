@@ -3,6 +3,7 @@ package commaproject.be.commaserver.domain.comma;
 import commaproject.be.commaserver.common.exception.user.UnAuthorizedUserException;
 import commaproject.be.commaserver.domain.BaseEntity;
 import commaproject.be.commaserver.domain.user.User;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -33,6 +34,7 @@ public class Comma extends BaseEntity {
 
     private String username;
 
+    @Column(columnDefinition = "BOOLEAN")
     private boolean deleted = Boolean.FALSE;
 
     private Comma(String title, String content, User user) {

@@ -13,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,7 +38,10 @@ public class InitServiceTest {
     @Mock
     protected CommentRepository commentRepository;
 
-    protected List<Comma> setCommasData() {
+    /**
+     * 3개의 게시글 데이터
+     */
+    protected Page<Comma> setCommasData() {
         List<Comma> commas = new ArrayList<>();
         Long userId = 1L;
         Long commaId = 1L;
@@ -45,7 +50,9 @@ public class InitServiceTest {
             commas.add(comma);
             ReflectionTestUtils.setField(comma, "id", commaId);
         }
-        return commas;
+
+        Page<Comma> page = new PageImpl<>(commas);
+        return page;
     }
 
     protected User setUserData(Long userId) {

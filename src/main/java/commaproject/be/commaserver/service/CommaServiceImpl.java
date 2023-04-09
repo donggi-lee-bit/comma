@@ -1,5 +1,6 @@
 package commaproject.be.commaserver.service;
 
+import commaproject.be.commaserver.common.exception.PageSizeOutOfBoundsException;
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
@@ -16,6 +17,9 @@ import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +51,9 @@ public class CommaServiceImpl implements CommaService {
     }
 
     @Override
-    public List<CommaDetailResponse> readAll() {
-        List<Comma> commas = commaRepository.findAll();
+    public List<CommaDetailResponse> readAll(Pageable pageable) {
+        validatePageSize(pageable.getPageSize());
+        Page<Comma> commas = commaRepository.findAll(pageable);
 
         return commas.stream()
             .map(comma -> new CommaDetailResponse(
@@ -121,7 +126,7 @@ public class CommaServiceImpl implements CommaService {
     }
 
     private List<CommentDetailResponse> getCommentDetailResponses(Long commaId) {
-        List<Comment> comments = commentRepository.findAllByCommaId(commaId);
+        List<Comment> comments = commentRepository.findAllByCommaId(commaId, commentPageRequest());
 
         return comments.stream()
             .map(comment -> new CommentDetailResponse(
@@ -136,5 +141,15 @@ public class CommaServiceImpl implements CommaService {
 
     private Long getPostLikeCount(Long commaId) {
         return postLikeRepository.countLikeByCommaIdAndLikeStatus(commaId, true);
+    }
+
+    private PageRequest commentPageRequest() {
+        return PageRequest.of(0, 10);
+    }
+
+    private void validatePageSize(int pageSize) {
+        if (pageSize > 100) {
+            throw new PageSizeOutOfBoundsException();
+        }
     }
 }

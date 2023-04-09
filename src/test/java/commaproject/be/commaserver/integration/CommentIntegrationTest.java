@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import commaproject.be.commaserver.common.exception.PageSizeOutOfBoundsException;
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
 import commaproject.be.commaserver.common.exception.comment.NotFoundCommentException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
 
 @DisplayName("댓글 서비스 통합 테스트")
 class CommentIntegrationTest extends InitIntegrationTest {
@@ -134,8 +136,9 @@ class CommentIntegrationTest extends InitIntegrationTest {
     @DisplayName("유효한 회고 게시글이면 해당 게시글의 모든 댓글을 조회하고 테스트가 성공한다")
     void read_All_comment_success() {
         Long commaId = 1L;
+        PageRequest commentPageRequest = PageRequest.of(0, 10);
 
-        List<CommentDetailResponse> commentDetailResponses = commentService.readAll(commaId);
+        List<CommentDetailResponse> commentDetailResponses = commentService.readAll(commaId, commentPageRequest);
 
         assertThat(commentDetailResponses.size()).isEqualTo(3);
     }
@@ -144,8 +147,9 @@ class CommentIntegrationTest extends InitIntegrationTest {
     @DisplayName("존재하지 않는 회고 게시글의 댓글을 조회하려고 하면 예외를 발생시킨다")
     void invalid_comma_read_All_comment() {
         Long commaId = Long.MAX_VALUE;
+        PageRequest commentPageRequest = PageRequest.of(0, 10);
 
-        assertThatThrownBy(() -> commentService.readAll(commaId))
+        assertThatThrownBy(() -> commentService.readAll(commaId, commentPageRequest))
             .isInstanceOf(NotFoundCommaException.class);
     }
 
@@ -178,5 +182,16 @@ class CommentIntegrationTest extends InitIntegrationTest {
 
         assertThatThrownBy(() -> commentService.readOne(commaId, commentId))
             .isInstanceOf(NotFoundCommentException.class);
+    }
+
+    @Test
+    @DisplayName("10개 이상의 댓글 페이징 처리 요청 시 에러를 발생시킨다")
+    void comment_page_size_out_of_bounds() {
+        Long commaId = 1L;
+        int pageSize = 11;
+        PageRequest pageRequest = PageRequest.of(0, pageSize);
+
+        assertThatThrownBy(() -> commentService.readAll(commaId, pageRequest))
+            .isInstanceOf(PageSizeOutOfBoundsException.class);
     }
 }

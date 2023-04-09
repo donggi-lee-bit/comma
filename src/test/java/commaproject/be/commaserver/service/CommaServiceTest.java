@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 class CommaServiceTest extends InitServiceTest {
 
@@ -25,12 +27,15 @@ class CommaServiceTest extends InitServiceTest {
     @DisplayName("회고를 조회하면 DB에 저장된 모든 회고를 조회하고 테스트가 성공한다")
     void findAll() {
         Long commaId = 1L;
-        List<Comma> commas = setCommasData();
+        Page<Comma> commas = setCommasData();
         List<Comment> comments = new ArrayList<>();
-        when(commaRepository.findAll()).thenReturn(commas);
-        when(commentRepository.findAllByCommaId(commaId)).thenReturn(comments);
+        // mocking 하고 있기 때문에 실제로 해당 테스트 메서드에서는 페이징 처리가 되고 있진 않음
+        PageRequest commaPageRequest = PageRequest.of(0, 2);
+        when(commaRepository.findAll(commaPageRequest)).thenReturn(commas);
+        PageRequest commentPageRequest = PageRequest.of(0, 10);
+        when(commentRepository.findAllByCommaId(commaId, commentPageRequest)).thenReturn(comments);
 
-        List<CommaDetailResponse> commaDetailResponsesExpected = commaService.readAll();
+        List<CommaDetailResponse> commaDetailResponsesExpected = commaService.readAll(commaPageRequest);
 
         assertThat(commaDetailResponsesExpected.size()).isEqualTo(3);
     }
@@ -44,7 +49,8 @@ class CommaServiceTest extends InitServiceTest {
         List<Comment> comments = setCommentsData(commaId, userId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         when(postLikeRepository.countLikeByCommaIdAndLikeStatus(commaId, true)).thenReturn(1L);
-        when(commentRepository.findAllByCommaId(commaId)).thenReturn(comments);
+        PageRequest commentPageRequest = PageRequest.of(0, 10);
+        when(commentRepository.findAllByCommaId(commaId, commentPageRequest)).thenReturn(comments);
 
         CommaDetailResponse commaDetailResponse = commaService.readOne(commaId);
 
@@ -66,7 +72,8 @@ class CommaServiceTest extends InitServiceTest {
         List<Comment> comments = setCommentsData(commaId, userId);
         when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-        when(commentRepository.findAllByCommaId(commaId)).thenReturn(comments);
+        PageRequest commentPageRequest = PageRequest.of(0, 10);
+        when(commentRepository.findAllByCommaId(commaId, commentPageRequest)).thenReturn(comments);
 
         CommaRequest commaRequest = new CommaRequest("title1", "update content1");
         CommaDetailResponse updateCommaDetailResponse = commaService.update(userId, commaId, commaRequest);

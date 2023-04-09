@@ -1,6 +1,7 @@
 package commaproject.be.commaserver.domain.comment;
 
 import commaproject.be.commaserver.domain.BaseEntity;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +25,8 @@ public class Comment extends BaseEntity {
     private Long userId;
     private String username;
     private Long commaId;
+
+    @Column(columnDefinition = "BOOLEAN")
     private boolean deleted = Boolean.FALSE;
 
     private Comment(String content, Long userId, String username, Long commaId) {
