@@ -2,78 +2,141 @@ ifndef::snippets[]
 :snippets: ./build/generated-snippets
 endif::[]
 
-= Comma 프로젝트 API 명세
-
+= Comma 애플리케이션 API 명세
+v0.0.1, 23-04-13
+:author: 이동기
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
 :toc: left
 :toclevels: 2
+:toc-title: 목차
 :sectlinks:
+:sectnums:
 
 [[resources-comma]]
-== 모든 회고 조회
-=== Request
+== 회고글 CRUD API
+
+=== 모든 회고 조회
+API: GET /api/commas?page={page}&size={size}
+
+==== Request
 include::{snippets}/comma-all-get/http-request.adoc[]
-=== Response
+==== Response
 include::{snippets}/comma-all-get/http-response.adoc[]
 
-== 특정 회고 조회
-=== Request
+=== 특정 회고 조회
+API: GET /api/commas/{commaId}
+
+==== Request
 include::{snippets}/comma-get/http-request.adoc[]
-=== Response
+==== Response
 include::{snippets}/comma-get/http-response.adoc[]
 
-== 회고 수정
-=== Request
+=== 회고 수정
+API: PUT /api/commas/{commaId}
+
+==== Request
 include::{snippets}/comma-update/http-request.adoc[]
-=== Response
+
+==== Response
 include::{snippets}/comma-update/http-response.adoc[]
 
-== 회고 생성
-=== Request
+=== 회고 생성
+API: POST /api/commas
+
+==== Request
 include::{snippets}/comma-post/http-request.adoc[]
-=== Response
+
+==== Response
 include::{snippets}/comma-post/http-response.adoc[]
 
-== 회고 삭제
-=== Request
+=== 회고 삭제
+API: DELETE /api/commas/{commaId}
+
+==== Request
 include::{snippets}/comma-delete/http-request.adoc[]
-=== Response
+
+==== Response
 include::{snippets}/comma-delete/http-response.adoc[]
 
 [[resources-comma-search]]
-== 특정 날짜, 특정 유저 글 조회
-=== Request
+== 회고글 검색 조회 API
+
+=== 특정 날짜, 특정 유저 글 조회
+API: GET /api/commas?type=userdate&date={date}&username={username}&page={page}&size={size}
+
+==== Request
 include::{snippets}/read-search-date-user/http-request.adoc[]
-=== Response
+
+==== Response
 include::{snippets}/read-search-date-user/http-response.adoc[]
 
-== 특정 사용자 글 조회
-=== Request
+=== 특정 사용자 글 조회
+API: GET /api/commas?type=user&username={username}&page={page}&size={size}
+
+==== Request
 include::{snippets}/read-search-user/http-request.adoc[]
-=== Response
+
+==== Response
 include::{snippets}/read-search-user/http-response.adoc[]
 
-== 특정 날짜 글 조회
-=== Request
+=== 특정 날짜 글 조회
+API: GET /api/commas?type=date&date={date}&page={page}&size={size}
+
+==== Request
 include::{snippets}/read-search-date/http-request.adoc[]
-=== Response
+
+==== Response
 include::{snippets}/read-search-date/http-response.adoc[]
 
 [[resources-comment]]
-== 댓글 생성
-=== Request
+== 댓글 CRUD API
+
+=== 댓글 생성
+API: POST /api/commas/{commaId}/comments
+
+==== Request
 include::{snippets}/create-comment/http-request.adoc[]
-=== Response
+
+==== Response
 include::{snippets}/create-comment/http-response.adoc[]
 
-== 댓글 수정
-=== Request
+=== 댓글 수정
+API: PUT /api/commas/{commaId}/comments/{commentId}
+
+==== Request
 include::{snippets}/update-comment/http-request.adoc[]
-=== Response
+
+==== Response
 include::{snippets}/update-comment/http-response.adoc[]
 
-== 댓글 삭제
-=== Request
+=== 댓글 삭제
+DELETE /api/commas/{commaId}/comments/{commentId}
+
+==== Request
 include::{snippets}/delete-comment/http-request.adoc[]
-=== Response
+
+==== Response
 include::{snippets}/delete-comment/http-response.adoc[]
 
+[[resources-like]]
+== 게시글 좋아요 API
+
+=== 좋아요 성공
+API: POST /api/likes/{commaId}/like
+
+==== Request
+include::{snippets}/user_click_like_success/http-request.adoc[]
+
+==== Response
+include::{snippets}/user_click_like_success/http-response.adoc[]
+
+=== 좋아요 취소 성공
+API: POST /api/likes/{commaId}/unlike
+
+==== Request
+include::{snippets}/user_click_unlike_success/http-request.adoc[]
+
+==== Response
+include::{snippets}/user_click_unlike_success/http-response.adoc[]
