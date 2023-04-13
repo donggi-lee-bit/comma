@@ -16,7 +16,7 @@
 
 # 모니터링 프로그램 실행 방법
 환경
-- Java 8
+- Java 11
 - Spring Boot 2.7.6
 
 ## Local 환경에서 실행
