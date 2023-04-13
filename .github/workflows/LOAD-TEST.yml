@@ -130,9 +130,25 @@ jobs:
           customHeaders: '{"Content-Type": "application/json"}'
           data: '{"param" : "${{ env.AWS_EC2_TEST_SERVER_IP }}", "testName" : "comma-load-test", "scriptName" : "test1.groovy", "runCount" : 1, "agentCount" : 1, "vuserPerAgent" : 10, "processes" : 2, "threads" : 5, "testComment" : "부하테스트 workflow 테스트 스크립트 실행", "status" : "READY", "duration" : "1200000"}'
 
+      - name: Get Ngrinder Test Result
+        uses: satak/webrequest-action@master
+        id: NgrinderTestResult
+        with:
+          url: 'http://${{ env.AWS_EC2_CONTROLLER_IP }}/perftest/api?page=0'
+          method: GET
+          username: admin
+          password: admin
+
+      - name: Show Ngrinder Test Result
+        run: |
+          $output = '${{ steps.NgrinderTestResult.outputs.output }}' | ConvertFrom-Json
+          Write-Host "Time from output $($output.time) statusCode $($output.statusCode) data $($output.data)"
+
       - name: Stop EC2 - (Controller, Agent, Test Server)
         run: aws ec2 stop-instances --instance-ids ${{ secrets.AWS_EC2_NGRINDER_CONTROLLER }} ${{ secrets.AWS_EC2_NGRINDER_AGENT }} ${{ secrets.AWS_EC2_SPRING_TEST_SERVER }}
         env:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+
