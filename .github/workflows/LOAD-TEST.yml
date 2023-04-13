@@ -148,7 +148,7 @@ jobs:
         if: success()
         with:
           severity: info
-          color: '#ff00aa'
+          color: '#5fa800'
           details: Test Succeeded!
           text: '${{ steps.NgrinderTestResult.outputs.output }}'
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
@@ -158,6 +158,7 @@ jobs:
         if: failure()
         with:
           severity: error
+          color: '#910909'
           details: Test Failed!
           text: '${{ steps.NgrinderTestResult.outputs.output }}'
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
