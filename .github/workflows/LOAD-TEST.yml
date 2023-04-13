@@ -150,7 +150,7 @@ jobs:
           severity: info
           color: '#ff00aa'
           details: Test Succeeded!
-          text: steps.NgrinderTestResult.outputs.output
+          text: '${{ steps.NgrinderTestResult.outputs.output }}'
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
       - name: Noti Discord - Test Failure
@@ -159,7 +159,7 @@ jobs:
         with:
           severity: error
           details: Test Failed!
-          text: steps.NgrinderTestResult.outputs.output
+          text: '${{ steps.NgrinderTestResult.outputs.output }}'
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
       - name: Stop EC2 - (Controller, Agent, Test Server)
