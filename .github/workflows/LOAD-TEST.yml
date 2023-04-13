@@ -143,10 +143,24 @@ jobs:
           username: admin
           password: admin
 
-      - name: Show Ngrinder Test Result
-        run: |
-          $output = '${{ steps.NgrinderTestResult.outputs.output }}' | ConvertFrom-Json
-          Write-Host "Time from output $($output.time) statusCode $($output.statusCode) data $($output.data)"
+      - name: Noti Discord - Test Success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          color: '#ff00aa'
+          details: Test Succeeded!
+          text: steps.NgrinderTestResult.outputs.output
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Noti Discord - Test Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          details: Test Failed!
+          text: steps.NgrinderTestResult.outputs.output
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
       - name: Stop EC2 - (Controller, Agent, Test Server)
         run: aws ec2 stop-instances --instance-ids ${{ secrets.AWS_EC2_NGRINDER_CONTROLLER }} ${{ secrets.AWS_EC2_NGRINDER_AGENT }} ${{ secrets.AWS_EC2_SPRING_TEST_SERVER }}
