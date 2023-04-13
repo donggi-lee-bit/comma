@@ -112,6 +112,16 @@ jobs:
           script: |
             sh ./agent_run.sh
 
+      - name: HTTP Request Action - Ngrinder rest api perf_test
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'http://${{ env.AWS_EC2_CONTROLLER_IP }}/perftest/api'
+          method: 'POST'
+          username: 'admin'
+          password: 'admin'
+          customHeaders: '{"Content-Type": "application/json"}'
+          data: '{"param" : "${{ env.AWS_EC2_TEST_SERVER_IP }}", "testName" : "comma-load-test", "scriptName" : "test1.groovy", "runCount" : 1, "agentCount" : 1, "vuserPerAgent" : 2, "testComment" : "부하테스트 workflow 테스트 스크립트 실행", "status" : "READY", "duration" : "1200000"}'
+
       - name: Stop EC2 - (Controller, Agent, Test Server)
         run: aws ec2 stop-instances --instance-ids ${{ secrets.AWS_EC2_NGRINDER_CONTROLLER }} ${{ secrets.AWS_EC2_NGRINDER_AGENT }} ${{ secrets.AWS_EC2_SPRING_TEST_SERVER }}
         env:
