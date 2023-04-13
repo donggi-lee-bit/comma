@@ -84,7 +84,7 @@ jobs:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Run remote ssh command plugin
-        uses: appleboy/ssh-action@v0.1.8
+        uses: appleboy/ssh-action@master
         id: deploy-prod
         with:
           host: "${{ env.AWS_EC2_TEST_SERVER_IP }}"
