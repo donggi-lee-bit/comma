@@ -69,7 +69,11 @@ jobs:
           export AWS_EC2_TEST_SERVER_IP=$(aws ec2 describe-instances --instance-ids ${{ secrets.AWS_EC2_SPRING_TEST_SERVER }} --query 'Reservations[].Instances[].PublicIpAddress' --output text)
           export AWS_EC2_CONTROLLER_IP=$(aws ec2 describe-instances --instance-ids ${{ secrets.AWS_EC2_NGRINDER_CONTROLLER }} --query 'Reservations[].Instances[].PublicIpAddress' --output text)
           export AWS_EC2_AGENT_IP=$(aws ec2 describe-instances --instance-ids ${{ secrets.AWS_EC2_NGRINDER_AGENT }} --query 'Reservations[].Instances[].PublicIpAddress' --output text)
-            
+          
+          echo "$AWS_EC2_TEST_SERVER_IP"
+          echo "$AWS_EC2_CONTROLLER_IP"
+          echo "$AWS_EC2_AGENT_IP"
+
           echo "AWS_EC2_TEST_SERVER_IP=$AWS_EC2_TEST_SERVER_IP" >> $GITHUB_ENV
           echo "AWS_EC2_CONTROLLER_IP=$AWS_EC2_CONTROLLER_IP" >> $GITHUB_ENV
           echo "AWS_EC2_AGENT_IP=$AWS_EC2_AGENT_IP" >> $GITHUB_ENV
