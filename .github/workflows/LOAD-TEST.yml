@@ -1,0 +1,29 @@
+name: LOAD-TEST
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ./
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: EC2 Run For Load Test - (Controller, Agent, Test Server)
+        run: aws ec2 start-instances --instance-ids ${{ secrets.AWS_EC2_NGRINDER_CONTROLLER }} ${{ secrets.AWS_EC2_NGRINDER_AGENT }} ${{ secrets.AWS_EC2_SPRING_TEST_SERVER }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
