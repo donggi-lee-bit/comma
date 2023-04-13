@@ -112,6 +112,10 @@ jobs:
           script: |
             sh ./agent_run.sh
 
+      - name: Wait For The Controller, Agent To Run
+        run: sleep 30s
+        shell: bash
+
       - name: HTTP Request Action - Ngrinder rest api perf_test
         uses: fjogeleit/http-request-action@v1
         with:
