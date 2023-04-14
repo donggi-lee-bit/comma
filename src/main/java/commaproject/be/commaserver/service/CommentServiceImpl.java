@@ -95,7 +95,8 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public List<CommentDetailResponse> readAll(Long commaId, Pageable pageable) {
-        validatePageSize(pageable.getPageSize());
+        int maxCommentSize = 10;
+        validatePageSize(pageable.getPageSize(), maxCommentSize);
 
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
@@ -137,8 +138,8 @@ public class CommentServiceImpl implements CommentService{
         }
     }
 
-    private void validatePageSize(int pageSize) {
-        if (pageSize > 10) {
+    private void validatePageSize(int pageSize, int maxCommentSize) {
+        if (pageSize > maxCommentSize) {
             throw new PageSizeOutOfBoundsException();
         }
     }
