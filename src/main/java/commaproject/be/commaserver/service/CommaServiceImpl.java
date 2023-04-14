@@ -52,7 +52,8 @@ public class CommaServiceImpl implements CommaService {
 
     @Override
     public List<CommaDetailResponse> readAll(Pageable pageable) {
-        validatePageSize(pageable.getPageSize());
+        int maxCommaSize = 100;
+        validatePageSize(pageable.getPageSize(), maxCommaSize);
         Page<Comma> commas = commaRepository.findAll(pageable);
 
         return commas.stream()
@@ -147,8 +148,8 @@ public class CommaServiceImpl implements CommaService {
         return PageRequest.of(0, 10);
     }
 
-    private void validatePageSize(int pageSize) {
-        if (pageSize > 100) {
+    private void validatePageSize(int pageSize, int maxCommaSize) {
+        if (pageSize > maxCommaSize) {
             throw new PageSizeOutOfBoundsException();
         }
     }
