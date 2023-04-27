@@ -5,9 +5,11 @@ import static commaproject.be.commaserver.domain.comma.QComma.comma;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import commaproject.be.commaserver.domain.comma.Comma;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.CollectionUtils;
 
 @RequiredArgsConstructor
 public class CommaSearchRepositoryImpl implements CommaSearchRepository {
@@ -16,11 +18,23 @@ public class CommaSearchRepositoryImpl implements CommaSearchRepository {
 
     @Override
     public List<Comma> searchByDateCondition(LocalDate start, LocalDate end, Pageable pageable) {
+        List<Long> ids = jpaQueryFactory
+            .select(comma.id)
+            .from(comma)
+            .where(comma.createdAt.between(start.atStartOfDay(), end.atStartOfDay()))
+            .orderBy(comma.id.desc())
+            .limit(pageable.getPageSize())
+            .offset(pageable.getOffset() * pageable.getPageSize())
+            .fetch();
+
+        if (CollectionUtils.isEmpty(ids)) {
+            return new ArrayList<>();
+        }
+
         return jpaQueryFactory
             .selectFrom(comma)
-            .where(comma.createdAt.between(start.atStartOfDay(), end.atStartOfDay()))
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
+            .where(comma.id.in(ids))
+            .orderBy(comma.id.desc())
             .fetch();
     }
 
