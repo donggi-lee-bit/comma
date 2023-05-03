@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import commaproject.be.commaserver.common.exception.PageSizeOutOfBoundsException;
-import commaproject.be.commaserver.service.dto.CommaDetailResponse;
-import java.util.List;
+import commaproject.be.commaserver.service.dto.CommaPaginatedResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
@@ -21,12 +20,12 @@ public class CommaIntegrationTest extends InitIntegrationTest {
         PageRequest pageRequest = PageRequest.of(0, pageSize);
         PageRequest pageRequest2 = PageRequest.of(0, pageSize2);
 
-        List<CommaDetailResponse> commaDetailResponses = commaService.readAll(pageRequest);
-        List<CommaDetailResponse> commaDetailResponses2 = commaService.readAll(pageRequest2);
+        CommaPaginatedResponse commaPaginatedResponse = commaService.readAll(pageRequest);
+        CommaPaginatedResponse commaPaginatedResponse2 = commaService.readAll(pageRequest2);
 
         assertSoftly(softly -> {
-            softly.assertThat(commaDetailResponses.size()).isEqualTo(2);
-            softly.assertThat(commaDetailResponses2.size()).isEqualTo(1);
+            softly.assertThat(commaPaginatedResponse.getCommaDetailResponses().size()).isEqualTo(2);
+            softly.assertThat(commaPaginatedResponse2.getCommaDetailResponses().size()).isEqualTo(1);
         });
     }
 

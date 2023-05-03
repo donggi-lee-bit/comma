@@ -11,6 +11,7 @@ import commaproject.be.commaserver.repository.CommentRepository;
 import commaproject.be.commaserver.repository.PostLikeRepository;
 import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
+import commaproject.be.commaserver.service.dto.CommaPaginatedResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
@@ -51,22 +52,19 @@ public class CommaServiceImpl implements CommaService {
     }
 
     @Override
-    public List<CommaDetailResponse> readAll(Pageable pageable) {
+    public CommaPaginatedResponse readAll(Pageable pageable) {
         int maxCommaSize = 100;
+
         validatePageSize(pageable.getPageSize(), maxCommaSize);
         Page<Comma> commas = commaRepository.findAll(pageable);
+        List<CommaDetailResponse> commaDetailResponses = getCommaDetailResponses(commas);
 
-        return commas.stream()
-            .map(comma -> new CommaDetailResponse(
-                comma.getId(),
-                comma.getTitle(),
-                comma.getContent(),
-                comma.getUsername(),
-                comma.getUser().getId(),
-                comma.getCreatedAt(),
-                getPostLikeCount(comma.getId()),
-                getCommentDetailResponses(comma.getId())))
-            .collect(Collectors.toUnmodifiableList());
+        return new CommaPaginatedResponse(
+            pageable.getPageNumber(),
+            commas.getTotalPages(),
+            pageable.getPageSize(),
+            commaDetailResponses
+        );
     }
 
     @Override
@@ -107,7 +105,8 @@ public class CommaServiceImpl implements CommaService {
             updateComma.getUser().getId(),
             updateComma.getCreatedAt(),
             getPostLikeCount(updateComma.getId()),
-            getCommentDetailResponses(comma.getId()));
+            getCommentDetailResponses(comma.getId())
+        );
     }
 
     @Override
@@ -124,6 +123,20 @@ public class CommaServiceImpl implements CommaService {
         comma.delete();
 
         return comma;
+    }
+
+    private List<CommaDetailResponse> getCommaDetailResponses(Page<Comma> commas) {
+        return commas.stream()
+            .map(comma -> new CommaDetailResponse(
+                comma.getId(),
+                comma.getTitle(),
+                comma.getContent(),
+                comma.getUsername(),
+                comma.getUser().getId(),
+                comma.getCreatedAt(),
+                getPostLikeCount(comma.getId()),
+                getCommentDetailResponses(comma.getId())))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private List<CommentDetailResponse> getCommentDetailResponses(Long commaId) {

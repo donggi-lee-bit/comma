@@ -16,6 +16,7 @@ import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
+import commaproject.be.commaserver.service.dto.CommaPaginatedResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
@@ -95,13 +96,16 @@ class CommaControllerTest extends InitControllerTest {
     @Test
     @DisplayName("전체 회고 조회 성공")
     void read_all_comma_success() throws Exception {
+        int currentPage = 0;
+        int lastPage = 1;
+        int pageSize = 2;
         List<CommaDetailResponse> commaDetailResponses = createCommaTestData();
-        BaseResponse<List<CommaDetailResponse>> baseResponse = new BaseResponse<>("200", "OK",
-            commaDetailResponses);
-        int page = 0;
-        int size = 2;
-        PageRequest pageRequest = PageRequest.of(page, size);
-        when(commaService.readAll(pageRequest)).thenReturn(commaDetailResponses);
+        CommaPaginatedResponse commaPaginatedResponse = new CommaPaginatedResponse(currentPage, pageSize,
+            lastPage, commaDetailResponses);
+        BaseResponse<CommaPaginatedResponse> baseResponse = new BaseResponse<>("200", "OK",
+            commaPaginatedResponse);
+        PageRequest pageRequest = PageRequest.of(currentPage, pageSize);
+        when(commaService.readAll(pageRequest)).thenReturn(commaPaginatedResponse);
 
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas")
@@ -123,19 +127,22 @@ class CommaControllerTest extends InitControllerTest {
                     responseFields(
                         fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                        fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("회고 아이디"),
-                        fieldWithPath("data[].title").type(JsonFieldType.STRING).description("회고 제목"),
-                        fieldWithPath("data[].content").type(JsonFieldType.STRING).description("회고 내용"),
-                        fieldWithPath("data[].username").type(JsonFieldType.STRING).description("회고 작성자"),
-                        fieldWithPath("data[].userId").type(JsonFieldType.NUMBER).description("회고 작성자 아이디"),
-                        fieldWithPath("data[].postLikeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
-                        fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
-                        fieldWithPath("data[].comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
-                        fieldWithPath("data[].comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
-                        fieldWithPath("data[].comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
-                        fieldWithPath("data[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용"),
-                        fieldWithPath("data[].comments[].createdAt").type(JsonFieldType.STRING).description("댓글 생성 시간"),
-                        fieldWithPath("data[].comments[].lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
+                        fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
+                        fieldWithPath("data.lastPage").type(JsonFieldType.NUMBER).description("마지막 페이지 위치"),
+                        fieldWithPath("data.offsetSize").type(JsonFieldType.NUMBER).description("요청한 오프셋 사이즈"),
+                        fieldWithPath("data.commaDetailResponses[].id").type(JsonFieldType.NUMBER).description("회고 아이디"),
+                        fieldWithPath("data.commaDetailResponses[].title").type(JsonFieldType.STRING).description("회고 제목"),
+                        fieldWithPath("data.commaDetailResponses[].content").type(JsonFieldType.STRING).description("회고 내용"),
+                        fieldWithPath("data.commaDetailResponses[].username").type(JsonFieldType.STRING).description("회고 작성자"),
+                        fieldWithPath("data.commaDetailResponses[].userId").type(JsonFieldType.NUMBER).description("회고 작성자 아이디"),
+                        fieldWithPath("data.commaDetailResponses[].postLikeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
+                        fieldWithPath("data.commaDetailResponses[].createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
+                        fieldWithPath("data.commaDetailResponses[].comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
+                        fieldWithPath("data.commaDetailResponses[].comments[].userId").type(JsonFieldType.NUMBER).description("댓글 작성자 아이디"),
+                        fieldWithPath("data.commaDetailResponses[].comments[].username").type(JsonFieldType.STRING).description("댓글 작성자"),
+                        fieldWithPath("data.commaDetailResponses[].comments[].content").type(JsonFieldType.STRING).description("댓글 내용"),
+                        fieldWithPath("data.commaDetailResponses[].comments[].createdAt").type(JsonFieldType.STRING).description("댓글 생성 시간"),
+                        fieldWithPath("data.commaDetailResponses[].comments[].lastModifiedAt").type(JsonFieldType.STRING).description("댓글 수정 시간")
                     )
                 ));
     }

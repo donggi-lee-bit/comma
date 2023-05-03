@@ -11,9 +11,9 @@ import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.user.AuthenticatedUser;
 import commaproject.be.commaserver.service.CommaService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
+import commaproject.be.commaserver.service.dto.CommaPaginatedResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,9 +37,9 @@ public class CommaController {
     }
 
     @GetMapping("/api/commas")
-    public BaseResponse<List<CommaDetailResponse>> readAll(Pageable pageable) {
-        List<CommaDetailResponse> commaDetailResponses = commaService.readAll(pageable);
-        return new BaseResponse<>(READ_ALL_COMMA_LOG_SUCCESS, commaDetailResponses);
+    public BaseResponse<CommaPaginatedResponse> readAll(Pageable pageable) {
+        CommaPaginatedResponse commaPaginatedResponse = commaService.readAll(pageable);
+        return new BaseResponse<>(READ_ALL_COMMA_LOG_SUCCESS, commaPaginatedResponse);
     }
 
     @PostMapping("/api/commas")
