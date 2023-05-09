@@ -63,13 +63,27 @@ public class CommaSearchRepositoryImpl implements CommaSearchRepository {
     }
 
     @Override
-    public List<Comma> searchByUserDateCondition(String username, LocalDate start, LocalDate end, Pageable pageable) {
-        return jpaQueryFactory
-            .selectFrom(comma)
+    public Page<Comma> searchByUserDateCondition(String username, LocalDate start, LocalDate end, Pageable pageable) {
+        List<Long> ids = jpaQueryFactory
+            .select(comma.id)
+            .from(comma)
             .where(comma.createdAt.between(start.atStartOfDay(), end.atStartOfDay()))
             .where(comma.username.eq(username))
-            .offset(pageable.getOffset())
+            .orderBy(comma.id.desc())
             .limit(pageable.getPageSize())
+            .offset(pageable.getOffset() * pageable.getPageSize())
             .fetch();
+
+        if (CollectionUtils.isEmpty(ids)) {
+            return new PageImpl<>(new ArrayList<>());
+        }
+
+        List<Comma> commas = jpaQueryFactory
+            .selectFrom(comma)
+            .where(comma.id.in(ids))
+            .orderBy(comma.id.desc())
+            .fetch();
+
+        return new PageImpl<>(commas, pageable, 0);
     }
 }
