@@ -1,6 +1,5 @@
 package commaproject.be.commaserver.service;
 
-import commaproject.be.commaserver.common.exception.PageSizeOutOfBoundsException;
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
 import commaproject.be.commaserver.common.exception.comment.NotFoundCommentException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
@@ -16,6 +15,7 @@ import commaproject.be.commaserver.service.dto.CommentRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,13 +95,12 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public List<CommentDetailResponse> readAll(Long commaId, Pageable pageable) {
-        int maxCommentSize = 10;
-        validatePageSize(pageable.getPageSize(), maxCommentSize);
+        Pageable pageRequest = exchangePageRequest(pageable);
 
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
-        List<Comment> comments = commentRepository.findAllByCommaId(comma.getId(), pageable);
+        List<Comment> comments = commentRepository.findAllByCommaId(comma.getId(), pageRequest);
 
         return comments.stream()
             .map(comment -> new CommentDetailResponse(
@@ -138,9 +137,13 @@ public class CommentServiceImpl implements CommentService{
         }
     }
 
-    private void validatePageSize(int pageSize, int maxCommentSize) {
-        if (pageSize > maxCommentSize) {
-            throw new PageSizeOutOfBoundsException();
+    private Pageable exchangePageRequest(Pageable pageable) {
+        int maxCommentSize = 10;
+        int pageSize = pageable.getPageSize();
+        if (pageSize <= maxCommentSize) {
+            return pageable;
         }
+
+        return PageRequest.of(pageable.getPageNumber(), maxCommentSize);
     }
 }

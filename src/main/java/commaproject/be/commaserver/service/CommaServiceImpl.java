@@ -1,6 +1,5 @@
 package commaproject.be.commaserver.service;
 
-import commaproject.be.commaserver.common.exception.PageSizeOutOfBoundsException;
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
@@ -53,17 +52,16 @@ public class CommaServiceImpl implements CommaService {
 
     @Override
     public CommaPaginatedResponse readAll(Pageable pageable) {
-        int maxCommaSize = 100;
+        Pageable pageRequest = exchangePageRequest(pageable);
 
-        validatePageSize(pageable.getPageSize(), maxCommaSize);
-        Page<Comma> commas = commaRepository.findAll(pageable);
-        List<CommaDetailResponse> commaDetailResponses = getCommaDetailResponses(commas);
+        Page<Comma> commas = commaRepository.findAll(pageRequest);
+        int totalPages = commas.getTotalPages() - 1;
 
         return new CommaPaginatedResponse(
             pageable.getPageNumber(),
-            commas.getTotalPages(),
-            pageable.getPageSize(),
-            commaDetailResponses
+            commas.getContent().size(),
+            totalPages,
+            getCommaDetailResponses(commas)
         );
     }
 
@@ -161,9 +159,14 @@ public class CommaServiceImpl implements CommaService {
         return PageRequest.of(0, 10);
     }
 
-    private void validatePageSize(int pageSize, int maxCommaSize) {
-        if (pageSize > maxCommaSize) {
-            throw new PageSizeOutOfBoundsException();
+    private Pageable exchangePageRequest(Pageable pageable) {
+        int maxCommaSize = 100;
+        int pageSize = pageable.getPageSize();
+
+        if (pageSize <= maxCommaSize) {
+            return pageable;
         }
+
+        return PageRequest.of(pageable.getPageNumber(), maxCommaSize);
     }
 }
