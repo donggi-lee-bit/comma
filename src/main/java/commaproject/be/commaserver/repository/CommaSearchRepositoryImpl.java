@@ -2,6 +2,7 @@ package commaproject.be.commaserver.repository;
 
 import static commaproject.be.commaserver.domain.comma.QComma.comma;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import commaproject.be.commaserver.domain.comma.Comma;
 import java.time.LocalDate;
@@ -20,15 +21,15 @@ public class CommaSearchRepositoryImpl implements CommaSearchRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-    @Override
-    public Page<Comma> searchByDateCondition(LocalDate start, LocalDate end, Pageable pageable) {
+    public Page<Comma> searchByCondition(Pageable pageable, LocalDate dateCondition, String usernameCondition) {
+        log.info("date: {}, username: {}", dateCondition, usernameCondition);
         List<Long> ids = jpaQueryFactory
             .select(comma.id)
             .from(comma)
-            .where(comma.createdAt.between(start.atStartOfDay(), end.atStartOfDay()))
+            .where(dateBetween(dateCondition), usernameEq(usernameCondition))
             .orderBy(comma.id.desc())
             .limit(pageable.getPageSize())
-            .offset(pageable.getOffset() * pageable.getPageSize())
+            .offset(pageable.getOffset())
             .fetch();
 
         if (CollectionUtils.isEmpty(ids)) {
@@ -44,73 +45,26 @@ public class CommaSearchRepositoryImpl implements CommaSearchRepository {
         Long totalCount = jpaQueryFactory
             .select(comma.count())
             .from(comma)
-            .where(comma.createdAt.between(start.atStartOfDay(), end.atStartOfDay()))
+            .where(dateBetween(dateCondition), usernameEq(usernameCondition))
             .orderBy(comma.id.desc())
             .fetchOne();
-        log.info("totalCount: {}", totalCount);
+
         return new PageImpl<>(pagination, pageable, totalCount);
     }
 
-    @Override
-    public Page<Comma> searchByUserCondition(String username, Pageable pageable) {
-        List<Long> ids = jpaQueryFactory
-            .select(comma.id)
-            .from(comma)
-            .where(comma.username.eq(username))
-            .orderBy(comma.id.desc())
-            .limit(pageable.getPageSize())
-            .offset(pageable.getOffset() * pageable.getPageSize())
-            .fetch();
-
-        if (CollectionUtils.isEmpty(ids)) {
-            return new PageImpl<>(new ArrayList<>());
+    private BooleanExpression dateBetween(LocalDate dateCondition) {
+        if (dateCondition == null) {
+            return null;
         }
 
-        List<Comma> pagination = jpaQueryFactory
-            .selectFrom(comma)
-            .where(comma.id.in(ids))
-            .orderBy(comma.id.desc())
-            .fetch();
-
-        Long totalCount = jpaQueryFactory
-            .select(comma.count())
-            .from(comma)
-            .where(comma.username.eq(username))
-            .orderBy(comma.id.desc())
-            .fetchOne();
-        return new PageImpl<>(pagination, pageable, totalCount);
+        return comma.createdAt.between(dateCondition.atStartOfDay(), dateCondition.plusDays(1).atStartOfDay());
     }
 
-    @Override
-    public Page<Comma> searchByUserDateCondition(String username, LocalDate start, LocalDate end, Pageable pageable) {
-        List<Long> ids = jpaQueryFactory
-            .select(comma.id)
-            .from(comma)
-            .where(comma.createdAt.between(start.atStartOfDay(), end.atStartOfDay()))
-            .where(comma.username.eq(username))
-            .orderBy(comma.id.desc())
-            .limit(pageable.getPageSize())
-            .offset(pageable.getOffset() * pageable.getPageSize())
-            .fetch();
-
-        if (CollectionUtils.isEmpty(ids)) {
-            return new PageImpl<>(new ArrayList<>());
+    private BooleanExpression usernameEq(String username) {
+        if (username == null) {
+            return null;
         }
 
-        List<Comma> pagination = jpaQueryFactory
-            .selectFrom(comma)
-            .where(comma.id.in(ids))
-            .orderBy(comma.id.desc())
-            .fetch();
-
-        Long totalCount = jpaQueryFactory
-            .select(comma.count())
-            .from(comma)
-            .where(comma.createdAt.between(start.atStartOfDay(), end.atStartOfDay()))
-            .where(comma.username.eq(username))
-            .orderBy(comma.id.desc())
-            .fetchOne();
-
-        return new PageImpl<>(pagination, pageable, totalCount);
+        return comma.username.eq(username);
     }
 }

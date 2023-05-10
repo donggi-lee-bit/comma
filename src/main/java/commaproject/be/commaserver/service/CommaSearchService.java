@@ -6,9 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface CommaSearchService {
 
-    CommaPaginatedResponse searchByDateCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable);
-
-    CommaPaginatedResponse searchByUserCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable);
-
-    CommaPaginatedResponse searchByUserDateCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable);
+    CommaPaginatedResponse searchByCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable);
 }

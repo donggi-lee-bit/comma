@@ -3,10 +3,9 @@ package commaproject.be.commaserver.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import commaproject.be.commaserver.service.dto.CommaDetailResponse;
+import commaproject.be.commaserver.service.dto.CommaPaginatedResponse;
 import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
 import java.time.LocalDate;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
@@ -20,9 +19,9 @@ public class CommaSearchIntegrationTest extends InitIntegrationTest {
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(LocalDate.now(), null);
         PageRequest pageRequest = PageRequest.of(0, 2);
 
-        List<CommaDetailResponse> commaDetailResponses = commaSearchService.searchByDateCondition(commaSearchConditionRequest, pageRequest);
+        CommaPaginatedResponse commaPaginatedResponse = commaSearchService.searchByCondition(commaSearchConditionRequest, pageRequest);
 
-        assertThat(commaDetailResponses.size()).isEqualTo(2);
+        assertThat(commaPaginatedResponse.getCommaDetailResponses().size()).isEqualTo(2);
     }
 
     @Test
@@ -31,12 +30,12 @@ public class CommaSearchIntegrationTest extends InitIntegrationTest {
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(null, "donggi");
         PageRequest pageRequest = PageRequest.of(0, 2);
 
-        List<CommaDetailResponse> commaDetailResponses = commaSearchService.searchByUserCondition(commaSearchConditionRequest, pageRequest);
-        String username = commaDetailResponses.get(0).getUsername();
+        CommaPaginatedResponse commaPaginatedResponse = commaSearchService.searchByCondition(commaSearchConditionRequest, pageRequest);
+        String username = commaPaginatedResponse.getCommaDetailResponses().get(0).getUsername();
 
         assertSoftly(softly -> {
             softly.assertThat(username).isEqualTo("donggi");
-            softly.assertThat(commaDetailResponses.size()).isEqualTo(2);
+            softly.assertThat(commaPaginatedResponse.getCommaDetailResponses().size()).isEqualTo(2);
         });
     }
 
@@ -46,12 +45,12 @@ public class CommaSearchIntegrationTest extends InitIntegrationTest {
         CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(LocalDate.now(), "donggi");
         PageRequest pageRequest = PageRequest.of(0, 2);
 
-        List<CommaDetailResponse> commaDetailResponses = commaSearchService.searchByUserDateCondition(commaSearchConditionRequest, pageRequest);
-        String username = commaDetailResponses.get(0).getUsername();
+        CommaPaginatedResponse commaPaginatedResponse = commaSearchService.searchByCondition(commaSearchConditionRequest, pageRequest);
+        String username = commaPaginatedResponse.getCommaDetailResponses().get(0).getUsername();
 
         assertSoftly(softly -> {
             softly.assertThat(username).isEqualTo("donggi");
-            softly.assertThat(commaDetailResponses.size()).isEqualTo(2);
+            softly.assertThat(commaPaginatedResponse.getCommaDetailResponses().size()).isEqualTo(2);
         });
     }
 }

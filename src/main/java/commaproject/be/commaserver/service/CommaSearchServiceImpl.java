@@ -10,7 +10,6 @@ import commaproject.be.commaserver.service.dto.CommaDetailResponse;
 import commaproject.be.commaserver.service.dto.CommaPaginatedResponse;
 import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CommaSearchServiceImpl implements CommaSearchService {
@@ -32,50 +30,16 @@ public class CommaSearchServiceImpl implements CommaSearchService {
     private final CommaRepository commaRepository;
 
     @Override
-    public CommaPaginatedResponse searchByDateCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
+    public CommaPaginatedResponse searchByCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
         validatePageSize(pageable.getPageSize());
 
-        LocalDate startDate = commaSearchConditionRequest.getDate();
-        LocalDate endDate = startDate.plusDays(1);
-
-        Page<Comma> commas = commaRepository.searchByDateCondition(startDate, endDate, pageable);
+        Page<Comma> commas = commaRepository.searchByCondition(pageable, commaSearchConditionRequest.getDate(), commaSearchConditionRequest.getUsername());
+        int totalPages = commas.getTotalPages() - 1;
 
         return new CommaPaginatedResponse(
             pageable.getPageNumber(),
-            commas.getTotalPages(),
-            pageable.getPageSize(),
-            getCommaDetailResponses(commas)
-        );
-    }
-
-    @Override
-    public CommaPaginatedResponse searchByUserCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
-        validatePageSize(pageable.getPageSize());
-
-        Page<Comma> commas = commaRepository.searchByUserCondition(commaSearchConditionRequest.getUsername(), pageable);
-        log.info("commas.getTotalPages(): {}", commas.getTotalPages());
-        log.info("commas.getTotalElements(): {}", commas.getTotalElements());
-
-        return new CommaPaginatedResponse(
-            pageable.getPageNumber(),
-            commas.getTotalPages(),
-            pageable.getPageSize(),
-            getCommaDetailResponses(commas)
-        );
-    }
-
-    @Override
-    public CommaPaginatedResponse searchByUserDateCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
-        validatePageSize(pageable.getPageSize());
-
-        LocalDate startDate = commaSearchConditionRequest.getDate();
-        LocalDate endDate = startDate.plusDays(1);
-        Page<Comma> commas = commaRepository.searchByUserDateCondition(commaSearchConditionRequest.getUsername(), startDate, endDate, pageable);
-
-        return new CommaPaginatedResponse(
-            pageable.getPageNumber(),
-            commas.getTotalPages(),
-            pageable.getPageSize(),
+            commas.getContent().size(),
+            totalPages,
             getCommaDetailResponses(commas)
         );
     }
