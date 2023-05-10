@@ -13,7 +13,6 @@ import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,9 +30,9 @@ public class CommaSearchServiceImpl implements CommaSearchService {
 
     @Override
     public CommaPaginatedResponse searchByCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
-        validatePageSize(pageable.getPageSize());
+        Pageable pageRequest = exchangePageRequest(pageable);
 
-        Page<Comma> commas = commaRepository.searchByCondition(pageable, commaSearchConditionRequest.getDate(), commaSearchConditionRequest.getUsername());
+        Page<Comma> commas = commaRepository.searchByCondition(pageRequest, commaSearchConditionRequest.getDate(), commaSearchConditionRequest.getUsername());
         int totalPages = commas.getTotalPages() - 1;
 
         return new CommaPaginatedResponse(
@@ -80,10 +79,14 @@ public class CommaSearchServiceImpl implements CommaSearchService {
         return PageRequest.of(0, 10);
     }
 
-    private void validatePageSize(int pageSize) {
-        int maxCommaPageSize = 100;
-        if (pageSize > maxCommaPageSize) {
-            throw new PageSizeOutOfBoundsException();
+    private Pageable exchangePageRequest(Pageable pageable) {
+        int maxCommaSize = 100;
+        int pageSize = pageable.getPageSize();
+
+        if (pageSize <= maxCommaSize) {
+            return pageable;
         }
+
+        return PageRequest.of(pageable.getPageNumber(), maxCommaSize);
     }
 }

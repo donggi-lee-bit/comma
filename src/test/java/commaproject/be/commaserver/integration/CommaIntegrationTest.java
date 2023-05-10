@@ -1,10 +1,13 @@
 package commaproject.be.commaserver.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import commaproject.be.commaserver.common.exception.PageSizeOutOfBoundsException;
 import commaproject.be.commaserver.service.dto.CommaPaginatedResponse;
+import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
@@ -35,7 +38,8 @@ public class CommaIntegrationTest extends InitIntegrationTest {
         int pageSize = 101;
         PageRequest pageRequest = PageRequest.of(0, pageSize);
 
-        assertThatThrownBy(() -> commaService.readAll(pageRequest))
-            .isInstanceOf(PageSizeOutOfBoundsException.class);
+        CommaPaginatedResponse commaPaginatedResponse = commaService.readAll(pageRequest);
+
+        assertThat(commaPaginatedResponse.getCommaDetailResponses().size()).isEqualTo(3);
     }
 }

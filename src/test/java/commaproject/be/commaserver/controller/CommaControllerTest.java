@@ -41,8 +41,6 @@ class CommaControllerTest extends InitControllerTest {
     @Test
     @DisplayName("특정 회고 조회 성공")
     void read_comma_success() throws Exception {
-
-        // given
         List<CommentDetailResponse> comments = createCommentTestData();
         Long commaId = 1L;
         CommaDetailResponse commaDetailResponse = new CommaDetailResponse(
@@ -52,7 +50,6 @@ class CommaControllerTest extends InitControllerTest {
 
         when(commaService.readOne(commaId)).thenReturn(commaDetailResponse);
 
-        // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.get("/api/commas/{commaId}", commaId)
                 .content(objectMapper
@@ -61,8 +58,6 @@ class CommaControllerTest extends InitControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
-
-        // then
         result
             .andExpect(status().isOk())
             .andDo(
@@ -128,8 +123,8 @@ class CommaControllerTest extends InitControllerTest {
                         fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
                         fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                         fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER).description("현재 페이지"),
-                        fieldWithPath("data.lastPage").type(JsonFieldType.NUMBER).description("마지막 페이지 위치"),
-                        fieldWithPath("data.offsetSize").type(JsonFieldType.NUMBER).description("요청한 오프셋 사이즈"),
+                        fieldWithPath("data.pageSize").type(JsonFieldType.NUMBER).description("요청한 오프셋 사이즈"),
+                        fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER).description("전체 페이지 개수"),
                         fieldWithPath("data.commaDetailResponses[].id").type(JsonFieldType.NUMBER).description("회고 아이디"),
                         fieldWithPath("data.commaDetailResponses[].title").type(JsonFieldType.STRING).description("회고 제목"),
                         fieldWithPath("data.commaDetailResponses[].content").type(JsonFieldType.STRING).description("회고 내용"),
@@ -150,8 +145,6 @@ class CommaControllerTest extends InitControllerTest {
     @Test
     @DisplayName("회고 생성 성공")
     void create_comma_success() throws Exception {
-
-        // given
         Long userId = 1L;
         Long commaId = 1L;
         CommaRequest commaRequest = new CommaRequest("title1", "content1");
@@ -159,7 +152,6 @@ class CommaControllerTest extends InitControllerTest {
 
         when(commaService.create(userId, commaRequest)).thenReturn(commaResponse);
 
-        // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.post("/api/commas")
                 .header("Authorization",
@@ -169,8 +161,6 @@ class CommaControllerTest extends InitControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
-
-        // then
         result
             .andExpect(status().isOk())
             .andDo(
@@ -189,8 +179,6 @@ class CommaControllerTest extends InitControllerTest {
     @Test
     @DisplayName("특정 회고 수정 성공")
     void update_comma_success() throws Exception {
-
-        // given
         Long commaId = 1L;
         Long userId = 1L;
         CommaRequest commaRequest = new CommaRequest("title1", "content1");
@@ -201,7 +189,6 @@ class CommaControllerTest extends InitControllerTest {
 
         when(commaService.update(userId, commaId, commaRequest)).thenReturn(commaDetailResponse);
 
-        // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.put("/api/commas/{commaId}", commaId)
                 .header("Authorization",
@@ -211,7 +198,6 @@ class CommaControllerTest extends InitControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
-        // then
         result
             .andExpect(status().isOk())
             .andDo(
@@ -245,17 +231,13 @@ class CommaControllerTest extends InitControllerTest {
     @Test
     @DisplayName("회고 삭제 성공")
     void delete_comma_success() throws Exception {
-
-        // given
         Long commaId = 1L;
         Long loginUserId = 1L;
         User user = User.from("username1", "test@test.com", "test.jpg");
         Comma comma = Comma.from("title1", "content1", user);
         ReflectionTestUtils.setField(comma, "id", commaId);
-
         when(commaService.remove(loginUserId, commaId)).thenReturn(comma);
 
-        // when
         ResultActions result = mockMvc.perform(
             RestDocumentationRequestBuilders.delete("/api/commas/{commaId}", commaId)
                 .header("Authorization",
@@ -263,7 +245,6 @@ class CommaControllerTest extends InitControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
 
-        // then
         result
             .andExpect(status().isOk())
             .andDo(

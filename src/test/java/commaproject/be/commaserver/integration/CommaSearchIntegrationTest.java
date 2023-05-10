@@ -5,7 +5,9 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import commaproject.be.commaserver.service.dto.CommaPaginatedResponse;
 import commaproject.be.commaserver.service.dto.CommaSearchConditionRequest;
+import commaproject.be.commaserver.service.dto.CommentDetailResponse;
 import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
@@ -52,5 +54,16 @@ public class CommaSearchIntegrationTest extends InitIntegrationTest {
             softly.assertThat(username).isEqualTo("donggi");
             softly.assertThat(commaPaginatedResponse.getCommaDetailResponses().size()).isEqualTo(2);
         });
+    }
+
+    @Test
+    @DisplayName("100개 이상의 회고 게시글 페이지 요청 시 100개로 요청하도록 한다")
+    void comment_page_size_out_of_bounds() {
+        int pageSize = 1000;
+        PageRequest pageRequest = PageRequest.of(0, pageSize);
+        CommaSearchConditionRequest commaSearchConditionRequest = new CommaSearchConditionRequest(LocalDate.now(), "donggi");
+
+        CommaPaginatedResponse commaPaginatedResponse = commaSearchService.searchByCondition(commaSearchConditionRequest, pageRequest);
+        assertThat(commaPaginatedResponse.getCommaDetailResponses().size()).isEqualTo(3);
     }
 }
