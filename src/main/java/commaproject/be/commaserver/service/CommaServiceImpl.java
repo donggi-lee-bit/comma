@@ -1,6 +1,5 @@
 package commaproject.be.commaserver.service;
 
-import commaproject.be.commaserver.common.exception.PageSizeOutOfBoundsException;
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
 import commaproject.be.commaserver.domain.comma.Comma;
@@ -11,6 +10,7 @@ import commaproject.be.commaserver.repository.CommentRepository;
 import commaproject.be.commaserver.repository.PostLikeRepository;
 import commaproject.be.commaserver.repository.UserRepository;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
+import commaproject.be.commaserver.service.dto.CommaPaginatedResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
 import commaproject.be.commaserver.service.dto.CommentDetailResponse;
@@ -51,21 +51,18 @@ public class CommaServiceImpl implements CommaService {
     }
 
     @Override
-    public List<CommaDetailResponse> readAll(Pageable pageable) {
-        validatePageSize(pageable.getPageSize());
-        Page<Comma> commas = commaRepository.findAll(pageable);
+    public CommaPaginatedResponse readAll(Pageable pageable) {
+        Pageable pageRequest = exchangePageRequest(pageable);
 
-        return commas.stream()
-            .map(comma -> new CommaDetailResponse(
-                comma.getId(),
-                comma.getTitle(),
-                comma.getContent(),
-                comma.getUsername(),
-                comma.getUser().getId(),
-                comma.getCreatedAt(),
-                getPostLikeCount(comma.getId()),
-                getCommentDetailResponses(comma.getId())))
-            .collect(Collectors.toUnmodifiableList());
+        Page<Comma> commas = commaRepository.findAll(pageRequest);
+        int totalPages = commas.getTotalPages() - 1;
+
+        return new CommaPaginatedResponse(
+            pageable.getPageNumber(),
+            commas.getContent().size(),
+            totalPages,
+            getCommaDetailResponses(commas)
+        );
     }
 
     @Override
@@ -106,7 +103,8 @@ public class CommaServiceImpl implements CommaService {
             updateComma.getUser().getId(),
             updateComma.getCreatedAt(),
             getPostLikeCount(updateComma.getId()),
-            getCommentDetailResponses(comma.getId()));
+            getCommentDetailResponses(comma.getId())
+        );
     }
 
     @Override
@@ -123,6 +121,20 @@ public class CommaServiceImpl implements CommaService {
         comma.delete();
 
         return comma;
+    }
+
+    private List<CommaDetailResponse> getCommaDetailResponses(Page<Comma> commas) {
+        return commas.stream()
+            .map(comma -> new CommaDetailResponse(
+                comma.getId(),
+                comma.getTitle(),
+                comma.getContent(),
+                comma.getUsername(),
+                comma.getUser().getId(),
+                comma.getCreatedAt(),
+                getPostLikeCount(comma.getId()),
+                getCommentDetailResponses(comma.getId())))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private List<CommentDetailResponse> getCommentDetailResponses(Long commaId) {
@@ -147,9 +159,14 @@ public class CommaServiceImpl implements CommaService {
         return PageRequest.of(0, 10);
     }
 
-    private void validatePageSize(int pageSize) {
-        if (pageSize > 100) {
-            throw new PageSizeOutOfBoundsException();
+    private Pageable exchangePageRequest(Pageable pageable) {
+        int maxCommaSize = 100;
+        int pageSize = pageable.getPageSize();
+
+        if (pageSize <= maxCommaSize) {
+            return pageable;
         }
+
+        return PageRequest.of(pageable.getPageNumber(), maxCommaSize);
     }
 }

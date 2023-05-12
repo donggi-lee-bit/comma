@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -14,6 +16,7 @@ import org.hibernate.annotations.Where;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "comment", indexes = {@Index(name = "idx_comma_id", columnList = "commaId")})
 @SQLDelete(sql = "UPDATE comment SET deleted = true WHERE id = ?")
 @Where(clause = "deleted = false")
 public class Comment extends BaseEntity {

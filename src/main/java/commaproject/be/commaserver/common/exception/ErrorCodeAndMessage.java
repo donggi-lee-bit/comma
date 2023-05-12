@@ -20,7 +20,8 @@ public enum ErrorCodeAndMessage implements CodeAndMessage {
     UN_AUTHORIZED_USER_ERROR("E-BR001", "해당 행위가 허용되지 않은 유저입니다."),
     ALREADY_POST_LIKE_ERROR("E-BR002", "이미 좋아요 한 게시글입니다."),
     ALREADY_POST_UNLIKE_ERROR("E-BR003", "좋아요 하지 않은 게시글입니다."),
-    PAGE_SIZE_OUT_OF_BOUNDS("E-BR004", "요청한 페이지 크기가 너무 큽니다.")
+    INVALID_PAGE_PARAMETER_ERROR("E-BR004", "잘못된 형식의 페이지 요청입니다."),
+    NOT_ALLOWED_PAGE_SORT_ERROR("E-BR005", "페이지 정렬은 허용되지 않는 요청입니다."),
     ;
 
     private final String code;

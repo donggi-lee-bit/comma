@@ -11,6 +11,7 @@ import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.domain.user.User;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
+import commaproject.be.commaserver.service.dto.CommaPaginatedResponse;
 import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
 import java.util.ArrayList;
@@ -35,9 +36,9 @@ class CommaServiceTest extends InitServiceTest {
         PageRequest commentPageRequest = PageRequest.of(0, 10);
         when(commentRepository.findAllByCommaId(commaId, commentPageRequest)).thenReturn(comments);
 
-        List<CommaDetailResponse> commaDetailResponsesExpected = commaService.readAll(commaPageRequest);
+        CommaPaginatedResponse commaPaginatedResponse = commaService.readAll(commaPageRequest);
 
-        assertThat(commaDetailResponsesExpected.size()).isEqualTo(3);
+        assertThat(commaPaginatedResponse.getCommaDetailResponses().size()).isEqualTo(3);
     }
 
     @Test

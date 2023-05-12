@@ -1,6 +1,5 @@
 package commaproject.be.commaserver.service;
 
-import commaproject.be.commaserver.common.exception.PageSizeOutOfBoundsException;
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
 import commaproject.be.commaserver.common.exception.comment.NotFoundCommentException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
@@ -95,8 +94,6 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public List<CommentDetailResponse> readAll(Long commaId, Pageable pageable) {
-        validatePageSize(pageable.getPageSize());
-
         Comma comma = commaRepository.findById(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
@@ -134,12 +131,6 @@ public class CommentServiceImpl implements CommentService{
     private void validateAuthorizedUserModifyComment(Long loginUserId, Long commenterId) {
         if (!commenterId.equals(loginUserId)) {
             throw new UnAuthorizedUserException();
-        }
-    }
-
-    private void validatePageSize(int pageSize) {
-        if (pageSize > 10) {
-            throw new PageSizeOutOfBoundsException();
         }
     }
 }

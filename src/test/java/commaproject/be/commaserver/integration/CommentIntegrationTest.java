@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import commaproject.be.commaserver.common.exception.PageSizeOutOfBoundsException;
 import commaproject.be.commaserver.common.exception.comma.NotFoundCommaException;
 import commaproject.be.commaserver.common.exception.comment.NotFoundCommentException;
 import commaproject.be.commaserver.common.exception.user.NotFoundUserException;
@@ -185,13 +184,14 @@ class CommentIntegrationTest extends InitIntegrationTest {
     }
 
     @Test
-    @DisplayName("10개 이상의 댓글 페이징 처리 요청 시 에러를 발생시킨다")
+    @DisplayName("10개 이상의 댓글 페이지 요청 시 10개로 요청하도록 한다")
     void comment_page_size_out_of_bounds() {
         Long commaId = 1L;
         int pageSize = 11;
         PageRequest pageRequest = PageRequest.of(0, pageSize);
 
-        assertThatThrownBy(() -> commentService.readAll(commaId, pageRequest))
-            .isInstanceOf(PageSizeOutOfBoundsException.class);
+        List<CommentDetailResponse> commentDetailResponses = commentService.readAll(commaId,
+            pageRequest);
+        assertThat(commentDetailResponses.size()).isEqualTo(3);
     }
 }
