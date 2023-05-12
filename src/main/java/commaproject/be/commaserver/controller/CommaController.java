@@ -8,6 +8,7 @@ import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage
 
 import commaproject.be.commaserver.common.response.BaseResponse;
 import commaproject.be.commaserver.domain.comma.Comma;
+import commaproject.be.commaserver.domain.comma.ValidPage;
 import commaproject.be.commaserver.domain.user.AuthenticatedUser;
 import commaproject.be.commaserver.service.CommaService;
 import commaproject.be.commaserver.service.dto.CommaDetailResponse;
@@ -16,7 +17,6 @@ import commaproject.be.commaserver.service.dto.CommaRequest;
 import commaproject.be.commaserver.service.dto.CommaResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +38,7 @@ public class CommaController {
     }
 
     @GetMapping("/api/commas")
-    public BaseResponse<CommaPaginatedResponse> readAll(@PageableDefault Pageable pageable) {
+    public BaseResponse<CommaPaginatedResponse> readAll(@ValidPage Pageable pageable) {
         CommaPaginatedResponse commaPaginatedResponse = commaService.readAll(pageable);
         return new BaseResponse<>(READ_ALL_COMMA_LOG_SUCCESS, commaPaginatedResponse);
     }

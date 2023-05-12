@@ -7,6 +7,7 @@ import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage
 import static commaproject.be.commaserver.common.response.ResponseCodeAndMessage.UPDATE_COMMENT_LOG_SUCCESS;
 
 import commaproject.be.commaserver.common.response.BaseResponse;
+import commaproject.be.commaserver.domain.comma.ValidPage;
 import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.domain.user.AuthenticatedUser;
 import commaproject.be.commaserver.service.CommentService;
@@ -15,9 +16,7 @@ import commaproject.be.commaserver.service.dto.CommentRequest;
 import commaproject.be.commaserver.service.dto.CommentResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +32,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/api/commas/{commaId}/comments")
-    public BaseResponse<List<CommentDetailResponse>> readAll(@PathVariable Long commaId, @PageableDefault Pageable pageable) {
+    public BaseResponse<List<CommentDetailResponse>> readAll(@PathVariable Long commaId, @ValidPage Pageable pageable) {
         List<CommentDetailResponse> commentDetailResponses = commentService.readAll(commaId, pageable);
         return new BaseResponse<>(READ_ALL_COMMENT_LOG_SUCCESS, commentDetailResponses);
     }

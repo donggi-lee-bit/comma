@@ -1,6 +1,5 @@
 package commaproject.be.commaserver.service;
 
-import commaproject.be.commaserver.common.exception.PageSizeOutOfBoundsException;
 import commaproject.be.commaserver.domain.comma.Comma;
 import commaproject.be.commaserver.domain.comment.Comment;
 import commaproject.be.commaserver.repository.CommaRepository;
@@ -30,9 +29,7 @@ public class CommaSearchServiceImpl implements CommaSearchService {
 
     @Override
     public CommaPaginatedResponse searchByCondition(CommaSearchConditionRequest commaSearchConditionRequest, Pageable pageable) {
-        Pageable pageRequest = exchangePageRequest(pageable);
-
-        Page<Comma> commas = commaRepository.searchByCondition(pageRequest, commaSearchConditionRequest.getDate(), commaSearchConditionRequest.getUsername());
+        Page<Comma> commas = commaRepository.searchByCondition(pageable, commaSearchConditionRequest.getDate(), commaSearchConditionRequest.getUsername());
         int totalPages = commas.getTotalPages() - 1;
 
         return new CommaPaginatedResponse(
@@ -62,7 +59,7 @@ public class CommaSearchServiceImpl implements CommaSearchService {
     }
 
     private List<CommentDetailResponse> getCommentDetailResponses(Long commaId) {
-        List<Comment> comments = commentRepository.findAllByCommaId(commaId, commentPageRequest());
+        List<Comment> comments = commentRepository.findAllByCommaId(commaId, PageRequest.of(0, 10));
 
         return comments.stream()
             .map(comment -> new CommentDetailResponse(
@@ -73,20 +70,5 @@ public class CommaSearchServiceImpl implements CommaSearchService {
                 comment.getCreatedAt(),
                 comment.getUpdatedAt()))
             .collect(Collectors.toUnmodifiableList());
-    }
-
-    private PageRequest commentPageRequest() {
-        return PageRequest.of(0, 10);
-    }
-
-    private Pageable exchangePageRequest(Pageable pageable) {
-        int maxCommaSize = 100;
-        int pageSize = pageable.getPageSize();
-
-        if (pageSize <= maxCommaSize) {
-            return pageable;
-        }
-
-        return PageRequest.of(pageable.getPageNumber(), maxCommaSize);
     }
 }

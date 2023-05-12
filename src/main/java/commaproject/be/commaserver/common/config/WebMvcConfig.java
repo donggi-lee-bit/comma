@@ -1,5 +1,6 @@
 package commaproject.be.commaserver.common.config;
 
+import commaproject.be.commaserver.common.argumentresolver.CustomPageArgumentResolver;
 import commaproject.be.commaserver.common.argumentresolver.OauthLoginArgumentResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +13,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final OauthLoginArgumentResolver oauthLoginArgumentResolver;
+    private final CustomPageArgumentResolver customPageArgumentResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(oauthLoginArgumentResolver);
+        resolvers.add(customPageArgumentResolver);
     }
 }
