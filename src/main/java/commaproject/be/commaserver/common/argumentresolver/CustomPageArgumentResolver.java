@@ -1,6 +1,6 @@
 package commaproject.be.commaserver.common.argumentresolver;
 
-import commaproject.be.commaserver.common.exception.InvalidPageParameterException;
+import commaproject.be.commaserver.common.exception.common.InvalidPageParameterException;
 import commaproject.be.commaserver.domain.comma.ValidPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;

@@ -21,6 +21,7 @@ public enum ErrorCodeAndMessage implements CodeAndMessage {
     ALREADY_POST_LIKE_ERROR("E-BR002", "이미 좋아요 한 게시글입니다."),
     ALREADY_POST_UNLIKE_ERROR("E-BR003", "좋아요 하지 않은 게시글입니다."),
     INVALID_PAGE_PARAMETER_ERROR("E-BR004", "잘못된 형식의 페이지 요청입니다."),
+    NOT_ALLOWED_PAGE_SORT_ERROR("E-BR005", "페이지 정렬은 허용되지 않는 요청입니다."),
     ;
 
     private final String code;

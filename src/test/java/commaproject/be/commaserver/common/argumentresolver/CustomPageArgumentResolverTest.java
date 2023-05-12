@@ -3,7 +3,7 @@ package commaproject.be.commaserver.common.argumentresolver;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import commaproject.be.commaserver.common.exception.InvalidPageParameterException;
+import commaproject.be.commaserver.common.exception.common.InvalidPageParameterException;
 import commaproject.be.commaserver.integration.InitIntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
