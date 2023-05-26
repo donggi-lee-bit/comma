@@ -42,6 +42,9 @@ public class Comma extends BaseEntity {
     @Column(columnDefinition = "BOOLEAN")
     private boolean deleted = Boolean.FALSE;
 
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int view;
+
     private Comma(String title, String content, User user) {
         this.title = title;
         this.content = content;
@@ -59,6 +62,10 @@ public class Comma extends BaseEntity {
         this.user = user;
         this.username = user.getUsername();
         return this;
+    }
+
+    public void increaseViewCount() {
+        this.view++;
     }
 
     public void delete() {

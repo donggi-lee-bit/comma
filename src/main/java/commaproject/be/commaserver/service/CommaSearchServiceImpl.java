@@ -46,6 +46,7 @@ public class CommaSearchServiceImpl implements CommaSearchService {
                 comma.getId(),
                 comma.getTitle(),
                 comma.getContent(),
+                comma.getView(),
                 comma.getUsername(),
                 comma.getUser().getId(),
                 comma.getCreatedAt(),

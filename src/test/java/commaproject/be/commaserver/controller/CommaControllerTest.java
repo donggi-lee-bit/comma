@@ -44,7 +44,7 @@ class CommaControllerTest extends InitControllerTest {
         List<CommentDetailResponse> comments = createCommentTestData();
         Long commaId = 1L;
         CommaDetailResponse commaDetailResponse = new CommaDetailResponse(
-            commaId, "title1", "content1", "username1", 1L, LocalDateTime.of(2022, 12, 27, 15, 13),1L, comments);
+            commaId, "title1", "content1", 0, "username1", 1L, LocalDateTime.of(2022, 12, 27, 15, 13),1L, comments);
         BaseResponse<CommaDetailResponse> baseResponse = new BaseResponse<>("200", "OK",
             commaDetailResponse);
 
@@ -185,7 +185,7 @@ class CommaControllerTest extends InitControllerTest {
 
         List<CommentDetailResponse> comments = createCommentTestData();
 
-        CommaDetailResponse commaDetailResponse = new CommaDetailResponse(commaId, "title1", "content1", "username1", userId, LocalDateTime.of(2022, 12, 28, 15, 30), 1L, comments);
+        CommaDetailResponse commaDetailResponse = new CommaDetailResponse(commaId, "title1", "content1", 0, "username1", userId, LocalDateTime.of(2022, 12, 28, 15, 30), 1L, comments);
 
         when(commaService.update(userId, commaId, commaRequest)).thenReturn(commaDetailResponse);
 
