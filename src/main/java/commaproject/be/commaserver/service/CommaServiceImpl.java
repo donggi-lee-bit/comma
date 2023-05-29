@@ -36,7 +36,7 @@ public class CommaServiceImpl implements CommaService {
     @Override
     @Transactional
     public CommaDetailResponse readOne(Long commaId) {
-        Comma comma = commaRepository.findById(commaId)
+        Comma comma = commaRepository.findByIdWithPessimisticLock(commaId)
             .orElseThrow(NotFoundCommaException::new);
 
         comma.increaseViewCount();

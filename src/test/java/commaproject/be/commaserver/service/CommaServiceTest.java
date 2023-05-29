@@ -48,7 +48,7 @@ class CommaServiceTest extends InitServiceTest {
         Long userId = 1L;
         Comma comma = setCommaData(commaId, userId);
         List<Comment> comments = setCommentsData(commaId, userId);
-        when(commaRepository.findById(commaId)).thenReturn(Optional.of(comma));
+        when(commaRepository.findByIdWithPessimisticLock(commaId)).thenReturn(Optional.of(comma));
         when(postLikeRepository.countLikeByCommaIdAndLikeStatus(commaId, true)).thenReturn(1L);
         PageRequest commentPageRequest = PageRequest.of(0, 10);
         when(commentRepository.findAllByCommaId(commaId, commentPageRequest)).thenReturn(comments);
