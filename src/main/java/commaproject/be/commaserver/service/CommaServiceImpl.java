@@ -34,14 +34,18 @@ public class CommaServiceImpl implements CommaService {
     private final CommentRepository commentRepository;
 
     @Override
+    @Transactional
     public CommaDetailResponse readOne(Long commaId) {
-        Comma comma = commaRepository.findById(commaId)
+        Comma comma = commaRepository.findByIdWithPessimisticLock(commaId)
             .orElseThrow(NotFoundCommaException::new);
+
+        comma.increaseViewCount();
 
         return new CommaDetailResponse(
             comma.getId(),
             comma.getTitle(),
             comma.getContent(),
+            comma.getView(),
             comma.getUsername(),
             comma.getUser().getId(),
             comma.getCreatedAt(),
@@ -99,6 +103,7 @@ public class CommaServiceImpl implements CommaService {
             updateComma.getId(),
             updateComma.getTitle(),
             updateComma.getContent(),
+            updateComma.getView(),
             updateComma.getUsername(),
             updateComma.getUser().getId(),
             updateComma.getCreatedAt(),
@@ -129,6 +134,7 @@ public class CommaServiceImpl implements CommaService {
                 comma.getId(),
                 comma.getTitle(),
                 comma.getContent(),
+                comma.getView(),
                 comma.getUsername(),
                 comma.getUser().getId(),
                 comma.getCreatedAt(),

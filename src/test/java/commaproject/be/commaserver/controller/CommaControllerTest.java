@@ -44,7 +44,7 @@ class CommaControllerTest extends InitControllerTest {
         List<CommentDetailResponse> comments = createCommentTestData();
         Long commaId = 1L;
         CommaDetailResponse commaDetailResponse = new CommaDetailResponse(
-            commaId, "title1", "content1", "username1", 1L, LocalDateTime.of(2022, 12, 27, 15, 13),1L, comments);
+            commaId, "title1", "content1", 0, "username1", 1L, LocalDateTime.of(2022, 12, 27, 15, 13),1L, comments);
         BaseResponse<CommaDetailResponse> baseResponse = new BaseResponse<>("200", "OK",
             commaDetailResponse);
 
@@ -76,6 +76,7 @@ class CommaControllerTest extends InitControllerTest {
                         fieldWithPath("data.content").type(JsonFieldType.STRING).description("회고 내용"),
                         fieldWithPath("data.username").type(JsonFieldType.STRING).description("회고 작성자"),
                         fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("회고 작성자 아이디"),
+                        fieldWithPath("data.view").type(JsonFieldType.NUMBER).description("회고 조회수"),
                         fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
                         fieldWithPath("data.postLikeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                         fieldWithPath("data.comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
@@ -130,6 +131,7 @@ class CommaControllerTest extends InitControllerTest {
                         fieldWithPath("data.commaDetailResponses[].content").type(JsonFieldType.STRING).description("회고 내용"),
                         fieldWithPath("data.commaDetailResponses[].username").type(JsonFieldType.STRING).description("회고 작성자"),
                         fieldWithPath("data.commaDetailResponses[].userId").type(JsonFieldType.NUMBER).description("회고 작성자 아이디"),
+                        fieldWithPath("data.commaDetailResponses[].view").type(JsonFieldType.NUMBER).description("회고 조회수"),
                         fieldWithPath("data.commaDetailResponses[].postLikeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                         fieldWithPath("data.commaDetailResponses[].createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
                         fieldWithPath("data.commaDetailResponses[].comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
@@ -185,7 +187,7 @@ class CommaControllerTest extends InitControllerTest {
 
         List<CommentDetailResponse> comments = createCommentTestData();
 
-        CommaDetailResponse commaDetailResponse = new CommaDetailResponse(commaId, "title1", "content1", "username1", userId, LocalDateTime.of(2022, 12, 28, 15, 30), 1L, comments);
+        CommaDetailResponse commaDetailResponse = new CommaDetailResponse(commaId, "title1", "content1", 0, "username1", userId, LocalDateTime.of(2022, 12, 28, 15, 30), 1L, comments);
 
         when(commaService.update(userId, commaId, commaRequest)).thenReturn(commaDetailResponse);
 
@@ -216,6 +218,7 @@ class CommaControllerTest extends InitControllerTest {
                         fieldWithPath("data.content").type(JsonFieldType.STRING).description("수정된 회고 내용"),
                         fieldWithPath("data.username").type(JsonFieldType.STRING).description("수정한 회고 작성자"),
                         fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("수정한 회고 작성자 아이디"),
+                        fieldWithPath("data.view").type(JsonFieldType.NUMBER).description("수정한 회고 조회수"),
                         fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("회고 작성된 시간"),
                         fieldWithPath("data.postLikeCount").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                         fieldWithPath("data.comments[].id").type(JsonFieldType.NUMBER).description("댓글 아이디"),
