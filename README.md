@@ -50,8 +50,11 @@ Local 환경을 실행하려면
 
 # 도커 컴포즈를 이용하여 mysql, prometheus, grafana 실행
 
-# docker-compose run
+# mysql docker-compose run
 docker-compose -f platform/db/docker-compose.yml up -d
+
+# prometheus & grafana docker-compose run
+docker-compose -f platform/monitoring/docker-compose.yml up -d
 
 # gradlew 의 실행 권한이 없다면 권한 정보를 수정합니다.
 chmod +x gradlew
@@ -107,18 +110,18 @@ mysql> select * from comma limit 3;
 <br/>
 
 <details>
-<summary> +a) Prometheus, Granafa 연결 확인 </summary>
+<summary> +a) Prometheus, Grafana 연결 확인 </summary>
 <div markdown="1">
 
-**Mac OS 를 기준으로 된 설정입니다. Windows 에서 실행할 경우 `docker.for.mac.localhost` 대신 `host.docker.internal` 을 사용합니다.**
+**Mac OS 기준으로 된 설정입니다.** <br>
+Windows 에서 실행할 경우 /platform/monitoring/prometheus/config/prometheus.yml 에서 static_configs.targets 을 `docker.for.mac.localhost` 대신 `host.docker.internal` 을 사용합니다.
 
-1. 브라우저 실행
-2. `http://localhost:9090` 로 프로메테우스를 실행합니다. status -> targets 에서 연결을 확인합니다. <br>
+1. 브라우저를 이용해 `http://localhost:9090` 로 프로메테우스에 접속합니다. status -> targets 에서 연결을 확인합니다. <br>
    ![img_1.png](images/img_1.png)
-3. `http://localhost:3000` 로 그라파나를 실행합니다. 처음 실행시 id/pw 를 **admin/admin** 으로 접속합니다. 비밀번호를 한 번 바꾼 뒤 `Welcome To Grafana` 페이지를 보게됩니다. <br>
+2. `http://localhost:3000` 로 그라파나를 실행합니다. 처음 실행시 id/pw 를 **admin/admin** 으로 접속합니다. 비밀번호를 한 번 바꾼 뒤 `Welcome To Grafana` 페이지를 보게됩니다. <br>
    ![img_2.png](images/img_2.png)
-4. 그라파나에서 data source(프로메테우스) 를 연결합니다. 왼쪽 아래의 톱니바퀴를 눌러 `Data sources` 에 접근합니다. Settings 의 HTTP URL에 `http://docker.for.mac.localhost:9090` 을 입력하여 프로메테우스를 연결합니다.
-5. 그라파나에서 프로메테우스가 수집한 메트릭을 보기 위해 `Dashboard` 를 띄워주어야합니다. Dashboards -> import 에서 `import via grafana.com` 에 `6756` 을 입력하여 대시보드를 만들어줍니다. (6756은 spring boot statistics 를 보여주는 대시보드 템플릿 id입니다.) <br>
+3. 그라파나에서 data source(프로메테우스) 를 연결합니다. 왼쪽 아래의 톱니바퀴를 눌러 `Data sources` 에 접근합니다. Settings 의 HTTP URL에 `http://docker.for.mac.localhost:9090` 을 입력하여 프로메테우스를 연결합니다.
+4. 그라파나에서 프로메테우스가 수집한 메트릭을 보기 위해 `Dashboard` 를 띄워주어야합니다. Dashboards -> import 에서 `import via grafana.com` 에 `6756` 을 입력하여 대시보드를 만들어줍니다. (6756은 spring boot statistics 를 보여주는 대시보드 템플릿 id입니다.) <br>
    ![img_3.png](images/img_3.png)
 
 </div>
