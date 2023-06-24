@@ -1,18 +1,30 @@
-<h1 align="middle"> comma</h1>
+<h1 align="middle"> ❜ </h1>
+
+<br/>
 
  <p align="middle">업무라는 무한루프 속에서 <br> 지속적인 맺음을 만들어 <br> 지쳐가는 생활에 쉼표를.</p>
+
+<div align="center">
+    <p dir="auto">
+        <a href="https://donggi-lee-bit.github.io/comma/src/main/resources/static/docs/index.html">
+            <img src="https://img.shields.io/badge/API Docs-6DB33F?style=flat&logo=spring&logoColor=white">
+        </a>
+        <a href="https://github.com/donggi-lee-bit/comma/wiki">
+            <img src="https://img.shields.io/badge/GitHub Wiki 📚-181717?style=flat&logo=Github&logoColor=white">
+        </a>
+    </p>
+</div>
 
 
 ## 서비스 소개 📝
 
-`회고`는 새롭게 시작할 수 있는 힘을 주고, 지났던 것들을 평가할 수 있게 합니다.
+회고는 새롭게 시작할 수 있는 힘을 주고, 지났던 것들을 평가할 수 있게 합니다.
 
-지난 일들을 확인하고, 지난 일에 대한 감정이나 상황을 `스스로` 또는 `팀원`들과 공유하여
+지난 일들을 확인하고, 지난 일에 대한 감정이나 상황을 스스로 또는 팀원들과 공유하여
 
 앞으로 더 나은 우리가 되기 위해 어떤 것을 해야하는지 찾을 수 있도록 도와줍니다.
 
 ---
-[애플리케이션 API 문서](https://donggi-lee-bit.github.io/comma/src/main/resources/static/docs/index.html)
 
 # 애플리케이션 실행 가이드
 
