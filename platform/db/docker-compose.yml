@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  mysql:
+    image: mysql:8.0.29
+    container_name: local-mysql
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: comma
+      MYSQL_USER: donggi
+      MYSQL_PASSWORD: dlehdrl12#
