@@ -1,4 +1,3 @@
-# local 용도
 version: '3.7'
 services:
   prometheus:
@@ -23,14 +22,3 @@ services:
       - ./grafana/volume:/var/lib/grafana
     restart: always
 
-  mysql:
-    image: mysql:8.0.29
-    container_name: local-mysql
-    ports:
-      - 3306:3306
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: comma
-      MYSQL_USER: donggi
-      MYSQL_PASSWORD: dlehdrl12#
