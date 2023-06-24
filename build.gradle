@@ -130,3 +130,7 @@ clean {
 jar {
     enabled = false
 }
+
+bootJar {
+    archiveFileName="comma-donggi.jar"
+}
