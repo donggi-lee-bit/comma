@@ -15,8 +15,11 @@
     </p>
 </div>
 
+- [서비스 소개 📝](#서비스-소개-)
+- [실행 방법](#실행-방법-)
+  - [Local 환경에서의 실행](#Local-환경에서의-실행-) 
 
-## 서비스 소개 📝
+# 서비스 소개 📝
 
 회고는 새롭게 시작할 수 있는 힘을 주고, 지났던 것들을 평가할 수 있게 합니다.
 
@@ -26,28 +29,85 @@
 
 ---
 
-# 애플리케이션 실행 가이드
+# 실행 방법
+
+환경
 
 - Java 11
 - Spring Boot 2.7.6
 
-## 데이터베이스 & 모니터링 프로그램(프로메테우스 그라파나) 실행
-- `commaserver/local/monitoring-database` 로 이동
+## Local 환경에서의 실행
+
+Local 환경에서는 MySQL 을 사용하고 있습니다. <br>
+Local 환경을 실행하려면 
+1. Docker 를 실행하고 
+2. 빌드 후 실행합니다.
+
 ```bash
-# 경로 : commaserver/monitor/prometheus-grafana
+# 경로 : project root
+
 # 실행 전 Local 환경에 도커가 켜져있어야 합니다.
+
 # 도커 컴포즈를 이용하여 mysql, prometheus, grafana 실행
 
-# 도커 이미지 생성 및 컨테이너 시작
-docker compose up -d
-# 컨테이너 중지
-docker compose stop
-# 컨테이너 다시 시작
-docker compose start
+# docker-compose run
+docker-compose -f platform/db/docker-compose.yml up -d
+
+# gradlew 의 실행 권한이 없다면 권한 정보를 수정합니다.
+chmod +x gradlew
+
+# build & test
+./gradlew clean build
+
+# spring execute
+> java -jar ./build/libs/comma-donggi.jar --spring.profiles-active=local
 ```
 
 <details>
-<summary> 모니터링 연결 확인 </summary>
+<summary> +a) Docker MySQL 연결 확인 </summary>
+<div markdown="1">
+
+```shell
+> docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS         PORTS                               NAMES
+57b4f0e18d7e   mysql:8.0.29   "docker-entrypoint.s…"   28 minutes ago   Up 2 minutes   0.0.0.0:3306->3306/tcp, 33060/tcp   local-mysql
+
+> docker exec -it local-mysql /bin/bash
+> mysql -u donggi -p
+Enter password: dlehdrl12#
+
+mysql> use comma
+Database changed
+
+mysql> show tables;
++-----------------+
+| Tables_in_comma |
++-----------------+
+| comma           |
+| comment         |
+| likes           |
+| users           |
++-----------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from comma limit 3;
++----+----------------------------+----------------------------+----------------+---------+-------+----------+------+---------+
+| id | created_at                 | updated_at                 | content        | deleted | title | username | view | user_id |
++----+----------------------------+----------------------------+----------------+---------+-------+----------+------+---------+
+|  1 | 2007-12-03 10:30:12.000000 | 2007-12-03 10:30:12.000000 | 1번째 회고 게시글입니다. |       0 | 회고    | donggi   |    0 |       1 |
+|  2 | 2007-12-03 10:31:12.000000 | 2007-12-03 10:31:12.000000 | 2번째 회고 게시글입니다. |       0 | 회고    | donggi   |    0 |       1 |
+|  3 | 2007-12-03 10:32:12.000000 | 2007-12-03 10:32:12.000000 | 3번째 회고 게시글입니다. |       0 | 회고    | donggi   |    0 |       1 |
++----+----------------------------+----------------------------+----------------+---------+-------+----------+------+---------+
+3 rows in set (0.00 sec)
+```
+
+</div>
+</details>
+
+<br/>
+
+<details>
+<summary> +a) Prometheus, Granafa 연결 확인 </summary>
 <div markdown="1">
 
 **Mac OS 를 기준으로 된 설정입니다. Windows 에서 실행할 경우 `docker.for.mac.localhost` 대신 `host.docker.internal` 을 사용합니다.**
